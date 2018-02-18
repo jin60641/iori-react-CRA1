@@ -1,0 +1,103 @@
+.Login {
+  background-image: url("/images/login-back.svg");
+  background-size: 100% 100%;
+  overflow: hidden;
+  height: 100%;
+  text-align: center; }
+
+.login-helper {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle; }
+
+.login-form {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+  width: 100vw;
+  background-color: white;
+  box-sizing: border-box;
+  max-width: 400px;
+  padding: 50px;
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  font-size: 9pt; }
+  .login-form .login-label, .login-form .login-input {
+    margin: auto;
+    margin-bottom: 10px;
+    display: block;
+    width: 100%;
+    webkit-appearance: none;
+    outline: none;
+    box-sizing: border-box; }
+  .login-form .login-input {
+    margin-top: 13px;
+    margin-bottom: 40px;
+    padding-bottom: 7px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    transition: border-bottom .2s linear; }
+    .login-form .login-input:focus {
+      border-bottom: 1px solid #ff5c3e; }
+  .login-form .login-auto {
+    margin-top: 0px;
+    display: inline-block;
+    cursor: pointer;
+    padding-top: 2px;
+    vertical-align: middle;
+    margin-bottom: 3px;
+    background-position: left;
+    background-repeat: no-repeat;
+    width: auto;
+    width: initial; }
+  .login-form .login-auto-label {
+    cursor: pointer;
+    margin-left: 4px;
+    display: inline-block;
+    width: auto;
+    width: initial; }
+  .login-form .login-btn {
+    text-align: center;
+    width: 100%;
+    height: 45px;
+    box-sizing: border-box;
+    color: white;
+    font-size: 14pt;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer; }
+    .login-form .login-btn .login-btn-img {
+      vertical-align: top; }
+  .login-form .login-local {
+    background-color: rgba(255, 92, 62, 0.9); }
+    .login-form .login-local:hover {
+      background-color: #ff5c3e; }
+  .login-form .login-facebook {
+    background-color: #537bbd;
+    margin-bottom: 30px; }
+    .login-form .login-facebook:hover {
+      background-color: #2e4f84; }
+    .login-form .login-facebook .login-facebook-img {
+      margin-top: 3px;
+      margin-right: 10px; }
+  .login-form .login-twitter {
+    background-color: #1da1f2;
+    margin-bottom: 30px; }
+    .login-form .login-twitter:hover {
+      background-color: #1da1f2; }
+    .login-form .login-twitter .login-twitter-img {
+      width: 40px;
+      height: 40px;
+      margin-top: -7px; }
+  .login-form .login-text {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px; }
+    .login-form .login-text .login-text-link {
+      color: #ce410a;
+      margin-left: 10px; }
+  .login-form .login-alert {
+    color: #ce410a;
+    margin-top: 5px;
+    margin-bottom: 7px;
+    min-height: 18px; }

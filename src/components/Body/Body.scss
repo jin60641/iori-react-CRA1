@@ -1,0 +1,13 @@
+.Body {
+	position : absolute;
+	top : 42px;
+	padding : 0px;
+	width : 100vw;
+	height : 100%;
+	max-height : calc( 100vh - 42px );
+	overflow-y : hidden;
+}
+
+.body-scroll {
+	overflow-y : scroll;
+}

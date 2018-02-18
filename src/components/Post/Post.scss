@@ -1,0 +1,168 @@
+.Post {
+	margin : auto;
+	box-sizing : border-box;
+	width : 100%;
+	font-family : inherit;
+	word-wrap : break-word;
+	background-color : white;
+	position : relative;
+	font-size : 13px;
+	letter-spacing : 0px;
+	border : 1px solid;
+	border-color : #e5e6e9 #dfe0e4 #d0d1d5;
+	border-radius : 3px;
+	padding : 10px;
+	display : block;
+	margin-bottom : 10px;
+	transition : opacity .3s linear;
+	text-decoration : none;
+	cursor : default;
+	color : black;
+
+	.post-profile {
+		width : 50px;
+		height : 50px;
+		display : inline-block;
+		vertical-align : top;
+		border  : 1px solid rgba(0, 0, 0, .1);
+		border-radius : 25px;
+		margin-right : 10px;
+		background : white;
+		overflow : hidden;
+
+		.post-profile-img {
+			width : 100%;
+			height : 100%;
+		}
+	}
+	.post-inform {
+		display : inline-block;
+		vertical-align : top;
+		padding-top : 3px;
+
+		.post-user {
+			display : block;
+			color : rgb(255,92,62);
+			text-decoration : none;
+			font-size : 18px;
+			font-weight : bold;
+			letter-spacing : -2px;
+			font-family : inherit;
+		}
+		.post-date {
+			vertical-align : middle;
+			position : relative;
+			letter-spacing : -1px;
+			font-size : 12px;
+			color : #9197a3;
+		}
+	}
+	.post-inside {
+		padding : 9px 10px 8px 10px;
+		display : block;
+	}
+	.PostImgBox {
+		display : inline-block;
+		border-radius : 3px;
+		margin-top : 10px;
+		overflow : hidden;
+		max-width : 100%;
+		border : 1px solid #e1e2e3;
+		.PostImg {
+			max-height : 600px;
+			display : block;
+			max-width : 100%;
+			-moz-transition : all 0.3s;
+			-webkit-transition : all 0.3s;
+			transition : all 0.3s;
+			
+			&:hover {
+				cursor : pointer;
+				transform : scale(1.1);
+			}
+		}
+	}
+}
+
+.PostWrite {
+	padding-bottom : 50px;
+	.post-write-text {
+		-webkit-appearance : none;
+		padding-top : 10px;
+		border-top : 1px solid rgba(0,0,0,0.2);
+		border-bottom : 1px solid rgba(0,0,0,0.2);
+		border-left : 0px;
+		border-right : 0px;
+		border-radius : 0px;
+		overflow-y : hidden;
+		display : block;
+		font-size : 14px;
+		width : 100%;
+		height : 100px;
+		vertical-align : top;
+		padding-left : 3px;
+		transition : border-top .1s linear, border-bottom .1s linear;
+		box-sizing : border-box;
+		resize: none;
+		
+		&:focus {
+			outline : 0;
+			border-top : 1px solid rgb(255,92,62);
+			border-bottom : 1px solid rgb(255,92,62);
+		}
+	}	
+	.post-write-submit {
+		margin-top : 8px;
+		float : right;
+		color : white;
+		border-radius : 2px;
+		box-sizing : border-box;
+		text-align : center;
+		line-height : 32px;
+		background-color : rgb(255,92,62);
+		font-size : 16px;
+		width : 60px;
+		height : 33px;
+
+		&:hover {
+			cursor : pointer;
+		}
+	}
+	.post-write-label {
+		margin-right : 14px;
+		margin-top : 8px;
+		width : 32px;
+		height : 32px;
+		float : right;
+		border-radius : 2px;
+		background : url(/images/post-write-label.png);
+		background-color : rgb(255,92,62);
+		background-size : 20px 20px;
+		background-repeat : no-repeat;
+		background-position : center center;
+		&:hover {
+			cursor : pointer;
+		}
+	}
+	.post-write-file {
+		display : none;
+	}
+	.post-write-preview {
+		width : 100%;
+		white-space : nowrap;
+		overflow-y : hidden;
+		margin-bottom : 3px;
+		.post-write-img {
+			padding : 3px;
+			margin-top : 10px;
+			border : 2px solid rgb(255,92,62);
+			width : 82px;
+			height : 82px;
+			margin-left : 4px;
+			margin-right : 5px;
+			position : relative;
+			display : inline-block;
+		}
+	}
+}
+

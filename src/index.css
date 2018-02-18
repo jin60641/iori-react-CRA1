@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; }
+
+#root {
+  height: 100vh;
+  width: 100vw;
+  background-color: #f2f2f2; }
+
+::-webkit-scrollbar {
+  width: 0.5em;
+  height: 0.5em; }
+
+::-webkit-scrollbar-thumb {
+  background: slategray; }
+
+::-webkit-scrollbar-track {
+  background: #b8c0c8; }
+
+body {
+  scrollbar-face-color: slategray;
+  scrollbar-track-color: #b8c0c8; }

@@ -1,0 +1,34 @@
+.Slider {
+	width : 100%;
+	text-align : center;
+	height : calc( 100vh - 42px );
+	background-repeat : no-repeat;
+	background-size : cover;
+	position : relative;
+	overflow : hidden;
+	white-space : nowrap;
+	.slider-layer {
+		position : relative;
+		background-color : rgba(0,0,0,.5);
+		width : 100%;
+		height : 100%;
+		display : flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		.slider-text {
+			color : white;
+			z-index : 5;
+		}
+	}
+	.slider-img {
+		display : inline-block;
+		width : 100%;
+		height : 100%;
+		background-size : cover;
+		background-position : 50% 50%;
+	}
+	.slider-img-moving {
+		transition : margin-left 1s;
+	}
+}

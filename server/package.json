@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "connect-busboy": "0.0.2",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "mongoose": "^4.13.5",
+    "mysql": "^2.15.0",
+    "mysql2": "^1.5.1",
+    "nodemailer": "^4.4.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "sequelize": "^4.31.2",
+    "socket.io": "^2.0.4"
+  }
+}
