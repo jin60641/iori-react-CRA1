@@ -9,23 +9,20 @@ let obj = {
 let LocalStrategy = require('passport-local').Strategy;
 obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'password' }, function( email, password, next ){
 	db.User.findOne({ where : { email : email } }).then( function( user ){
-		if(!user.dataValues){
-			return next(null,false,{msg:"이메일 또는 비밀번호가 잘못되었습니다."});
+		if(!user){
+			return next(new Error("이메일 또는 비밀번호가 잘못되었습니다."));
 		} else {
 			var shasum = crypto.createHash('sha1');
 			shasum.update(password);
 			var sha_pw = shasum.digest('hex');
 			if( user.password == sha_pw ){
 				if( user && user.signUp == false ){
-					return next(null,false,{msg:'이메일 인증을 진행하셔야 정상적인 이용이 가능합니다.'});
-				} else if( user.be == false ){
-					return next(null,false,{msg:'이메일 또는 비밀번호가 잘못되었습니다.'});
+					return next(new Error('이메일 인증을 진행하셔야 정상적인 이용이 가능합니다.'));
 				} else if( user ){
-					delete user.password;
 					return next(null,user);
 				}
 			} else {
-				return next(null,false,{msg:'이메일 또는 비밀번호가 잘못되었습니다.'});
+				return next(new Error('이메일 또는 비밀번호가 잘못되었습니다.'));
 			}
 		}
 	});
@@ -38,33 +35,33 @@ obj.verifyMail = function( req, res ){
 	 var email = req.params.email;
 	 var link = req.params.link;
 	 if( email != null, link != null ){
-			db.User.findOne({ where : { email : email } }).then( function( user ){
-				if( user.dataValues ){
-					 var shasum = crypto.createHash('sha1');
-					 shasum.update(user.email);
-					 var sha_email = shasum.digest('hex');
-					 if( sha_email == link ){
-						  if( !user.signUp ){
-								db.User.update({ 'signUp' : true }, { where : { email : email } }).then( function(){
-									  res.render(__dirname + '/../views/emailauth.ejs', { result : "회원가입이 완료되었습니다." });
-								});
-						  } else {
-								res.render(__dirname + '/../views/emailauth.ejs', { result : "회원가입이 완료되었습니다." });
-						  }
-					 } else {
-						  res.redirect('/');
-					 }
-				} else {
-					 res.redirect('/');
-				}
-		  });
-	 }
+		db.User.findOne({ where : { email : email } }).then( function( user ){
+			if( user ){
+				 var shasum = crypto.createHash('sha1');
+				 shasum.update(user.email);
+				 var sha_email = shasum.digest('hex');
+				 if( sha_email == link ){
+					if( !user.signUp ){
+						db.User.update({ 'signUp' : true }, { where : { email : email } }).then( function(){
+							res.send({ data : "회원가입이 완료되었습니다." });
+						});
+					} else {
+						res.send({ data : "회원가입이 완료되었습니다." });
+					}
+				 } else {
+					res.send({ msg : "잘못된 접근입니다." });
+				 }
+			} else {
+				res.send({ msg : "잘못된 접근입니다." });
+			}
+	 	});
+	}
 }
 
 obj.findPw = function( req, res ){
 	var email = req.body['email'].trim();
 	db.User.findOne({ where : { email : email } }).then( function( user ){
-		if( user.datavalues ) {
+		if( user ) {
 			var shasum = crypto.createHash('sha1');
 			shasum.update(email);
 			var sha_email = shasum.digest('hex');
@@ -91,7 +88,7 @@ obj.findPwVerifyMail = function( req, res ){
 	var email = req.params.email;
 	var link = req.params.link;
 	db.User.findOne({ where : { email : email } }).then( function( user ){
-		if( user.dataValues ){
+		if( user ){
 			var shasum = crypto.createHash('sha1');
 			shasum.update(user.email);
 			var sha_email = shasum.digest('hex');
@@ -107,7 +104,7 @@ obj.findPwVerifyMail = function( req, res ){
 }
 
 obj.checkSession = function( req, res, next ){
-	 if( req.user && req.user.signUp && req.user.be ){
+	 if( req.user && req.user.signUp ){
 		return next();
 	 } else {
 		res.send({ msg : "로그인해주세요" });
@@ -115,9 +112,9 @@ obj.checkSession = function( req, res, next ){
 }
 
 obj.checkAdmin = function( req, res, next ){
-	if( req.user && req.user.signUp && req.user.be ){
+	if( req.user && req.user.signUp ){
 		db.User.findOne({ where : { id : req.user.id } }).then( function( user ){
-			if( user.dataValues.admin == true ){
+			if( user.admin == true ){
 				return next();
 			} else {
 				res.status(404).send("Not Found");
@@ -153,9 +150,7 @@ obj.loggedIn = function( req, res ){
 obj.authLocal = function( req, res, next ){
 	obj.passport.authenticate('local', function( err, user, info ){
 		if( err ){
-			return next(err);
-		} else if( !user ){
-			return res.send({ msg : '이메일 또는 비밀번호가 잘못되었습니다.' });
+			return res.send({ msg : err.message });
 		} else {
 			req.logIn( user, function( error ){
 				if( error ){
@@ -179,7 +174,7 @@ obj.join = function( req, res ){
 	}
 	db.User.findOne({ where : { email : email } })
 		.then( function( user ){
-			if( user && user.dataValues ){
+			if( user ){
 				throw new Error("이미 사용중인 메일입니다.");
 			} else {
 				const regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
