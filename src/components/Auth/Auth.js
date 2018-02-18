@@ -10,10 +10,10 @@ class Auth extends Component {
 		super(props);
 	}
 	render(){
-		const { fetchLogin, fetchJoin } = this.props;
+		const { fetchLogin, fetchJoin, history } = this.props;
 		switch(this.props.match.params.page){
 			case "login":
-				return(<Login fetchLogin={fetchLogin} cx={cx}/>);
+				return(<Login fetchLogin={fetchLogin} cx={cx} history={history}/>);
 			case "join":
 				return(<Join fetchJoin={fetchJoin} cx={cx}/>);
 		}
