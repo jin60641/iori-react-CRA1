@@ -8,6 +8,7 @@ import styles from './Body.css';
 import Newsfeed from '../Newsfeed/Newsfeed';
 import Error from '../Error/Error';
 import Slider from '../Slider/Slider';
+import Auth from '../Auth/Auth';
 
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
@@ -45,8 +46,8 @@ class Body extends Component {
 	}
 	render(){
 		return(
-			<div className={cx('Body',{ 'body-scroll' : this.state.scrollBar })} ref="Body" >
-				<Switch>
+			<Switch>
+				<div className={cx('Body',{ 'body-scroll' : this.state.scrollBar })} ref="Body" >
 					<Route exact path="/" render={(props) => (
 						this.isLoggedIn() ? 
 							<Newsfeed {...props}
@@ -60,10 +61,13 @@ class Body extends Component {
 								showScroll = { this.showScroll }
 							/>
 					)} />
+					<Route path="/auth/:page" render={(props) => (
+						<Auth {...props} />
+					)}/>
 					<Route path="/error" component={Error}/>
 					<Redirect to="/error" />
-				</Switch>
-			</div>
+				</div>
+			</Switch>
 		);
 	}
 }

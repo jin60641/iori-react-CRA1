@@ -22,7 +22,7 @@
     "eject": "react-scripts eject",
     "start": "node ./server/app.js",
     "api": "NODE_ENV=api node ./server/app.js",
-	"sass": "node-sass-chokidar -w src -o src"
+    "sass": "node-sass-chokidar -w src -o src"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
