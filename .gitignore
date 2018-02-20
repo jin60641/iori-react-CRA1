@@ -24,4 +24,3 @@ yarn-error.log*
 server/config
 
 public/files
-public/images
