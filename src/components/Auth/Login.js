@@ -49,26 +49,23 @@ class Login extends Component {
 	render(){
 		const { cx } = this.props;
 		return (
-			<div className="Login">
-				<div className="login-helper"></div>
-				<form className="login-form" onSubmit={this.handleSubmit} >
-					<label className="login-label" htmlFor="email">이메일</label>
-					<input ref="email" type="text" className="login-input" placeholder="" />
-					<label className="login-label" htmlFor="password">비밀번호</label>
-					<input ref="password" type="password" className="login-input" placeholder="" />
-					<div className={ cx('login-btn','login-local') } onClick={this.handleSubmit} >로그인</div>
-					<div className="login-alert"> { this.state.alert } </div>
-					<div className={ cx('login-btn','login-facebook') }>
-						<img className={ cx('login-btn-img', 'login-facebook-img') } src="/images/ic_facebook.png" />페이스북으로 로그인
-					</div>
-					<div className={ cx('login-btn','login-twitter') }>
-						<img className={ cx('login-btn-img', 'login-twitter-img') } src="/images/ic_twitter.png" />트위터로 로그인
-					</div>
-					<div className="login-text">비밀번호를 잊으셨나요? <Link className="login-text-link" to="/findpw">비밀번호 찾기</Link></div>
-					<div className="login-text">아직 회원이 아니신가요? <Link className="login-text-link" to="/auth/join">회원가입</Link></div>
-					<input type="submit" hidden />
-				</form>
-			</div>
+			<form className="auth-form" onSubmit={this.handleSubmit} >
+				<label className="auth-label" htmlFor="email">이메일</label>
+				<input ref="email" type="text" className="auth-input" placeholder="" />
+				<label className="auth-label" htmlFor="password">비밀번호</label>
+				<input ref="password" type="password" className="auth-input" placeholder="" />
+				<div className={ cx('auth-btn','login-local') } onClick={this.handleSubmit} >로그인</div>
+				<div className="auth-alert"> { this.state.alert } </div>
+				<div className={ cx('auth-btn','login-facebook') }>
+					<img className={ cx('auth-btn-img', 'auth-facebook-img') } src="/images/ic_facebook.png" />페이스북으로 로그인
+				</div>
+				<div className={ cx('auth-btn','login-twitter') }>
+					<img className={ cx('auth-btn-img', 'auth-twitter-img') } src="/images/ic_twitter.png" />트위터로 로그인
+				</div>
+				<div className="auth-text">비밀번호를 잊으셨나요? <Link className="auth-text-link" to="/findpw">비밀번호 찾기</Link></div>
+				<div className="auth-text">아직 회원이 아니신가요? <Link className="auth-text-link" to="/auth/join">회원가입</Link></div>
+				<input type="submit" hidden />
+			</form>
 		);
 	}
 }

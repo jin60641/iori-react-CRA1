@@ -19,7 +19,10 @@ console.log(action);
 		this.handleJoin({email:"jin60641@naver.com",password:"test",name:"진상"});
 	}
 	render(){
-		return(<div className="Join" onClick ={ this.test } >asd </div>);
+		return(
+			<div className="auth-form" onClick ={ this.test } >
+			</div>
+		);
 	}
 }
 

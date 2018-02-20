@@ -1,15 +1,15 @@
-.Login {
+.Auth {
 	height : 100%;
 	text-align : center;
 }
 
-.login-helper {
+.auth-helper {
 	display : inline-block;
 	height : 100%;
 	vertical-align : middle;
 }
 
-.login-form {
+.auth-form {
 	display : inline-block;
 	vertical-align : middle;
 	text-align : left;
@@ -22,7 +22,7 @@
 	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
 	font-size : 9pt;
 	
-	.login-label, .login-input {
+	.auth-label, .auth-input {
 		margin : auto;
 		margin-bottom : 10px;
 		display : block;
@@ -31,7 +31,7 @@
 		outline : none;
 		box-sizing : border-box;
 	}
-	.login-input {
+	.auth-input {
 		margin-top : 13px;
 		margin-bottom : 40px;
 		padding-bottom : 7px;
@@ -43,7 +43,7 @@
 			border-bottom : 1px solid rgb(255,92,62);
 		}
 	}
-	.login-auto {
+	.auth-auto {
 		margin-top : 0px;
 		display : inline-block;
 		cursor : pointer;
@@ -55,24 +55,24 @@
 		width : auto;
 		width : initial;
 	}
-	.login-auto-label {
+	.auth-auto-label {
 		cursor : pointer;
 		margin-left : 4px;
 		display : inline-block;
 		width : auto;
 		width : initial;
 	}
-	.login-btn {
+	.auth-btn {
 		text-align : center;
 		width : 100%;
-		height : 45px;
+		height : 40px;
 		box-sizing : border-box;
 		color : white;
 		font-size : 14pt;
 		padding-top : 10px;
-		padding-bottom : 10px;
+		padding-bottom : 8px;
 		cursor : pointer;
-		.login-btn-img {
+		.auth-btn-img {
 			vertical-align : top;
 		}
 	}
@@ -88,9 +88,8 @@
 		&:hover {
 			background-color : #2e4f84;
 		}
-		.login-facebook-img {
-			margin-top : 3px;
-			margin-right : 10px;
+		.auth-facebook-img {
+			margin-right : 4px;
 		}
 	}
 	.login-twitter {
@@ -99,22 +98,22 @@
 		&:hover {
 			background-color : #1da1f2;
 		}
-		.login-twitter-img {
-			width : 40px;
-			height : 40px;
+		.auth-twitter-img {
+			width : 36px;
+			height : 36px;
 			margin-top : -7px;
 		}
 	}
-	.login-text {
+	.auth-text {
 		display : block;
 		margin-top : 10px;
 		margin-bottom : 10px;
-		.login-text-link {
+		.auth-text-link {
 			color : #ce410a;
 			margin-left : 10px;
 		}
 	}
-	.login-alert {
+	.auth-alert {
 		color : #ce410a;
 		margin-top : 5px;
 		margin-bottom : 7px;

@@ -39,6 +39,7 @@ class Body extends Component {
 		this.setState({
 			scrollBar : bool===undefined?true:bool
 		});
+		console.log(false);
 	}
 	isLoggedIn = () => {
 		const { user } = this.props;
@@ -46,8 +47,18 @@ class Body extends Component {
 	}
 	render(){
 		return(
-			<Switch>
-				<div className={cx('Body',{ 'body-scroll' : this.state.scrollBar })} ref="Body" >
+			<div className={cx('Body',{ 'body-scroll' : this.state.scrollBar })} ref="Body" >
+				<Switch>
+					<Route path="/auth/:page" render={(props) => (
+						<Auth {...props} 
+							showScroll = { this.showScroll }
+						/>
+					)}/>
+					<Route path="/auth" render={(props) => (
+						<Auth {...props} 
+							showScroll = { this.showScroll }
+						/>
+					)}/>
 					<Route exact path="/" render={(props) => (
 						this.isLoggedIn() ? 
 							<Newsfeed {...props}
@@ -56,18 +67,15 @@ class Body extends Component {
 								posts = { [] }
 								fetchGetPosts = { this.props.fetchGetPosts }
 								fetchWritePost = { this.props.fetchWritePost }
-							/> :
+						/> :
 							<Slider {...props} 
 								showScroll = { this.showScroll }
-							/>
+						/>
 					)} />
-					<Route path="/auth/:page" render={(props) => (
-						<Auth {...props} />
-					)}/>
 					<Route path="/error" component={Error}/>
 					<Redirect to="/error" />
-				</div>
-			</Switch>
+				</Switch>
+			</div>
 		);
 	}
 }
@@ -77,4 +85,3 @@ const actionToProps = {
 };
 
 export default withRouter(connect(undefined, actionToProps)(Body));
-

@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path')
 const app = express();
 const bodyParser = require('body-parser');
-const busboy = require('connect-busboy');
 
 app.use('/public',express.static(path.resolve(__dirname,'..','public')));
 let port = 3000;
@@ -19,7 +18,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(busboy())
 
 let session = require('express-session')
 let sessionMiddleware = {
