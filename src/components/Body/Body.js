@@ -8,6 +8,7 @@ import styles from './Body.css';
 import Newsfeed from '../Newsfeed/Newsfeed';
 import Error from '../Error/Error';
 import Slider from '../Slider/Slider';
+import Mail from '../Mail/Mail';
 import Auth from '../Auth/Auth';
 
 import classNames from 'classnames/bind';
@@ -49,6 +50,10 @@ class Body extends Component {
 		return(
 			<div className={cx('Body',{ 'body-scroll' : this.state.scrollBar })} ref="Body" >
 				<Switch>
+					<Route path="/mail/:email/:link" render={(props) => (
+						<Mail {...props}
+						/>
+					)}/>
 					<Route path="/auth/:page" render={(props) => (
 						<Auth {...props} 
 							showScroll = { this.showScroll }

@@ -4,11 +4,13 @@ export const login = createAction('LOGIN');
 export const logout = createAction('LOGOUT');
 export const loggedIn = createAction('LOGGEDIN');
 export const join = createAction('JOIN');
+export const certifyMail = createAction('CERTIFYMAIL');
 
 const loginUri = '/api/auth/local';
 const logoutUri = '/api/auth/logout';
 const loggedInUri = '/api/auth/loggedin';
 const joinUri = '/api/auth/join';
+const certifyMailUri = '/api/auth/mail';
 
 export const fetchLogin = (data) => {
 	return async (dispatch) => {
@@ -86,3 +88,22 @@ export const fetchJoin = (data) => {
 	}
 };
 
+export const fetchCertifyMail = (data) => {
+	return async (dispatch) => {
+		const resp = await fetch(certifyMailUri, {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			method: 'POST',
+			body: JSON.stringify(data),
+			credentials: 'include'
+		});
+		const body = await resp.json();
+		if(body.data){
+			return dispatch(certifyMail(body.data));
+		} else {
+			return dispatch(certifyMail(new Error(body.msg)));
+		}
+	}
+};

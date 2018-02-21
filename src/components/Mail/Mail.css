@@ -1,0 +1,75 @@
+.Mail {
+  display: block;
+  margin: auto;
+  width: 100%;
+  max-width: 700px;
+  height: calc( 100vh - 42px); }
+
+.mail-helper {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-top: -15px; }
+
+.mail-wrap {
+  display: inline-block;
+  width: 100%;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  background-color: white; }
+
+.mail-head {
+  height: 55px;
+  background-color: #ff5c3e;
+  padding: 13px 0px 0px 38px;
+  box-sizing: border-box; }
+  @media (max-width: 767px) {
+    .mail-head {
+      padding-left: 30px; } }
+
+.mail-head .mail-head-logo {
+  width: 77px; }
+
+.mail-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 445px;
+  max-height: 100vw;
+  background-position: right bottom;
+  background-repeat: no-repeat;
+  background-size: 265px;
+  background-image: url("/images/email_deco.png");
+  box-sizing: border-box;
+  padding: 38px; }
+  @media (max-width: 767px) {
+    .mail-body {
+      background-size: 200px;
+      padding: 38px 30px 27px 30px; } }
+  .mail-body .mail-title {
+    font-size: 19px;
+    font-weight: 800;
+    padding-bottom: 20px;
+    border-bottom: 2px solid black;
+    max-width: 310px;
+    width: 100%;
+    margin-bottom: 20px; }
+  .mail-body .mail-text {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 32px; }
+  .mail-body .mail-btn {
+    cursor: pointer;
+    margin-top: 22px;
+    padding: 14px 35px;
+    font-size: 17px;
+    border-radius: 200px;
+    background-color: #ff5c3e;
+    color: white;
+    display: inline-block;
+    text-align: center; }
+    @media (max-width: 767px) {
+      .mail-body .mail-btn {
+        margin-top: 18px;
+        padding: 11px 30px; } }
