@@ -1,11 +1,11 @@
 module.exports = function(sequelize, DataTypes){
-	return sequelize.define('User', {
+	const User = sequelize.define('User', {
 		id : { type : DataTypes.INTEGER, primaryKey : true, autoIncrement : true },
 		admin : { type : DataTypes.BOOLEAN, defaultValue : false },
 		email : { type : DataTypes.STRING, allowNull : false },
 		name : { type : DataTypes.STRING(32), allowNull : false },
 		password : { type : DataTypes.STRING, allowNull : false },
-		signUp : { type : DataTypes.BOOLEAN, defaultValue : false },
+		signUp : { type : DataTypes.BOOLEAN, defaultValue : true },
 		profile : { type : DataTypes.BOOLEAN, defaultValue : false }
 	},{
 		tableName : 'user',
@@ -13,4 +13,5 @@ module.exports = function(sequelize, DataTypes){
 		paranoid : true,
 		freezeTableName : true
 	});
+	return User;
 };

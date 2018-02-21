@@ -9,7 +9,7 @@ let obj = {
 
 let LocalStrategy = require('passport-local').Strategy;
 obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'password' }, function( email, password, next ){
-	db.User.findOne({ where : { email : email } }).then( function( user ){
+	db.User.findOne({ where : { email : email }, raw : true }).then( function( user ){
 		if(!user){
 			return next(new Error("이메일 또는 비밀번호가 잘못되었습니다."));
 		} else {
@@ -36,7 +36,7 @@ obj.verifyMail = function( req, res ){
 	let email = req.body['email'];
 	let link = req.body['link'];
 	if( email != null, link != null ){
-		db.User.findOne({ where : { email : email } }).then( function( user ){
+		db.User.findOne({ where : { email : email }, raw : true }).then( function( user ){
 			if( user ){
 				 let shasum = crypto.createHash('sha1');
 				 shasum.update(user.email);
@@ -61,7 +61,7 @@ obj.verifyMail = function( req, res ){
 
 obj.findPw = function( req, res ){
 	let email = req.body['email'].trim();
-	db.User.findOne({ where : { email : email } }).then( function( user ){
+	db.User.findOne({ where : { email : email }, raw : true }).then( function( user ){
 		if( user ) {
 			let shasum = crypto.createHash('sha1');
 			shasum.update(email);
@@ -88,7 +88,7 @@ obj.findPw = function( req, res ){
 obj.findPwVerifyMail = function( req, res ){
 	let email = req.params.email;
 	let link = req.params.link;
-	db.User.findOne({ where : { email : email } }).then( function( user ){
+	db.User.findOne({ where : { email : email }, raw : true }).then( function( user ){
 		if( user ){
 			let shasum = crypto.createHash('sha1');
 			shasum.update(user.email);
@@ -114,7 +114,7 @@ obj.checkSession = function( req, res, next ){
 
 obj.checkAdmin = function( req, res, next ){
 	if( req.user && req.user.signUp ){
-		db.User.findOne({ where : { id : req.user.id } }).then( function( user ){
+		db.User.findOne({ where : { id : req.user.id }, raw : true }).then( function( user ){
 			if( user.admin == true ){
 				return next();
 			} else {
@@ -173,7 +173,7 @@ obj.join = function( req, res ){
 	} catch( e ){
 		res.send({ "msg" : e.message });
 	}
-	db.User.findOne({ where : { email : email } })
+	db.User.findOne({ where : { email : email }, raw : true })
 		.then( function( user ){
 			if( user ){
 				throw new Error("이미 사용중인 메일입니다.");
@@ -203,7 +203,7 @@ obj.join = function( req, res ){
 					from: 'iori <jinsang@ajou.ac.kr>',
 					to: email,
 					subject : 'iori.kr E-mail verification guide',
-					html : '<div id="box" style="display:block;background-color:#ebeff4;margin-top:auto;margin-bottom:auto;margin-right:auto;margin-left:auto;width:100%;padding-top:50px;padding-bottom:50px;" > <div id="wrap" style="max-width:700px;border-radius:4px;margin-left:auto;margin-right:auto;box-shadow:0 2px 8px rgba(0, 0, 0, 0.25);background-color:white;" > <div id="head" style="height:55px;background-color:#26385e;padding-top:13px;padding-bottom:0px;padding-right:0px;padding-left:38px;box-sizing:border-box;" > <img src="https://iori.kr/images/email_logo_mono.png" style="width:77px;" /> </div> <div id="body" style="position:relative;background-position:right bottom;background-repeat:no-repeat;background-size:265px;background-image:url(\'https://iori.kr/images/email_deco.png\');padding-top:38px;padding-bottom:38px;padding-right:38px;padding-left:38px;box-sizing:border-box;" > <div id="title" style="font-size:19px;font-weight:800;padding-bottom:20px;border-bottom-width:2px;border-bottom-style:solid;border-bottom-color:black;max-width:310px;width:100%;margin-bottom:20px;" > iori.kr 이메일 인증 안내 </div> <div id="text" style="font-size:15px;line-height:32px;" > 안녕하세요.<br /> iori.kr의 회원이 되신 것을 진심으로 환영합니다.<br /> 아래 인증 버튼을 클릭하시면<br /> 회원 가입 절차가 완료됩니다.<br /> </div> <a id="btn" href="' + string + '" style="text-decoration:none;cursor:pointer;margin-top:22px;margin-left:10px;padding-top:14px;padding-bottom:14px;padding-right:35px;padding-left:35px;font-size:17px;border-radius:200px;background-color:#3fc649;color:white;display:inline-block;text-align:center;" > 이메일 인증 </a> <div id="footer" style="margin-top:80px;" > <img src="https://iori.kr/images/email_logo_colored.png" style="height:27px;display:inline-block;vertical-align:middle;" /> <div id="footer-text" style="display:inline-block;margin-top:2px;vertical-align:middle;font-size:10px;color:#a8a8a8;padding-left:15px;border-left-width:1px;border-left-style:solid;border-left-color:#d5d5d5;margin-left:15px;line-height:14px;" > Copyrightⓒ2017.Allrights reserved by iori.kr<br /> 본인이 가입하신 것이 아니라면 문의 바랍니다. </div> </div> </div> </div> </div>'
+					html : '<div id="box" style="display:block;background-color:#ebeff4;margin-top:auto;margin-bottom:auto;margin-right:auto;margin-left:auto;width:100%;padding-top:50px;padding-bottom:50px;" > <div id="wrap" style="max-width:700px;border-radius:4px;margin-left:auto;margin-right:auto;box-shadow:0 2px 8px rgba(0, 0, 0, 0.25);background-color:white;" > <div id="head" style="height:55px;background-color:#ff5c3e;padding-top:13px;padding-bottom:0px;padding-right:0px;padding-left:38px;box-sizing:border-box;" > <img src="https://iori.kr/images/email_logo_mono.png" style="width:77px;" /> </div> <div id="body" style="position:relative;background-position:right bottom;background-repeat:no-repeat;background-size:265px;background-image:url(\'https://iori.kr/images/email_deco.png\');padding-top:38px;padding-bottom:38px;padding-right:38px;padding-left:38px;box-sizing:border-box;" > <div id="title" style="font-size:19px;font-weight:800;padding-bottom:20px;border-bottom-width:2px;border-bottom-style:solid;border-bottom-color:black;max-width:310px;width:100%;margin-bottom:20px;" > iori.kr 이메일 인증 안내 </div> <div id="text" style="font-size:15px;line-height:32px;" > 안녕하세요.<br /> iori.kr의 회원이 되신 것을 진심으로 환영합니다.<br /> 아래 인증 버튼을 클릭하시면<br /> 회원 가입 절차가 완료됩니다.<br /> </div> <a id="btn" href="' + string + '" style="text-decoration:none;cursor:pointer;margin-top:22px;margin-left:10px;padding-top:14px;padding-bottom:14px;padding-right:35px;padding-left:35px;font-size:17px;border-radius:200px;background-color:#3fc649;color:white;display:inline-block;text-align:center;" > 이메일 인증 </a> <div id="footer" style="margin-top:80px;" > <img src="https://iori.kr/images/email_logo_colored.png" style="height:27px;display:inline-block;vertical-align:middle;" /> <div id="footer-text" style="display:inline-block;margin-top:2px;vertical-align:middle;font-size:10px;color:#a8a8a8;padding-left:15px;border-left-width:1px;border-left-style:solid;border-left-color:#d5d5d5;margin-left:15px;line-height:14px;" > Copyrightⓒ2017.Allrights reserved by iori.kr<br /> 본인이 가입하신 것이 아니라면 문의 바랍니다. </div> </div> </div> </div> </div>'
 				}, function(err, response){
 					if( err ){
 					}

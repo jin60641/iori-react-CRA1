@@ -30,7 +30,8 @@ class Post extends Component {
 		}
 	}
 	render() {
-		const { data } = this.props;
+		let { data } = this.props;
+		data = JSON.parse(JSON.stringify(data));
 		console.log(data);
 		const profileUri = data.user.profile?`/files/profile/${data.user.id}.png`:'/images/profile.png';
 		return (

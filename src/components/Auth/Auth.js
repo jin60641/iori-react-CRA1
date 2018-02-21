@@ -13,7 +13,6 @@ class Switch extends Component {
 	}
 	render(){
 		const { page, fetchLogin, fetchJoin, history } = this.props;
-		console.log(this.props);
 		switch(page){
 			case "login":
 				return(<Login fetchLogin={fetchLogin} cx={cx} history={history}/>);

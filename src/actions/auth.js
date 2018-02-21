@@ -24,6 +24,7 @@ export const fetchLogin = (data) => {
 			credentials: 'include'
 		});
 		const body = await resp.json();
+		console.log(body);
 		if(body.data){
 			return dispatch(login(body.data));
 		} else {
@@ -54,16 +55,12 @@ export const fetchLoggedIn = () => {
 			method: 'POST',
 			credentials: 'include'
 		});
-		const body = await resp.text();
-		//const body = await resp.json();
-		console.log(body);
-		/*
+		const body = await resp.json();
 		if(body.data){
 			return dispatch(login(body.data));
 		} else {
 			return dispatch(login(new Error(body.msg)));
 		}
-		*/
 	}
 };
 
@@ -79,7 +76,6 @@ export const fetchJoin = (data) => {
 			credentials: 'include'
 		});
 		const body = await resp.json();
-		console.log(body);
 		if(body.data){
 			return dispatch(join(body.data));
 		} else {

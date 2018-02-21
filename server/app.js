@@ -22,7 +22,8 @@ app.use(bodyParser.urlencoded({
 let session = require('express-session')
 let sessionMiddleware = {
     secret: require('./config/settings.js').sessionSecret,
-    cookie: { path: '/', domain: 'iori.kr', expires : false }
+	resave: false,
+	saveUninitialized: true
 }
 let authMws = require('./middlewares/auth.js');
 app.use(session(sessionMiddleware));

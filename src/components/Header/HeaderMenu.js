@@ -8,19 +8,19 @@ class HeaderMenu extends Component {
 	render(){
 		const { user } = this.props;
 		let profileUri = '/images/profile.png';
-		if( user && user.signUp && user.be ){
+		if( user && user.signUp ){
 			if( user.profile ){
 				profileUri = `/files/profile/${user.id}.png`;
 			}
 			return (
-				null
+				<img src={ profileUri } className="HeaderMenu" />
 			)
 		} else {
 			return (
 				<Link to="/auth/login">
 					<img src={ profileUri } className="HeaderMenu" />
 				</Link>
-			)
+			);
 		}
 	}
 }

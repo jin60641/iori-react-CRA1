@@ -14,6 +14,6 @@ export default handleActions({
 		if( action.error ) {
 			return state;
 		}
-		return action.payload.concat(state);
+		return [action.payload].concat(state);
 	},
 }, initialState );

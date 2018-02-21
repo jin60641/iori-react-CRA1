@@ -40,11 +40,10 @@ class Body extends Component {
 		this.setState({
 			scrollBar : bool===undefined?true:bool
 		});
-		console.log(false);
 	}
 	isLoggedIn = () => {
 		const { user } = this.props;
-		return user && user.signUp && user.be;
+		return user && user.signUp;
 	}
 	render(){
 		return(
@@ -52,6 +51,7 @@ class Body extends Component {
 				<Switch>
 					<Route path="/mail/:email/:link" render={(props) => (
 						<Mail {...props}
+							showScroll = { this.showScroll }
 						/>
 					)}/>
 					<Route path="/auth/:page" render={(props) => (

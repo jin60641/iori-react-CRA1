@@ -19,10 +19,10 @@ class App extends Component {
 	}
 	componentWillReceiveProps(nextProps){
 		const { socket } = this.props;
-		console.log(socket,nextProps);
+		//console.log(socket,nextProps);
 		if( !this.props.socket && nextProps.socket ){
 			nextProps.socket.on( 'say', (stream) => {
-				console.log(stream);
+				//console.log(stream);
 			});
 		}
 	}
