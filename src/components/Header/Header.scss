@@ -26,7 +26,7 @@
 			display : inline-block;
 			color : #66757f;
 			text-align : center;
-			padding-top : 11px;
+			padding-top : 14px;
 			height : 42px;
 			text-decoration : none;
 			width : 70px;
@@ -47,13 +47,13 @@
 				position : absolute;
 			}
 			&:hover:after {
-				padding-bottom : 5px;		
+				padding-bottom : 2px;		
 			}
 		}
 		.header-tab-active {
 			color : rgb(255,92,62);
 			&:after {
-				padding-bottom : 5px;		
+				padding-bottom : 2px;		
 			}
 		}
 	}

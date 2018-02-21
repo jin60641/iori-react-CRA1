@@ -25,7 +25,7 @@
       display: inline-block;
       color: #66757f;
       text-align: center;
-      padding-top: 11px;
+      padding-top: 14px;
       height: 42px;
       text-decoration: none;
       width: 70px;
@@ -43,11 +43,11 @@
         bottom: 0px;
         position: absolute; }
       .Header .header-tabs .header-tab:hover:after {
-        padding-bottom: 5px; }
+        padding-bottom: 2px; }
     .Header .header-tabs .header-tab-active {
       color: #ff5c3e; }
       .Header .header-tabs .header-tab-active:after {
-        padding-bottom: 5px; }
+        padding-bottom: 2px; }
   .Header .HeaderMenu {
     right: 40px;
     display: block;

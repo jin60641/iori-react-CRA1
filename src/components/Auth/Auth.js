@@ -13,6 +13,7 @@ class Switch extends Component {
 	}
 	render(){
 		const { page, fetchLogin, fetchJoin, history } = this.props;
+		console.log(this.props);
 		switch(page){
 			case "login":
 				return(<Login fetchLogin={fetchLogin} cx={cx} history={history}/>);
@@ -35,10 +36,11 @@ class Auth extends Component {
 	}
 	render(){
 		const page = this.props.match.params.page;
+		const { fetchLogin, fetchJoin, history } = this.props;
 		return(
 			<div className="Auth">
 				<div className="auth-helper"></div>
-				<Switch page={ page } />
+				<Switch page={ page } fetchLogin={ fetchLogin } fetchJoin={ fetchJoin } history={ history } />
 			</div>
 		);
 	}
@@ -49,5 +51,4 @@ const actionToProps = {
 	fetchJoin
 };
 
-connect(undefined, actionToProps)(Switch);
-export default Auth;
+export default connect(undefined, actionToProps)(Auth);

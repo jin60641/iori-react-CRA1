@@ -21,28 +21,3 @@
   font-weight: 300;
   src: url("/public/fonts/NanumSquareL.eot");
   src: url("/public/fonts/NanumSquareL.eot?#iefix") format("embedded-opentype"), url("/public/fonts/NanumSquareL.woff") format("woff"), url("/public/fonts/NanumSquareL.ttf") format("truetype"); }
-
-body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  font-family: 'NanumSquare', 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
-
-#root {
-  height: 100vh;
-  width: 100vw;
-  background-color: #f2f2f2; }
-
-::-webkit-scrollbar {
-  width: 0.5em;
-  height: 0.5em; }
-
-::-webkit-scrollbar-thumb {
-  background: slategray; }
-
-::-webkit-scrollbar-track {
-  background: #b8c0c8; }
-
-body {
-  scrollbar-face-color: slategray;
-  scrollbar-track-color: #b8c0c8; }

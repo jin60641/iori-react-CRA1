@@ -5,7 +5,7 @@ class Login extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			alert : " "
+			message : " "
 		}
 	}
 	componentWillMount() {
@@ -18,7 +18,7 @@ class Login extends Component {
 					history.push('/');
 				} else {
 					this.setState({
-						alert : action.payload.message
+						message : action.payload.message
 					});
 				}
 			});
@@ -30,15 +30,15 @@ class Login extends Component {
 		const password = this.refs.password.value;
 		if( email.length == 0 ){
 			this.setState({
-				alert : "이메일을 입력해 주세요."
+				message : "이메일을 입력해 주세요."
 			});
 		} else if( email.match(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/g ) == undefined ){
 			this.setState({
-				alert : "유효하지 않은 이메일입니다."
+				message : "유효하지 않은 이메일입니다."
 			});
 		} else if( password.length == 0 ){
 			this.setState({
-				alert : "비밀번호를 입력해 주세요."
+				message : "비밀번호를 입력해 주세요."
 			});
 		} else {
 			this.handleLogin(email, password);
@@ -48,6 +48,7 @@ class Login extends Component {
 	}
 	render(){
 		const { cx } = this.props;
+		const { message } = this.state;
 		return (
 			<form className="auth-form" onSubmit={this.handleSubmit} >
 				<label className="auth-label" htmlFor="email">이메일</label>
@@ -55,7 +56,7 @@ class Login extends Component {
 				<label className="auth-label" htmlFor="password">비밀번호</label>
 				<input ref="password" type="password" className="auth-input" placeholder="" />
 				<div className={ cx('auth-btn','login-local') } onClick={this.handleSubmit} >로그인</div>
-				<div className="auth-alert"> { this.state.alert } </div>
+				<div className="auth-message"> { message } </div>
 				<div className={ cx('auth-btn','login-facebook') }>
 					<img className={ cx('auth-btn-img', 'auth-facebook-img') } src="/images/ic_facebook.png" />페이스북으로 로그인
 				</div>

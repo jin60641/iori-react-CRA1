@@ -1,7 +1,11 @@
+@import 'styles/utils.scss';
+@import 'styles/fonts.scss';
+
 body {
 	margin: 0;
 	padding: 0;
 	overflow-x : hidden;
+	font-family: 'NanumSquare', 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 #root {

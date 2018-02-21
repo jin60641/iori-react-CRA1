@@ -71,6 +71,7 @@
       background-color: #ff5c3e; }
   .auth-form .login-facebook {
     background-color: #537bbd;
+    margin-top: 8px;
     margin-bottom: 30px; }
     .auth-form .login-facebook:hover {
       background-color: #2e4f84; }
@@ -92,8 +93,7 @@
     .auth-form .auth-text .auth-text-link {
       color: #ce410a;
       margin-left: 10px; }
-  .auth-form .auth-alert {
+  .auth-form .auth-message {
     color: #ce410a;
     margin-top: 5px;
-    margin-bottom: 7px;
     min-height: 18px; }

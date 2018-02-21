@@ -1,0 +1,7 @@
+@import "../../node_modules/breakpoint-sass/stylesheets/_breakpoint.scss";
+@import "../../node_modules/include-media/dist/include-media";
+
+$breakpoints: (
+	medium: 768px,
+	large: 1132px
+);
