@@ -8,7 +8,7 @@ class Newsfeed extends Component {
 	constructor(props) {
 		super(props);
 		const initialState = {
-			skip : 0,
+			offset : 0,
 			limit : 10
 		}
 		this.state = Object.assign(
@@ -24,14 +24,14 @@ class Newsfeed extends Component {
 		}
 	}
 	componentWillReceiveProps(nextProps){
-		this.setState({ skip : nextProps.posts.length });
+		this.setState({ offset : nextProps.posts.length });
 		if( nextProps.isBottom && this.props.isBottom == false ){
 			this.handleGetPosts();
 		}
 	}
 	handleGetPosts = (options = {}) => {
 		const { fetchGetPosts } = this.props;
-		this.setState({ skip : this.state.skip + this.state.limit });
+		this.setState({ offset : this.state.offset + this.state.limit });
 		const data = Object.assign( this.state, options );
 		fetchGetPosts(data)
 			.then( (action) => {

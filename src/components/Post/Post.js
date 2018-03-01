@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './Post.css';
-import PostImg from './PostImg';
 
 class Post extends Component {
 	constructor(props) {
@@ -24,7 +23,6 @@ class Post extends Component {
 			} else if( day <= 7 ){
 				return day + "일 전";
 			} else {
-				console.log(day,gap);
 				return (date.getYear()+1900) +"년 " + (date.getMonth()+1) + "월 " + date.getDate() + "일";
 			}
 		}
@@ -32,23 +30,27 @@ class Post extends Component {
 	render() {
 		let { data } = this.props;
 		data = JSON.parse(JSON.stringify(data));
-		console.log(data);
-		const profileUri = data.user.profile?`/files/profile/${data.user.id}.png`:'/images/profile.png';
+		const profileUri = data.User.profile?`/files/profile/${data.User.id}.png`:'/images/profile.png';
 		return (
 			<div className="Post">
-				<Link to={`/profile/${data.user.id}`} className="post-profile"> 
+				<Link to={`/profile/${data.User.id}`} className="post-profile"> 
 					<img src={profileUri} className="post-profile-img" alt={"profile"} />
 				</Link>
 				<div className="post-inform">
-					<Link to={`/profile/${data.user.id}`} className="post-user"> 
-						{data.user.name} 
+					<Link to={`/profile/${data.User.id}`} className="post-user"> 
+						{data.User.name} 
 					</Link>
-					<div className="post-date"> {this.getDateString(data.date)} </div>
+					<div className="post-date"> {this.getDateString(data.createdAt)} </div>
 				</div>
 					<div className="post-inside">
 					{ data.text }
 				</div>
-				<PostImg data={ data } />
+				{ data.file ?
+					<div className="post-img-outer">
+						<img className="post-img-inner" src={`/files/post/${data.id}/1.png`} alt="post img" />
+					</div>
+					: null
+				}
 			</div>
 		);
 	}

@@ -52,21 +52,21 @@
   .Post .post-inside {
     padding: 9px 10px 8px 10px;
     display: block; }
-  .Post .PostImgBox {
+  .Post .post-img-outer {
     display: inline-block;
     border-radius: 3px;
     margin-top: 10px;
     overflow: hidden;
     max-width: 100%;
     border: 1px solid #e1e2e3; }
-    .Post .PostImgBox .PostImg {
+    .Post .post-img-outer .post-img-inner {
       max-height: 600px;
       display: block;
       max-width: 100%;
       -moz-transition: all 0.3s;
       -webkit-transition: all 0.3s;
       transition: all 0.3s; }
-      .Post .PostImgBox .PostImg:hover {
+      .Post .post-img-outer .post-img-inner:hover {
         cursor: pointer;
         transform: scale(1.1); }
 

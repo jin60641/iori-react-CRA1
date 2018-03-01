@@ -8,10 +8,8 @@ module.exports = function(sequelize, DataTypes){
 		signUp : { type : DataTypes.BOOLEAN, defaultValue : true },
 		profile : { type : DataTypes.BOOLEAN, defaultValue : false }
 	},{
-		tableName : 'user',
 		timestamps : true,
-		paranoid : true,
-		freezeTableName : true
+		paranoid : true
 	});
 	return User;
 };
