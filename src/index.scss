@@ -14,6 +14,10 @@ body {
     background-color : #f2f2f2;
 }
 
+input {
+	outline : none;
+}
+
 @mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, white, 50%)) {
 	::-webkit-scrollbar {
 			width:	$size;

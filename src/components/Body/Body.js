@@ -10,6 +10,7 @@ import Error from '../Error/Error';
 import Slider from '../Slider/Slider';
 import Mail from '../Mail/Mail';
 import Auth from '../Auth/Auth';
+import Chat from '../Chat/Chat';
 
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
@@ -43,12 +44,17 @@ class Body extends Component {
 	}
 	isLoggedIn = () => {
 		const { user } = this.props;
-		return user && user.signUp;
+		return user && user.verify;
 	}
 	render(){
 		return(
 			<div className={cx('Body',{ 'body-scroll' : this.state.scrollBar })} ref="Body" >
 				<Switch>
+					<Route path="/chat" render={(props) => (
+						<Chat {...props }
+							cx = { cx }
+						/>
+					)}/>
 					<Route path="/mail/:email/:link" render={(props) => (
 						<Mail {...props}
 							showScroll = { this.showScroll }

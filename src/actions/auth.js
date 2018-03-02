@@ -4,13 +4,13 @@ export const login = createAction('LOGIN');
 export const logout = createAction('LOGOUT');
 export const loggedIn = createAction('LOGGEDIN');
 export const join = createAction('JOIN');
-export const certifyMail = createAction('CERTIFYMAIL');
+export const verifyMail = createAction('VERIFYMAIL');
 
 const loginUri = '/api/auth/local';
 const logoutUri = '/api/auth/logout';
 const loggedInUri = '/api/auth/loggedin';
 const joinUri = '/api/auth/join';
-const certifyMailUri = '/api/auth/mail';
+const verifyMailUri = '/api/auth/verify';
 
 export const fetchLogin = (data) => {
 	return async (dispatch) => {
@@ -86,7 +86,7 @@ export const fetchJoin = (data) => {
 
 export const fetchCertifyMail = (data) => {
 	return async (dispatch) => {
-		const resp = await fetch(certifyMailUri, {
+		const resp = await fetch(verifyMailUri, {
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
@@ -97,9 +97,9 @@ export const fetchCertifyMail = (data) => {
 		});
 		const body = await resp.json();
 		if(body.data){
-			return dispatch(certifyMail(body.data));
+			return dispatch(verifyMail(body.data));
 		} else {
-			return dispatch(certifyMail(new Error(body.msg)));
+			return dispatch(verifyMail(new Error(body.msg)));
 		}
 	}
 };

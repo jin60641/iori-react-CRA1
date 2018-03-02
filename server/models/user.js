@@ -5,7 +5,7 @@ module.exports = function(sequelize, DataTypes){
 		email : { type : DataTypes.STRING, allowNull : false },
 		name : { type : DataTypes.STRING(32), allowNull : false },
 		password : { type : DataTypes.STRING, allowNull : false },
-		signUp : { type : DataTypes.BOOLEAN, defaultValue : true },
+		verify : { type : DataTypes.BOOLEAN, defaultValue : false },
 		profile : { type : DataTypes.BOOLEAN, defaultValue : false }
 	},{
 		timestamps : true,

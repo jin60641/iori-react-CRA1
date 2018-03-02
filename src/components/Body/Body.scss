@@ -1,9 +1,11 @@
+@import "../../styles/utils.scss";
+
 .Body {
 	background-image : url('/images/back.svg');
 	background-size : 100% 100%;
 	overflow : hidden;
 	position : absolute;
-	top : 42px;
+	top : $header-height;
 	padding : 0px;
 	width : 100vw;
 	height : 100%;

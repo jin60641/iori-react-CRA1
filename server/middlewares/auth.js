@@ -17,7 +17,7 @@ obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'p
 			shasum.update(password);
 			let sha_pw = shasum.digest('hex');
 			if( user.password == sha_pw ){
-				if( user && user.signUp == false ){
+				if( user && user.verify == false ){
 					return next(new Error('이메일 인증을 진행하셔야 정상적인 이용이 가능합니다.'));
 				} else if( user ){
 					return next(null,user);
@@ -42,8 +42,8 @@ obj.verifyMail = function( req, res ){
 				 shasum.update(user.email);
 				 let sha_email = shasum.digest('hex');
 				 if( sha_email == link ){
-					if( !user.signUp ){
-						db.User.update({ 'signUp' : true }, { where : { email : email } }).then( function(){
+					if( !user.verify ){
+						db.User.update({ 'verify' : true }, { where : { email : email } }).then( function(){
 							res.send({ data : "회원가입이 완료되었습니다." });
 						});
 					} else {
@@ -105,7 +105,7 @@ obj.findPwVerifyMail = function( req, res ){
 }
 
 obj.checkSession = function( req, res, next ){
-	 if( req.user && req.user.signUp ){
+	 if( req.user && req.user.verify ){
 		return next();
 	 } else {
 		res.send({ msg : "로그인해주세요" });
@@ -113,7 +113,7 @@ obj.checkSession = function( req, res, next ){
 }
 
 obj.checkAdmin = function( req, res, next ){
-	if( req.user && req.user.signUp ){
+	if( req.user && req.user.verify ){
 		db.User.findOne({ where : { id : req.user.id }, raw : true }).then( function( user ){
 			if( user.admin == true ){
 				return next();

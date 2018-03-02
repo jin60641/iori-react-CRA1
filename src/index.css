@@ -33,6 +33,9 @@ body {
   width: 100vw;
   background-color: #f2f2f2; }
 
+input {
+  outline: none; }
+
 ::-webkit-scrollbar {
   width: 0.5em;
   height: 0.5em; }

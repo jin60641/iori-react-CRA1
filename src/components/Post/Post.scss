@@ -1,3 +1,5 @@
+@import "../../styles/utils.scss";
+
 .Post {
 	margin : auto;
 	box-sizing : border-box;
@@ -42,7 +44,7 @@
 
 		.post-user {
 			display : block;
-			color : rgb(255,92,62);
+			color : $color-normal;
 			text-decoration : none;
 			font-size : 18px;
 			font-weight : bold;
@@ -107,8 +109,8 @@
 		
 		&:focus {
 			outline : 0;
-			border-top : 1px solid rgb(255,92,62);
-			border-bottom : 1px solid rgb(255,92,62);
+			border-top : 1px solid $color-normal;
+			border-bottom : 1px solid $color-normal;
 		}
 	}	
 	.post-write-submit {
@@ -119,7 +121,7 @@
 		box-sizing : border-box;
 		text-align : center;
 		line-height : 32px;
-		background-color : rgb(255,92,62);
+		background-color : $color-normal;
 		font-size : 16px;
 		width : 60px;
 		height : 33px;
@@ -136,7 +138,7 @@
 		float : right;
 		border-radius : 2px;
 		background : url(/images/post-write-label.png);
-		background-color : rgb(255,92,62);
+		background-color : $color-normal;
 		background-size : 20px 20px;
 		background-repeat : no-repeat;
 		background-position : center center;
@@ -155,7 +157,7 @@
 		.post-write-img {
 			padding : 3px;
 			margin-top : 10px;
-			border : 2px solid rgb(255,92,62);
+			border : 2px solid $color-normal;
 			width : 82px;
 			height : 82px;
 			margin-left : 4px;
