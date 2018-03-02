@@ -6,13 +6,16 @@ import App from './App'
 import './index.css';
 import configureStore from './store/configureStore';
 import registerServiceWorker from './registerServiceWorker';
+import { CookiesProvider } from 'react-cookie';
 
 let store = configureStore();
 
 ReactDOM.render(
 	(
 		<Provider store={store}>
-			<App />
+			<CookiesProvider>
+				<App />
+			</CookiesProvider>
 		</Provider>
 	),
 	document.getElementById('root')

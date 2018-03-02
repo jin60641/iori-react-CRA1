@@ -53,6 +53,7 @@ class Body extends Component {
 					<Route path="/chat" render={(props) => (
 						<Chat {...props }
 							cx = { cx }
+							showScroll = { this.showScroll }
 						/>
 					)}/>
 					<Route path="/mail/:email/:link" render={(props) => (

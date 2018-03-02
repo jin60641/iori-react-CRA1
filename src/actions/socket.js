@@ -1,4 +1,5 @@
 import {createAction} from 'redux-actions';
+import {chatSocket} from './chat.js';
 import io from 'socket.io-client';
 
 export const connectSocket = createAction('CONNECT_SOCKET');
@@ -9,11 +10,10 @@ export const fetchCloseSocket = () => {
 };
 
 function init(socket, dispatch) {
-	socket.on('disconnect', function () {
+	socket.on('disconnect', () => {
 		console.log('disconnected!!!');
 	});
 }
-
 
 export const fetchConnectSocket = () => {
 	return async (dispatch) => {
@@ -21,11 +21,11 @@ export const fetchConnectSocket = () => {
 
 		try {
 			await new Promise((resolve, reject) => {
-				const timer = setTimeout(function () {
+				const timer = setTimeout( () => {
 					reject(new Error('Socket Timeout'));
 				}, 3000);
 
-				socket.on('connect', function () {
+				socket.on('connect', () => {
 					console.log('connected!!!');
 					clearTimeout(timer);
 					resolve();
@@ -33,6 +33,7 @@ export const fetchConnectSocket = () => {
 			});
 
 			init(socket, dispatch);
+			chatSocket(socket, dispatch);
 
 			return dispatch(connectSocket(socket));
 		}

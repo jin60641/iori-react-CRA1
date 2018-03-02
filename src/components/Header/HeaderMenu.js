@@ -8,7 +8,7 @@ class HeaderMenu extends Component {
 	render(){
 		const { user } = this.props;
 		let profileUri = '/images/profile.png';
-		if( user && user.signUp ){
+		if( user && user.verify ){
 			if( user.profile ){
 				profileUri = `/files/profile/${user.id}.png`;
 			}
