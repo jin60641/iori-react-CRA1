@@ -29,6 +29,7 @@ class Join extends Component {
 		const email = this.refs.email.value;
 		const password = this.refs.password.value;
 		const passwordCheck = this.refs.passwordCheck.value;
+		const handle = this.refs.handle.value;
 		const name = this.refs.name.value;
 		if( email.length == 0 ){
 			this.setState({
@@ -37,6 +38,10 @@ class Join extends Component {
 		} else if( email.match(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/g ) == undefined ){
 			this.setState({
 				message : "유효하지 않은 이메일입니다."
+			});
+		} else if( handle.length == 0 ){
+			this.setState({
+				message : "핸들을 입력해 주세요."
 			});
 		} else if( name.length == 0 ){
 			this.setState({
@@ -51,7 +56,7 @@ class Join extends Component {
 				message : "비밀번호 확인이 일치하지 않습니다."
 			});
 		} else {
-			this.handleJoin({email,password,name});
+			this.handleJoin({email,password,name,handle});
 		}
 	}
 
@@ -64,6 +69,8 @@ class Join extends Component {
 				<input ref="email" type="text" className="auth-input" placeholder="" />
 				<label className="auth-label" htmlFor="name">이름</label>
 				<input ref="name" type="text" className="auth-input" placeholder="" /> 
+				<label className="auth-label" htmlFor="handle">핸들</label>
+				<input ref="handle" type="text" className="auth-input" placeholder="" /> 
 				<label className="auth-label" htmlFor="password">비밀번호</label>
 				<input ref="password" type="password" className="auth-input" placeholder="" /> 
 				<label className="auth-label" htmlFor="passwordCheck">비밀번호 확인</label>

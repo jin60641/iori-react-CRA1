@@ -23,7 +23,7 @@
   background-color: #ff5c3e;
   padding: 13px 0px 0px 38px;
   box-sizing: border-box; }
-  @media (max-width: 767px) {
+  @media (max-width: 649px) {
     .mail-head {
       padding-left: 30px; } }
 
@@ -43,7 +43,7 @@
   background-image: url("/images/email_deco.png");
   box-sizing: border-box;
   padding: 38px; }
-  @media (max-width: 767px) {
+  @media (max-width: 649px) {
     .mail-body {
       background-size: 200px;
       padding: 38px 30px 27px 30px; } }
@@ -69,7 +69,7 @@
     color: white;
     display: inline-block;
     text-align: center; }
-    @media (max-width: 767px) {
+    @media (max-width: 649px) {
       .mail-body .mail-btn {
         margin-top: 18px;
         padding: 11px 30px; } }

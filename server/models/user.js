@@ -4,6 +4,7 @@ module.exports = function(sequelize, DataTypes){
 		admin : { type : DataTypes.BOOLEAN, defaultValue : false },
 		email : { type : DataTypes.STRING, allowNull : false },
 		name : { type : DataTypes.STRING(32), allowNull : false },
+		handle : { type : DataTypes.STRING(32), allowNull : false },
 		password : { type : DataTypes.STRING, allowNull : false },
 		verify : { type : DataTypes.BOOLEAN, defaultValue : false },
 		profile : { type : DataTypes.BOOLEAN, defaultValue : false }

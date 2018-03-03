@@ -11,10 +11,18 @@ import { fetchConnectSocket } from './actions/socket';
 class App extends Component {
 	constructor(props){
 		super(props);
+		this.state = {
+			init : false
+		}
 	}
 	componentWillMount(){
 		const { fetchLoggedIn, fetchConnectSocket } = this.props;
-		fetchLoggedIn();
+		fetchLoggedIn()
+		.then( (action) => {
+			this.setState({
+				init : true
+			})
+		})
 		fetchConnectSocket();
 	}
 	componentWillReceiveProps(nextProps){
@@ -28,11 +36,15 @@ class App extends Component {
 	}
 	render() {
 		const { fetchJoin, fetchLogin, fetchLogout, fetchLoggedIn, user, socket } = this.props;
+		const { init } = this.state;
 		return (
 			<Router>
 				<div>
 					<Header fetchLogout={ fetchLogout } user={ user } />
-					<Body user={ user } fetchLogin={ fetchLogin } fetchJoin={ fetchJoin } />
+					{ init ?
+						<Body user={ user } fetchLogin={ fetchLogin } fetchJoin={ fetchJoin } />
+						: <div></div>
+					}
 				</div>
 			</Router>
 		);

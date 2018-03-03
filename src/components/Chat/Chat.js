@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withCookies, Cookies } from 'react-cookie';
 import './Chat.css';
 
 import Dialog from './Dialog.js';
+
+import { fetchSearch } from '../../actions/search';
 
 class Chat extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
 			menu : false,
-			layer : false,
+			layer : "",
 			dialogs : [],
-			chats : {}
+			chats : {},
+			layerSelected : {}
 		}
 	}
 	handleClickMenu = (e) => {
@@ -26,11 +30,42 @@ class Chat extends Component {
 	handleClickNew = (e,type) => {
 		e.stopPropagation();
 		this.showChatMenu(false);
-		this.showChatLayer(true);
+		this.showChatLayer(type);
 	}
-	showChatLayer = (bool) => {
+	showChatLayer = (type) => {
 		this.setState({
-			layer : bool
+			layer : type
+		});
+	}
+	handleLayerSelect = (id) => {
+		const prev = this.state.layerSelected;
+		const layerSelected = Object.assign({},prev);
+		layerSelected[id] = !prev[id];
+		this.setState({layerSelected});
+	}
+	handleLayerSearch = (e) => {
+		const { fetchSearch } = this.props;
+		const query = e.target.value
+		if( !query.length ){
+			return null;
+		}
+		const data = {
+			type : "User",
+			query : {
+				$or : [
+					{ 
+						name : { $like : `%${query}%` } 
+					}, { 
+						handle : { $like : `%${query}%` } 
+					}
+				]
+			}
+		}
+		fetchSearch(data)
+		.then( (action) => {
+			if( !action.error ){
+			} else {
+			}
 		});
 	}
 	componentWillUnmount = () => {
@@ -67,11 +102,11 @@ class Chat extends Component {
 	}
 	hideAll = () => {
 		this.showChatMenu(false);
-		this.showChatLayer(false);
+		this.showChatLayer("");
 	}
 	render(){
-		const { cx } = this.props;
-		const { dialogs, menu, layer } = this.state;
+		const { cx, searched } = this.props;
+		const { dialogs, menu, layer, layerSelected } = this.state;
 		return(
 			<div className="Chat">
 				<div className="chat-wrap" onClick={this.handleClickOutside} >
@@ -111,18 +146,29 @@ class Chat extends Component {
 						</div>
 					</div>
 				</div>
-				<div className={cx("chat-layer",{"chat-layer-active":layer})} onClick={()=>this.showChatLayer(false)} >
+				<div className={cx("chat-layer",{"chat-layer-active":layer!==""})} onClick={()=>this.showChatLayer("")} >
 					<div className="chat-layer-close"></div>
 					<div className="chat-layer-box" onClick={(e)=>e.stopPropagation()}>
-						<div className="chat-layer-box-close" onClick={()=>this.showChatLayer(false)}></div>
+						<div className="chat-layer-box-close" onClick={()=>this.showChatLayer("")}></div>
 						<div className="chat-layer-title">Title</div>
 						<div className="chat-layer-search-box">
-							<input type="text" className="chat-layer-search" placeholder="검색" />
+							<input type="text" className="chat-layer-search" placeholder="검색" onChange={this.handleLayerSearch} />
 						</div>
 						<div className={cx("chat-layer-list","chat-layer-div")}>
+						{ searched.map( (result) => {
+							return(
+								<div className={cx("chat-dialogs",{"chat-dialogs-active":layerSelected[result.id]})} key={`chat-layer-list-${result.id}`} onClick={()=>this.handleLayerSelect(result.id)}>
+									<img className="chat-dialogs-img" />
+									<div className="chat-dialogs-message-wrap">
+										<div className="chat-dialogs-message-name">{result.name}</div>
+										<div className="chat-dialogs-message-handle">@{result.handle}</div>
+									</div>
+								</div>
+							);
+						}) }
 						</div>
 						<div className="chat-layer-menu">
-							<div className={cx("chat-layer-menu-item","chat-layer-menu-active")} onClick={()=>this.showChatLayer(false)} >취소</div>
+							<div className={cx("chat-layer-menu-item","chat-layer-menu-active")} onClick={()=>this.showChatLayer("")} >취소</div>
 							<div className="chat-layer-menu-item">초대</div>
 						</div>
 					</div>
@@ -132,4 +178,8 @@ class Chat extends Component {
 	}
 }
 
-export default withCookies(Chat);
+const stateToProps = ({searched}) => ({searched});
+const actionToProps = {
+	fetchSearch
+};
+export default withCookies(connect(stateToProps, actionToProps)(Chat));

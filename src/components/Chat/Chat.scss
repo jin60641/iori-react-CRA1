@@ -379,17 +379,17 @@ $chat-panel-width : 73%;
 		display : inline-block;
 		word-wrap : break-word;
 		overflow : hidden;
-		.chat-dialogs-message-div {
+		.chat-dialogs-message-name {
 			color : black;
 			font-weight : 700;
 		}
-		.chat-dialogs-message-span {
+		.chat-dialogs-message-handle {
 			color : #999;
 		}
 	}
 }
 
-.chat-dialogs-selected {
+.chat-dialogs-active {
 	background-color: rgba($color-normal, 0.8) !important;
 	color: white !important;
 }

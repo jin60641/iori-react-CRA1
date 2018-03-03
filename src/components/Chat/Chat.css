@@ -315,13 +315,13 @@
     display: inline-block;
     word-wrap: break-word;
     overflow: hidden; }
-    .chat-dialogs .chat-dialogs-message-wrap .chat-dialogs-message-div {
+    .chat-dialogs .chat-dialogs-message-wrap .chat-dialogs-message-name {
       color: black;
       font-weight: 700; }
-    .chat-dialogs .chat-dialogs-message-wrap .chat-dialogs-message-span {
+    .chat-dialogs .chat-dialogs-message-wrap .chat-dialogs-message-handle {
       color: #999; }
 
-.chat-dialogs-selected {
+.chat-dialogs-active {
   background-color: rgba(255, 92, 62, 0.8) !important;
   color: white !important; }
 

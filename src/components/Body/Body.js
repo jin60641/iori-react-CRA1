@@ -51,10 +51,12 @@ class Body extends Component {
 			<div className={cx('Body',{ 'body-scroll' : this.state.scrollBar })} ref="Body" >
 				<Switch>
 					<Route path="/chat" render={(props) => (
-						<Chat {...props }
-							cx = { cx }
-							showScroll = { this.showScroll }
-						/>
+						this.isLoggedIn() ? 
+							<Chat {...props }
+								cx = { cx }
+								showScroll = { this.showScroll }
+							/>
+						: <Redirect to="/auth/login/chat" />
 					)}/>
 					<Route path="/mail/:email/:link" render={(props) => (
 						<Mail {...props}
@@ -79,10 +81,11 @@ class Body extends Component {
 								posts = { [] }
 								fetchGetPosts = { this.props.fetchGetPosts }
 								fetchWritePost = { this.props.fetchWritePost }
-						/> :
+							/> 
+						:
 							<Slider {...props} 
 								showScroll = { this.showScroll }
-						/>
+							/>
 					)} />
 					<Route path="/error" component={Error}/>
 					<Redirect to="/error" />
