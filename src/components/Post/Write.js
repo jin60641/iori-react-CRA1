@@ -17,9 +17,9 @@ class PostWrite extends Component {
 		const { text, files } = this.state;
 		let formData = new FormData();
 		formData.append("text",text);
-		for( let i = 0; i < files.length; ++i ){
-			formData.append('file',files[i].data);
-		}	
+		Array.from(files).forEach( file => {
+			formData.append('file',file.data);
+		})
 		this.setState(initialState);
 		fetchWritePost(formData)
 			.then( (action) => {
@@ -34,15 +34,15 @@ class PostWrite extends Component {
 	handleChangeFile = (e) => {
 		e.preventDefault();
 		const files = e.target.files;
-		for( let i = 0; i < files.length; ++i ){
+		Array.from(files).forEach( file => {
 			const reader = new FileReader();
 			reader.onloadend = () => {
 				this.setState({
-					files: this.state.files.concat([{ data : files[i], url : reader.result }])
+					files: this.state.files.concat([{ data : file, url : reader.result }])
 				});
 			}
-			reader.readAsDataURL(files[i])
-		}
+			reader.readAsDataURL(file)
+		});
 	}
 	render() {
 		return (

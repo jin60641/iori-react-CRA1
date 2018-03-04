@@ -5,6 +5,7 @@ import './Chat.css';
 import Dialog from './Dialog.js';
 
 import { fetchSearchUser, fetchSearchUsers } from '../../actions/search';
+import { fetchSendChat, fetchGetChats } from '../../actions/chat';
 
 const initialState = {
 	menu : false,
@@ -13,7 +14,8 @@ const initialState = {
 	chats : {},
 	layerSelected : {},
 	type : null,
-	panel : null
+	to : null,
+	text : ""
 }
 
 class Chat extends Component {
@@ -32,7 +34,7 @@ class Chat extends Component {
 				if( !action.error ){
 					this.setState( Object.assign(this.state,{
 						type,
-						panel : action.payload
+						to : action.payload
 					}) );
 				}
 			});
@@ -61,21 +63,25 @@ class Chat extends Component {
 	handleClickInvite = () => {
 		const { history } = this.props;
 		const { layer, layerSelected } = this.state;
+		const selected = Object.keys(layerSelected);
+		if( !selected.length ){
+			return false;
+		}
 		if( layer === "user" ){
-			const to = layerSelected[Object.keys(layerSelected)[0]];
+			const to = layerSelected[selected[0]];
 			history.push(`/chat/@${to.handle}`);
 			this.setState({
 				layerSelected : {},
 				layer : null,
 				type : "user",
-				panel : to
+				to
 			});
 		} else if( layer === "group" ){
 			this.setState({
 				layerSelected : {},
 				layer : null,
 				type : "group",
-				panel : ""
+				to : null
 			});
 		}
 	} 
@@ -144,9 +150,52 @@ class Chat extends Component {
 		this.showChatMenu(false);
 		this.showChatLayer(null);
 	}
+	sendChat = (file) => {
+		const { fetchSendChat } = this.props;
+		const { text, to, type } = this.state;
+		let formData = new FormData();
+		formData.append("to",to.id);
+		formData.append("type",type);
+		if( !file ){
+			formData.append("text",text);
+			this.setState({
+				text : ""
+			});
+		} else {
+			formData.append("text","");
+			formData.append("file",file);
+		}
+		fetchSendChat(formData)
+		.then( (action) => {
+			console.log(action);
+			if( !action.error ){
+			} else {
+			}
+		})
+	}
+	handleClickSend = () => {
+		const { text } = this.state;
+		if( !text.length ){
+			return 0;
+		}
+		this.sendChat();
+	}
+    handleChangeFile = (e) => {
+        e.preventDefault();
+        const { files } = e.target;
+		Array.from(files).forEach( file => {
+			this.sendChat(file);
+		});
+		e.target.value = "";
+    }
+	handleChangeText = (e) => {
+		this.setState({
+			text : e.target.value
+		})
+	}
 	render(){
 		const { cx, searched } = this.props;
-		const { panel, dialogs, menu, layer, layerSelected, type } = this.state;
+		const { to, dialogs, menu, layer, layerSelected, type, text } = this.state;
 		return(
 			<div className="Chat">
 				<div className="chat-wrap" onClick={this.handleClickOutside} >
@@ -165,7 +214,7 @@ class Chat extends Component {
 							</div>
 						</div>
 						<div className={cx("chat-title","chat-header-div")}>
-							{ panel?panel.name:"" }<span className="chat-title-span"></span>
+							{ to?to.name:"" }<span className="chat-title-span"></span>
 						</div>
 					</div>
 					<div className="chat-dialog">
@@ -184,10 +233,10 @@ class Chat extends Component {
 								<div className="chat-panel">
 								</div>
 								<div className="send-panel">
-									<textarea className="send-textarea" placeholder="메시지를 입력하세요"></textarea>
+									<textarea className="send-textarea" value={text} onChange={this.handleChangeText} placeholder="메시지를 입력하세요"></textarea>
 									<label className="send-file-label" htmlFor="chat-file" />
-									<input className="send-file-input" id="chat-file" type="file" multiple />
-									<div className="send-btn">
+									<input className="send-file-input" id="chat-file" type="file" onChange={this.handleChangeFile} multiple/>
+									<div className="send-btn" onClick={this.handleClickSend}>
 										전송
 									</div>
 								</div>
@@ -233,6 +282,8 @@ class Chat extends Component {
 const stateToProps = ({searched}) => ({searched});
 const actionToProps = {
 	fetchSearchUser,
-	fetchSearchUsers
+	fetchSearchUsers,
+	fetchSendChat,
+	fetchGetChats
 };
 export default connect(stateToProps, actionToProps)(Chat);

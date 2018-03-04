@@ -26,7 +26,7 @@
     text-align: center; }
     .chat-wrap .chat-header .chat-title {
       vertical-align: top;
-      width: calc( 100% - 200px);
+      width: calc( 100% - 230px);
       box-sizing: border-box;
       padding-left: 25px;
       font-weight: bold;
@@ -45,7 +45,7 @@
       .chat-wrap .chat-header .chat-header-div:hover {
         background-color: #ff5c3e; }
     .chat-wrap .chat-header .chat-menu {
-      width: 200px;
+      width: 230px;
       vertical-align: top;
       position: relative; }
     .chat-wrap .chat-header .chat-menu-text {
@@ -90,7 +90,7 @@
       display: block; }
   .chat-wrap .chat-dialog {
     height: calc( 100% - 48px);
-    width: 200px;
+    width: 230px;
     vertical-align: top;
     display: inline-block;
     overflow: hidden;
@@ -112,7 +112,7 @@
     vertical-align: top;
     display: inline-block;
     margin: 0px;
-    width: calc( 100% - 200px);
+    width: calc( 100% - 230px);
     height: calc( 100% - 48px);
     position: relative; }
     .chat-wrap .chat-box .chat-panel {
@@ -226,8 +226,8 @@
         margin: 6px;
         resize: none;
         outline: none;
-        padding-top: 6px;
-        padding-left: 8px;
+        padding-top: 9px;
+        padding-left: 9px;
         margin-bottom: 5px;
         margin-right: 10px;
         box-sizing: border-box;

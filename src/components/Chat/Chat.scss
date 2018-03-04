@@ -5,7 +5,7 @@ $send-panel-height : 48px;
 $chat-search-height : 54px;
 $chat-layer-header-height : 54px;
 $chat-layer-search-height : 32px;
-$chat-dialog-width : 200px;
+$chat-dialog-width : 230px;
 
 .Chat {
 	position : relative;
@@ -276,8 +276,8 @@ $chat-dialog-width : 200px;
 				margin : 6px;
 				resize : none;
 				outline : none;
-				padding-top : 6px;
-				padding-left : 8px;
+				padding-top : 9px;
+				padding-left : 9px;
 				margin-bottom : 5px;
 				margin-right : 10px;
 				box-sizing : border-box;

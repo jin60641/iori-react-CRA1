@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './Newsfeed.css';
 import Post from '../Post/Post';
-import PostWrite from '../Post/PostWrite';
+import Write from '../Post/Write';
 
 class Newsfeed extends Component {
 	constructor(props) {
@@ -43,7 +43,7 @@ class Newsfeed extends Component {
 	render() {
 		return (
 			<div className="Newsfeed">
-				<PostWrite fetchWritePost={this.props.fetchWritePost} />
+				<Write fetchWritePost={this.props.fetchWritePost} />
 				{ this.props.posts.map((post,i) => {
 					return (<Post data={post} key={post.id} />);
 				})}
