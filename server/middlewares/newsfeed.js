@@ -43,7 +43,7 @@ obj.writePost = async function(req,res){
 			fs.move(file.path,path.join(dir,(i+1)+".png"));
 		});
 		const current = {
-			UserId : req.user.id,
+			userId : req.user.id,
 			text : req.body.text.trim().xssFilter().substr(0,120).replace(/((\r\n)|\n|\r){3,}/g,"\r\n\r\n"),
 			file : req.files.length
 		}
@@ -52,7 +52,7 @@ obj.writePost = async function(req,res){
 				where : {
 					id : pid
 				},
-				include : { model : db.User }
+				include : { model : db.User, as : 'user' }
 			}).then( (post) => {
 				res.send({ "data" : post.get({ plain : true }) });
 			})

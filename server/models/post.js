@@ -6,11 +6,10 @@ module.exports = function(sequelize, DataTypes) {
 		file : { type : DataTypes.INTEGER, defaultValue : 0 },
 	},{
 		timestamps : true,
-		paranoid : true
+		paranoid : true,
 	});
 	Post.associate = function(models) {
-		models.User.hasMany(Post);
-		Post.belongsTo(models.User);
+		Post.belongsTo(models.User, { as : 'user', foreignKey : 'userId', targetKey : 'id' });
 	}
 	return Post;
 };

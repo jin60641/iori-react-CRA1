@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes){
 		profile : { type : DataTypes.BOOLEAN, defaultValue : false }
 	},{
 		timestamps : true,
-		paranoid : true
+		paranoid : true,
 	});
 	return User;
 };

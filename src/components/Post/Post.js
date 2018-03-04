@@ -30,15 +30,15 @@ class Post extends Component {
 	render() {
 		let { data } = this.props;
 		data = JSON.parse(JSON.stringify(data));
-		const profileUri = data.User.profile?`/files/profile/${data.User.id}.png`:'/images/profile.png';
+		const profileUri = data.user.profile?`/files/profile/${data.user.id}.png`:'/images/profile.png';
 		return (
 			<div className="Post">
-				<Link to={`/profile/${data.User.id}`} className="post-profile"> 
+				<Link to={`/profile/${data.user.id}`} className="post-profile"> 
 					<img src={profileUri} className="post-profile-img" alt={"profile"} />
 				</Link>
 				<div className="post-inform">
-					<Link to={`/profile/${data.User.id}`} className="post-user"> 
-						{data.User.name} 
+					<Link to={`/profile/${data.user.id}`} className="post-user"> 
+						{data.user.name} 
 					</Link>
 					<div className="post-date"> {this.getDateString(data.createdAt)} </div>
 				</div>
