@@ -1,11 +1,11 @@
 @import "../../styles/utils.scss";
 
 $chat-header-height : 48px;
-$send-panel-height : 50px;
+$send-panel-height : 48px;
 $chat-search-height : 54px;
 $chat-layer-header-height : 54px;
 $chat-layer-search-height : 32px;
-$chat-panel-width : 73%;
+$chat-dialog-width : 200px;
 
 .Chat {
 	position : relative;
@@ -35,7 +35,7 @@ $chat-panel-width : 73%;
 		text-align : center;
 		.chat-title {
 			vertical-align : top;
-			width : $chat-panel-width;
+			width : calc( 100% - #{$chat-dialog-width} );
 			box-sizing : border-box;
 			padding-left : 25px;
 			font-weight : bold;
@@ -58,7 +58,7 @@ $chat-panel-width : 73%;
 			}
 		}
 		.chat-menu {
-			width : calc( 100% - #{$chat-panel-width} );
+			width : $chat-dialog-width;
 			vertical-align : top;
 			position : relative;
 		}
@@ -113,7 +113,7 @@ $chat-panel-width : 73%;
 	}
 	.chat-dialog {
 		height : calc( 100% - #{$chat-header-height} );
-		width : calc( 100% - #{$chat-panel-width} );
+		width : $chat-dialog-width;
 		vertical-align : top;
 		display : inline-block;
 		overflow : hidden;
@@ -139,7 +139,7 @@ $chat-panel-width : 73%;
 		vertical-align : top;
 		display : inline-block;
 		margin : 0px;
-		width : $chat-panel-width;
+		width : calc( 100% - #{$chat-dialog-width} );
 		height : calc( 100% - #{$chat-header-height} );
 		position : relative;
 		.chat-panel {
@@ -265,29 +265,32 @@ $chat-panel-width : 73%;
 				}
 			}
 		}
-
 		.send-panel {
-			display : none;
 			border-top : 1px solid #e1e8ed;
 			background-color : rgba($color-normal,0.15);
+			height : $send-panel-height;
 			width : 100%;
 			.send-textarea {
 				box-shadow : $color-normal 0 1px 0 0 #e8e8e8;
 				overflow-y : hidden;
 				margin : 6px;
-				padding-top : 8px;
+				resize : none;
+				outline : none;
+				padding-top : 6px;
 				padding-left : 8px;
 				margin-bottom : 5px;
 				margin-right : 10px;
-				width : calc( 100% - 155px );
-				height : 23px;
+				box-sizing : border-box;
+				width : calc( 100% - 130px );
+				height : calc( 100% - 13px );
 				border : 1px solid rgba($color-normal,0.3);
 				vertical-align : top;
 			}
-			.chat-file-input {
+			.send-file-input {
 				display : none;
 			}
-			.chat-file-label {	
+			.send-file-label {
+				background-color : white;
 				cursor : pointer;
 				vertical-align : top;
 				display : inline-block;
@@ -321,6 +324,12 @@ $chat-panel-width : 73%;
 			right : 0px;
 			width : 100%;
 		}
+	}
+	.chat-box-default {
+		display : inline-flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 	}
 }
 
@@ -590,51 +599,6 @@ $chat-panel-width : 73%;
 	background-color : rgba($color-normal,.6);
 	background-clip : padding-box;
 }
-
-
-@media screen and ( max-width : 600px ){
-	.chat-wrap .chat-dialog {
-		width : 100%;
-	}
-	.chat-wrap .chat-box {
-		display : none;
-		width : 100%;
-	}
-	.chat-wrap {
-		height : calc( 100vh - 47px );
-	}
-}
-
-@media screen and ( max-width : 500px ){
-	.chat-wrap .chat-header .chat-menu-text {
-		color : transparent;
-		padding-left : 0px;
-	}
-	.chat-wrap .chat-header .chat-menu-box {
-		white-space : nowrap;
-		color : transparent !important;
-	}
-	.chat-new-user {
-		background-position-x : 28px;
-	}
-	.chat-new-group {
-		background-position-x : 23px;
-	}
-}
-
-@media screen and ( max-height : 600px ){
-	.chat-wrap {
-		height : calc( 100vh - 47px );
-	}
-}
-
-@media screen and ( max-height : 150px ){
-	.chat-wrap .chat-box .default-dialog {
-		display : none;
-	}
-}
-
-
 .chat-new-user {
 	background-image : url('/svg/chat-user.svg');
 	background-repeat : no-repeat;

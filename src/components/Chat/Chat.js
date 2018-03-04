@@ -1,21 +1,41 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withCookies, Cookies } from 'react-cookie';
 import './Chat.css';
 
 import Dialog from './Dialog.js';
 
-import { fetchSearch } from '../../actions/search';
+import { fetchSearchUser, fetchSearchUsers } from '../../actions/search';
+
+const initialState = {
+	menu : false,
+	layer : null,
+	dialogs : [],
+	chats : {},
+	layerSelected : {},
+	type : null,
+	panel : null
+}
 
 class Chat extends Component {
 	constructor(props){
 		super(props);
-		this.state = {
-			menu : false,
-			layer : "",
-			dialogs : [],
-			chats : {},
-			layerSelected : {}
+		this.state = Object.assign({},initialState);
+	}
+	componentWillMount = (e) => {
+		const chatHandle = this.props.match.params.handle;
+		if( chatHandle ){
+			const type = chatHandle[0]==='@'?'user':(chatHandle[0]==='g'?'group':null);;
+			const handle = chatHandle.substr(1);
+			const { fetchSearchUser } = this.props;
+			fetchSearchUser({ query : handle })
+			.then( (action) => {
+				if( !action.error ){
+					this.setState( Object.assign(this.state,{
+						type,
+						panel : action.payload
+					}) );
+				}
+			});
 		}
 	}
 	handleClickMenu = (e) => {
@@ -34,34 +54,54 @@ class Chat extends Component {
 	}
 	showChatLayer = (type) => {
 		this.setState({
-			layer : type
+			layer : type,
+			layerSelected : {}
 		});
 	}
-	handleLayerSelect = (id) => {
+	handleClickInvite = () => {
+		const { history } = this.props;
+		const { layer, layerSelected } = this.state;
+		if( layer === "user" ){
+			const to = layerSelected[Object.keys(layerSelected)[0]];
+			history.push(`/chat/@${to.handle}`);
+			this.setState({
+				layerSelected : {},
+				layer : null,
+				type : "user",
+				panel : to
+			});
+		} else if( layer === "group" ){
+			this.setState({
+				layerSelected : {},
+				layer : null,
+				type : "group",
+				panel : ""
+			});
+		}
+	} 
+	handleLayerSelect = (user) => {
 		const prev = this.state.layerSelected;
-		const layerSelected = Object.assign({},prev);
-		layerSelected[id] = !prev[id];
+		let layerSelected = {};
+		if( this.state.type === "user" ){
+			layerSelected[user.id] = user;
+		} else {
+			layerSelected = Object.assign({},prev);
+			if( prev[user.id] ){
+				delete layerSelected[user.id];
+			} else {
+				layerSelected[user.id] = user;
+			}
+		}
 		this.setState({layerSelected});
 	}
 	handleLayerSearch = (e) => {
-		const { fetchSearch } = this.props;
+		const { fetchSearchUsers } = this.props;
 		const query = e.target.value
 		if( !query.length ){
 			return null;
 		}
-		const data = {
-			type : "User",
-			query : {
-				$or : [
-					{ 
-						name : { $like : `%${query}%` } 
-					}, { 
-						handle : { $like : `%${query}%` } 
-					}
-				]
-			}
-		}
-		fetchSearch(data)
+		const data = { query };
+		fetchSearchUsers(data)
 		.then( (action) => {
 			if( !action.error ){
 			} else {
@@ -102,11 +142,11 @@ class Chat extends Component {
 	}
 	hideAll = () => {
 		this.showChatMenu(false);
-		this.showChatLayer("");
+		this.showChatLayer(null);
 	}
 	render(){
 		const { cx, searched } = this.props;
-		const { dialogs, menu, layer, layerSelected } = this.state;
+		const { panel, dialogs, menu, layer, layerSelected, type } = this.state;
 		return(
 			<div className="Chat">
 				<div className="chat-wrap" onClick={this.handleClickOutside} >
@@ -125,12 +165,12 @@ class Chat extends Component {
 							</div>
 						</div>
 						<div className={cx("chat-title","chat-header-div")}>
-							title<span className="chat-title-span">span</span>
+							{ panel?panel.name:"" }<span className="chat-title-span"></span>
 						</div>
 					</div>
 					<div className="chat-dialog">
 						<div className={cx("chat-dialogs","chat-dialog-search")}>
-							<input type="text" className="chat-search" placeholder="search" />
+							<input type="text" className="chat-search" placeholder="검색" />
 						</div>
 						<div className="chat-dialog-box">
 							{ dialogs.map( (dialog, i) => {
@@ -138,26 +178,38 @@ class Chat extends Component {
 							})}
 						</div>
 					</div>
-					<div className="chat-box">
-						<div className="chat-panel">
-						</div>
-						<div className="send-panel">
-							<textarea className="send-textarea" placeholder="메시지를 입력하세요"></textarea>
-						</div>
-					</div>
+					{ 
+						type ? 
+							<div className="chat-box">
+								<div className="chat-panel">
+								</div>
+								<div className="send-panel">
+									<textarea className="send-textarea" placeholder="메시지를 입력하세요"></textarea>
+									<label className="send-file-label" htmlFor="chat-file" />
+									<input className="send-file-input" id="chat-file" type="file" multiple />
+									<div className="send-btn">
+										전송
+									</div>
+								</div>
+							</div>
+						: 
+							<div className={cx("chat-box","chat-box-default")}>
+								새 메시지나 검색을 통해 대화를 시작해보세요
+							</div>
+					}
 				</div>
-				<div className={cx("chat-layer",{"chat-layer-active":layer!==""})} onClick={()=>this.showChatLayer("")} >
+				<div className={cx("chat-layer",{"chat-layer-active":layer})} onClick={()=>this.showChatLayer(null)} >
 					<div className="chat-layer-close"></div>
 					<div className="chat-layer-box" onClick={(e)=>e.stopPropagation()}>
-						<div className="chat-layer-box-close" onClick={()=>this.showChatLayer("")}></div>
+						<div className="chat-layer-box-close" onClick={()=>this.showChatLayer(null)}></div>
 						<div className="chat-layer-title">Title</div>
 						<div className="chat-layer-search-box">
 							<input type="text" className="chat-layer-search" placeholder="검색" onChange={this.handleLayerSearch} />
 						</div>
 						<div className={cx("chat-layer-list","chat-layer-div")}>
-						{ searched.map( (result) => {
+						{ searched.users.map( (result) => {
 							return(
-								<div className={cx("chat-dialogs",{"chat-dialogs-active":layerSelected[result.id]})} key={`chat-layer-list-${result.id}`} onClick={()=>this.handleLayerSelect(result.id)}>
+								<div className={cx("chat-dialogs",{"chat-dialogs-active":layerSelected[result.id]})} key={`chat-layer-list-${result.id}`} onClick={()=>this.handleLayerSelect(result)}>
 									<img className="chat-dialogs-img" />
 									<div className="chat-dialogs-message-wrap">
 										<div className="chat-dialogs-message-name">{result.name}</div>
@@ -168,8 +220,8 @@ class Chat extends Component {
 						}) }
 						</div>
 						<div className="chat-layer-menu">
-							<div className={cx("chat-layer-menu-item","chat-layer-menu-active")} onClick={()=>this.showChatLayer("")} >취소</div>
-							<div className="chat-layer-menu-item">초대</div>
+							<div className={cx("chat-layer-menu-item","chat-layer-menu-active")} onClick={()=>this.showChatLayer(null)} >취소</div>
+							<div className={cx("chat-layer-menu-item",{"chat-layer-menu-active":Object.keys(layerSelected).length})} onClick={this.handleClickInvite}>초대</div>
 						</div>
 					</div>
 				</div>
@@ -180,6 +232,7 @@ class Chat extends Component {
 
 const stateToProps = ({searched}) => ({searched});
 const actionToProps = {
-	fetchSearch
+	fetchSearchUser,
+	fetchSearchUsers
 };
-export default withCookies(connect(stateToProps, actionToProps)(Chat));
+export default connect(stateToProps, actionToProps)(Chat);

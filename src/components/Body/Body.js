@@ -50,6 +50,14 @@ class Body extends Component {
 		return(
 			<div className={cx('Body',{ 'body-scroll' : this.state.scrollBar })} ref="Body" >
 				<Switch>
+					<Route path="/chat/:handle" render={(props) => (
+						this.isLoggedIn() ? 
+							<Chat {...props }
+								cx = { cx }
+								showScroll = { this.showScroll }
+							/>
+						: <Redirect to="/auth/login/chat" />
+					)}/>
 					<Route path="/chat" render={(props) => (
 						this.isLoggedIn() ? 
 							<Chat {...props }

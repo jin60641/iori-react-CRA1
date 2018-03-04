@@ -3,6 +3,7 @@ const router = express.Router();
 
 const searchMws = require('../middlewares/search');
 
-router.post( '/', searchMws.search );
+router.post( '/users', searchMws.searchUsers );
+router.post( '/user', searchMws.searchUser );
 
 module.exports = router;

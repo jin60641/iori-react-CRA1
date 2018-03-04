@@ -1,13 +1,15 @@
 import {handleActions} from 'redux-actions';
-import { search } from '../actions/search';
+import {searchUsers} from '../actions/search';
 
-let initialState = [];
+let initialState = {
+	users : []
+};
 
 export default handleActions({
-	[search]: function(state, action) {
+	[searchUsers]: function(state, action) {
 		if( action.error ) {
 			return state;
 		}
-		return action.payload;
+		return { ...state, users : action.payload };
 	},
 }, initialState );
