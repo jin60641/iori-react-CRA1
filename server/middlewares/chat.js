@@ -22,12 +22,13 @@ obj.filter = multer({
 
 obj.sendChat = (req,res) => {
 	try {
+		const { to, text, type } = req.body;
 		const current = {
 			fromId : req.user.id,
-			toId : req.body.to,
-			text : req.body.text.trim().substr(0,120),
+			toId : to,
+			text : text.trim().substr(0,120),
 			file : req.file?true:false,
-			type : req.body.type
+			type
 		}
 		db.Chat.create(current).then( model => {
 			const cid = model.dataValues.id;
@@ -39,12 +40,19 @@ obj.sendChat = (req,res) => {
 					{ model : db.User, as : 'from' },
 					{ model : db.User, as : 'to' }
 				]
-			}).then( chat => {
+			}).then( result => {
+				const chat = result.get({ plain : true });
 				if( req.file ){
 					const dir = path.join(__dirname,'..','..','public','files','chat');
 					fs.move(req.file.path,path.join(dir,cid+".png"));
 				}
-				res.send({ "data" : chat.get({ plain : true }) });
+				res.send({ 
+					"data" : {
+						type,
+						to : chat.to,
+						chats : [ chat ]
+					}
+				})
 			})
 		})
 	} catch(e){
@@ -52,16 +60,35 @@ obj.sendChat = (req,res) => {
 	}
 }
 
-obj.getChats = function( req, res ){
-	const limit = req.body['limit']?req.body['limit']:10;
-	const offset = req.body['offset']?req.body['offset']:0;
-	db.Chat.findAll({ 
-		include : { model : db.User },
+obj.getChats = ( req, res ) => {
+	let { limit, offset, to, type } = req.body;
+	limit = limit?limit:10;
+	offset = offset?offest:0;
+	db.Chat.findAll({
+		where : {
+			$or : [{
+				toId : req.user.id,
+				fromId : to.id
+			},{
+				toId : to.id,
+				fromId : req.user.id
+			}]
+		},
+		include : [
+			{ model : db.User, as : 'from' },
+			{ model : db.User, as : 'to' }
+		],
 		order : [ ['id','DESC'] ], 
-		limit : limit, 
-		offset : offset
+		limit, 
+		offset
 	}).then((chats) => {
-		res.send({ "data" : chats.map( function(chat){ return chat.get({ plain : true }); } ) });
+		res.send({ 
+			"data" : {
+				type,
+				to,
+				chats : chats.map( function(chat){ return chat.get({ plain : true }); } )
+			}
+		});
 	}).catch((err) => {
 		res.send({ "msg" : "fail" });
 	});

@@ -20,7 +20,7 @@ export const fetchGetChats = (data) => {
 				'Content-Type': 'application/json'
 			},
 			method: 'POST',
-			body: data,
+			body: JSON.stringify(data),
 			credentials: 'include'
 		});
 		const body = await resp.json();

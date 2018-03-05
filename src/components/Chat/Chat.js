@@ -15,7 +15,53 @@ const initialState = {
 	layerSelected : {},
 	type : null,
 	to : null,
-	text : ""
+	text : "",
+	layerQuery : ""
+}
+
+const limit = 10;
+
+class Message extends Component {
+	constructor(props){
+		super(props);
+	}
+	render(){
+		const { user, chat, cx } = this.props;
+		const my = user.id === chat.from.id;
+		return(
+			<div className={cx("chat-message",{"chat-message-my":my})}>
+				{ /*
+					my ?
+						null
+						: <a className="chat-message-profileimg" href={`/profile${chat.from.handle}`}></a>
+				*/ }
+				<div className="chat-message-body">
+					<div className="chat-message-body-name">
+						{ chat.to.name }
+					</div>
+					{ 
+						chat.file ?
+							<img className="chat-message-body-file" src={`/files/chat/${chat.id}.png`} />
+						:
+							<div>
+								<div className="chat-message-body-caret">
+									<div className="chat-message-body-caret-outer" />
+									<div className="chat-message-body-caret-inner" />
+								</div>
+								<div className="chat-message-body-text">
+									{ chat.text }
+								</div>
+							</div>
+					}
+				</div>
+				{/* 
+					my ?
+						<span className="chat-message-profileimg"></span>
+						: null
+				*/}
+			</div>
+		);
+	}
 }
 
 class Chat extends Component {
@@ -28,7 +74,7 @@ class Chat extends Component {
 		if( chatHandle ){
 			const type = chatHandle[0]==='@'?'user':(chatHandle[0]==='g'?'group':null);;
 			const handle = chatHandle.substr(1);
-			const { fetchSearchUser } = this.props;
+			const { fetchSearchUser, fetchGetChats } = this.props;
 			fetchSearchUser({ query : handle })
 			.then( (action) => {
 				if( !action.error ){
@@ -36,6 +82,10 @@ class Chat extends Component {
 						type,
 						to : action.payload
 					}) );
+					fetchGetChats({ to : action.payload, type, limit })
+					.then( action => {
+						console.log(action);
+					});
 				}
 			});
 		}
@@ -57,8 +107,13 @@ class Chat extends Component {
 	showChatLayer = (type) => {
 		this.setState({
 			layer : type,
-			layerSelected : {}
+			layerSelected : {},
+			layerQuery : ""
 		});
+		const data = { query : null };
+		const { fetchSearchUsers } = this.props;
+		fetchSearchUsers(data)
+		.then( () => {});
 	}
 	handleClickInvite = () => {
 		const { history } = this.props;
@@ -103,6 +158,9 @@ class Chat extends Component {
 	handleLayerSearch = (e) => {
 		const { fetchSearchUsers } = this.props;
 		const query = e.target.value
+		this.setState({
+			layerQuery : query
+		})
 		if( !query.length ){
 			return null;
 		}
@@ -167,7 +225,6 @@ class Chat extends Component {
 		}
 		fetchSendChat(formData)
 		.then( (action) => {
-			console.log(action);
 			if( !action.error ){
 			} else {
 			}
@@ -194,8 +251,8 @@ class Chat extends Component {
 		})
 	}
 	render(){
-		const { cx, searched } = this.props;
-		const { to, dialogs, menu, layer, layerSelected, type, text } = this.state;
+		const { cx, searched, chats, user } = this.props;
+		const { to, dialogs, menu, layer, layerSelected, layerQuery, type, text } = this.state;
 		return(
 			<div className="Chat">
 				<div className="chat-wrap" onClick={this.handleClickOutside} >
@@ -231,6 +288,14 @@ class Chat extends Component {
 						type ? 
 							<div className="chat-box">
 								<div className="chat-panel">
+								{ 
+									chats[to.handle] ? 
+										chats[to.handle].map( chat => {
+											return(<Message chat={chat} user={user} cx={cx} key={`chat-message-${chat.id}`} />);
+										})
+									:
+										<div></div>
+								}
 								</div>
 								<div className="send-panel">
 									<textarea className="send-textarea" value={text} onChange={this.handleChangeText} placeholder="메시지를 입력하세요"></textarea>
@@ -253,7 +318,7 @@ class Chat extends Component {
 						<div className="chat-layer-box-close" onClick={()=>this.showChatLayer(null)}></div>
 						<div className="chat-layer-title">Title</div>
 						<div className="chat-layer-search-box">
-							<input type="text" className="chat-layer-search" placeholder="검색" onChange={this.handleLayerSearch} />
+							<input type="text" className="chat-layer-search" placeholder="검색" value={layerQuery} onChange={this.handleLayerSearch} />
 						</div>
 						<div className={cx("chat-layer-list","chat-layer-div")}>
 						{ searched.users.map( (result) => {
@@ -279,7 +344,7 @@ class Chat extends Component {
 	}
 }
 
-const stateToProps = ({searched}) => ({searched});
+const stateToProps = ({searched,chats,user}) => ({searched,chats,user});
 const actionToProps = {
 	fetchSearchUser,
 	fetchSearchUsers,
