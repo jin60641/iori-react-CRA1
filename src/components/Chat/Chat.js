@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import ReactDOM from 'react-dom';
 import './Chat.css';
 
 import Dialog from './Dialog.js';
@@ -21,9 +22,58 @@ const initialState = {
 
 const limit = 10;
 
+class Panel extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			isBottom : true,
+			timer : null
+		}
+		this.handleScroll = this.handleScroll.bind(this);
+	}
+	componentDidMount(){
+		ReactDOM.findDOMNode(this.refs.Panel).addEventListener('scroll',this.handleScroll);
+	}
+	componentWillUnmount(){
+		ReactDOM.findDOMNode(this.refs.Panel).removeEventListener('scroll',this.handleScroll);
+	}
+	handleScroll(e){
+		const dom = e.target;
+		this.setState({ isBottom : dom.scrollHeight - dom.scrollTop === dom.clientHeight });
+	}
+	handleScrollBottom = () => {
+		const { isBottom } = this.state;
+		const dom = ReactDOM.findDOMNode(this.refs.Panel);
+		dom.scrollTop = dom.scrollHeight;
+	}
+	render(){
+		const { chats, to, user, cx } = this.props;
+		return(
+			<div className="chat-panel" ref="Panel">
+			{ 
+				chats[to.handle] ? 
+					chats[to.handle].map( chat => {
+						return(<Message chat={chat} user={user} cx={cx} key={`chat-message-${chat.id}`}  handleScrollBottom={this.handleScrollBottom} />);
+					})
+				:
+					<div></div>
+			}
+			</div>
+		);
+	}
+}
+
 class Message extends Component {
 	constructor(props){
 		super(props);
+	}
+	componentDidUpdate = () => {
+		const { handleScrollBottom } = this.props;
+		handleScrollBottom();
+	}
+	componentDidMount = () => {
+		const { handleScrollBottom } = this.props;
+		handleScrollBottom();
 	}
 	render(){
 		const { user, chat, cx } = this.props;
@@ -64,6 +114,7 @@ class Message extends Component {
 	}
 }
 
+
 class Chat extends Component {
 	constructor(props){
 		super(props);
@@ -84,7 +135,6 @@ class Chat extends Component {
 					}) );
 					fetchGetChats({ to : action.payload, type, limit })
 					.then( action => {
-						console.log(action);
 					});
 				}
 			});
@@ -116,7 +166,7 @@ class Chat extends Component {
 		.then( () => {});
 	}
 	handleClickInvite = () => {
-		const { history } = this.props;
+		const { history, fetchGetChats } = this.props;
 		const { layer, layerSelected } = this.state;
 		const selected = Object.keys(layerSelected);
 		if( !selected.length ){
@@ -130,6 +180,10 @@ class Chat extends Component {
 				layer : null,
 				type : "user",
 				to
+			});
+			fetchGetChats({ to, type : "user", limit })
+			.then( action => {
+				console.log(action);
 			});
 		} else if( layer === "group" ){
 			this.setState({
@@ -186,7 +240,7 @@ class Chat extends Component {
 		if( !cookies && nextProps.cookies ){
 			const string = cookies.get('dialogs');
 			const dialogs = (string&&string.length)?JSON.parse(string):[];
-    		this.setState({
+			this.setState({
 				dialogs,
 				chats : dialogs.reduce( (result,item,index,array) => { result[item] = []; return result;  })
 			});
@@ -237,14 +291,14 @@ class Chat extends Component {
 		}
 		this.sendChat();
 	}
-    handleChangeFile = (e) => {
-        e.preventDefault();
-        const { files } = e.target;
+	handleChangeFile = (e) => {
+		e.preventDefault();
+		const { files } = e.target;
 		Array.from(files).forEach( file => {
 			this.sendChat(file);
 		});
 		e.target.value = "";
-    }
+	}
 	handleChangeText = (e) => {
 		this.setState({
 			text : e.target.value
@@ -287,16 +341,7 @@ class Chat extends Component {
 					{ 
 						type ? 
 							<div className="chat-box">
-								<div className="chat-panel">
-								{ 
-									chats[to.handle] ? 
-										chats[to.handle].map( chat => {
-											return(<Message chat={chat} user={user} cx={cx} key={`chat-message-${chat.id}`} />);
-										})
-									:
-										<div></div>
-								}
-								</div>
+								<Panel chats={chats} to={to} cx={cx} user={user} />
 								<div className="send-panel">
 									<textarea className="send-textarea" value={text} onChange={this.handleChangeText} placeholder="메시지를 입력하세요"></textarea>
 									<label className="send-file-label" htmlFor="chat-file" />
