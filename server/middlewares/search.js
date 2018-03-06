@@ -8,13 +8,15 @@ const filter = {
 
 obj.searchUser = (req,res) => {
 	const { query } = req.body;
-	const where = {
-		handle : query
+	if( query.length ){
+		const where = {
+			handle : query
+		}
+		db.User.find({ where, attributes : filter.User, raw : true })
+		.then( function(result){
+			res.send({ data : result });
+		})
 	}
-	db.User.find({ where, attributes : filter.User, raw : true })
-	.then( function(result){
-		res.send({ data : result });
-	})
 }
 obj.searchUsers = (req,res) => {
 	const { query } = req.body;

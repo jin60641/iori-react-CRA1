@@ -328,7 +328,7 @@
     .chat-dialogs .chat-dialogs-message-wrap .chat-dialogs-message-name {
       color: black;
       font-weight: 700; }
-    .chat-dialogs .chat-dialogs-message-wrap .chat-dialogs-message-handle {
+    .chat-dialogs .chat-dialogs-message-wrap .chat-dialogs-message-text {
       color: #999; }
 
 .chat-dialogs-active {

@@ -60,6 +60,31 @@ obj.sendChat = (req,res) => {
 	}
 }
 
+obj.getDialogs = ( req, res ) => {
+	db.Chat.findAll({
+		where : {
+			$or : [{
+				toId : req.user.id,
+			},{
+				fromId : req.user.id
+			}]
+		},
+		include : [
+			{ model : db.User, as : 'from' },
+			{ model : db.User, as : 'to' }
+		],
+		order : [ ['id'] ]
+	}).then( chats => {
+		let ret = {};
+		chats
+			.map( chat => { return chat.get({ plain : true }); } )
+			.forEach( chat => { 
+				ret[ chat.toId === req.user.id ?chat.fromId:chat.toId ] = chat;
+			})
+		res.send({ "data" : ret });
+	});
+}
+
 obj.getChats = ( req, res ) => {
 	let { limit, offset, to, type } = req.body;
 	limit = limit?limit:10;
@@ -81,15 +106,15 @@ obj.getChats = ( req, res ) => {
 		order : [ ['id','DESC'] ], 
 		limit, 
 		offset
-	}).then((chats) => {
+	}).then( chats => {
 		res.send({ 
 			"data" : {
 				type,
 				to,
-				chats : chats.map( function(chat){ return chat.get({ plain : true }); } )
+				chats : chats.map( chat => { return chat.get({ plain : true }); } )
 			}
 		});
-	}).catch((err) => {
+	}).catch( err => {
 		res.send({ "msg" : "fail" });
 	});
 };

@@ -3,15 +3,12 @@ import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
 import './Chat.css';
 
-import Dialog from './Dialog.js';
-
 import { fetchSearchUser, fetchSearchUsers } from '../../actions/search';
-import { fetchSendChat, fetchGetChats } from '../../actions/chat';
+import { fetchSendChat, fetchGetChats, fetchGetDialogs } from '../../actions/chat';
 
 const initialState = {
 	menu : false,
 	layer : null,
-	dialogs : [],
 	chats : {},
 	layerSelected : {},
 	type : null,
@@ -21,6 +18,32 @@ const initialState = {
 }
 
 const limit = 10;
+
+class Dialog extends Component {
+    constructor(props){
+        super(props);
+    }
+    render(){
+        const { dialog, cx, user, openChat } = this.props;
+		const my = user.id === dialog.from.id;
+        return(
+            <div className="chat-dialogs" onClick={ ()=>{openChat(my?dialog.to:dialog.from,"user")} }>
+                <div className="chat-dialogs-time">
+                    time
+                </div>
+                <img className="chat-dialogs-img" src="/images/profile.png" />
+                <div className="chat-dialogs-message-wrap">
+                    <div className="chat-dialogs-message-name">
+                        { my ? dialog.to.name : dialog.from.name }
+                    </div>
+                    <div className="chat-dialogs-message-text">
+                        { my ? `나 : ${dialog.text}`  : dialog.text }
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
 
 class Panel extends Component {
 	constructor(props){
@@ -122,20 +145,17 @@ class Chat extends Component {
 	}
 	componentWillMount = (e) => {
 		const chatHandle = this.props.match.params.handle;
+		const { fetchSearchUser, fetchGetChats, fetchGetDialogs } = this.props;
+		fetchGetDialogs()
+		.then( action => {
+		});
 		if( chatHandle ){
 			const type = chatHandle[0]==='@'?'user':(chatHandle[0]==='g'?'group':null);;
 			const handle = chatHandle.substr(1);
-			const { fetchSearchUser, fetchGetChats } = this.props;
 			fetchSearchUser({ query : handle })
-			.then( (action) => {
+			.then( action => {
 				if( !action.error ){
-					this.setState( Object.assign(this.state,{
-						type,
-						to : action.payload
-					}) );
-					fetchGetChats({ to : action.payload, type, limit })
-					.then( action => {
-					});
+					this.openChat(action.payload,type);
 				}
 			});
 		}
@@ -160,13 +180,25 @@ class Chat extends Component {
 			layerSelected : {},
 			layerQuery : ""
 		});
-		const data = { query : null };
+		const data = { query : "" };
 		const { fetchSearchUsers } = this.props;
 		fetchSearchUsers(data)
 		.then( () => {});
 	}
-	handleClickInvite = () => {
+	openChat = (to,type) => {
 		const { history, fetchGetChats } = this.props;
+		history.push(`/chat/@${to.handle}`);
+		this.setState({
+			layerSelected : {},
+			layer : null,
+			type,
+			to
+		});
+		fetchGetChats({ to, type : "user", limit })
+		.then( action => {
+		});
+	}
+	handleClickInvite = () => {
 		const { layer, layerSelected } = this.state;
 		const selected = Object.keys(layerSelected);
 		if( !selected.length ){
@@ -174,24 +206,8 @@ class Chat extends Component {
 		}
 		if( layer === "user" ){
 			const to = layerSelected[selected[0]];
-			history.push(`/chat/@${to.handle}`);
-			this.setState({
-				layerSelected : {},
-				layer : null,
-				type : "user",
-				to
-			});
-			fetchGetChats({ to, type : "user", limit })
-			.then( action => {
-				console.log(action);
-			});
+			this.openChat(to,layer);
 		} else if( layer === "group" ){
-			this.setState({
-				layerSelected : {},
-				layer : null,
-				type : "group",
-				to : null
-			});
 		}
 	} 
 	handleLayerSelect = (user) => {
@@ -233,27 +249,6 @@ class Chat extends Component {
 	componentDidMount = () => {
 		const { showScroll } = this.props;
 		showScroll(false);
-	}
-	componentWillReceiveProps = (nextProps) => {
-		const { cookies, chats } = this.props;
-		const { dialogs } = this.state;
-		if( !cookies && nextProps.cookies ){
-			const string = cookies.get('dialogs');
-			const dialogs = (string&&string.length)?JSON.parse(string):[];
-			this.setState({
-				dialogs,
-				chats : dialogs.reduce( (result,item,index,array) => { result[item] = []; return result;  })
-			});
-		}
-		if( nextProps.chats && nextProps.chats.length && ( !chats.length || chats[0].id != nextProps.chats[0].id  ) ){
-			dialogs.forEach( (dialog,i) => {
-				if( dialog.id == nextProps.chats[0].id ){
-					this.setState({
-						dialogs : [dialog].concat(dialogs.slice(0,i)).concat(dialogs.slice(i+1))
-					});
-				}
-			})
-		}
 	}
 	handleClickOutside = () => {
 		this.hideAll();
@@ -299,14 +294,20 @@ class Chat extends Component {
 		});
 		e.target.value = "";
 	}
-	handleChangeText = (e) => {
+	handleChangeText = e => {
 		this.setState({
 			text : e.target.value
 		})
 	}
+	handleChatKeyDown = e => {
+		if( e.keyCode == 13 && !e.shiftKey){
+			this.handleClickSend();
+			e.preventDefault();
+		}
+	}
 	render(){
-		const { cx, searched, chats, user } = this.props;
-		const { to, dialogs, menu, layer, layerSelected, layerQuery, type, text } = this.state;
+		const { cx, searched, chats, user, dialogs } = this.props;
+		const { to, menu, layer, layerSelected, layerQuery, type, text } = this.state;
 		return(
 			<div className="Chat">
 				<div className="chat-wrap" onClick={this.handleClickOutside} >
@@ -333,8 +334,8 @@ class Chat extends Component {
 							<input type="text" className="chat-search" placeholder="검색" />
 						</div>
 						<div className="chat-dialog-box">
-							{ dialogs.map( (dialog, i) => {
-								<Dialog cx={cx} dialog={dialog}/>
+							{ Object.keys(dialogs).map( key => {
+								return(<Dialog cx={cx} user={user} dialog={dialogs[key]} key={`dialog-${key}`} openChat={this.openChat} />);
 							})}
 						</div>
 					</div>
@@ -343,7 +344,10 @@ class Chat extends Component {
 							<div className="chat-box">
 								<Panel chats={chats} to={to} cx={cx} user={user} />
 								<div className="send-panel">
-									<textarea className="send-textarea" value={text} onChange={this.handleChangeText} placeholder="메시지를 입력하세요"></textarea>
+									<textarea className="send-textarea" value={text} placeholder="메시지를 입력하세요" 
+										onChange={ this.handleChangeText } 
+										onKeyDown={ this.handleChatKeyDown } >
+									</textarea> 
 									<label className="send-file-label" htmlFor="chat-file" />
 									<input className="send-file-input" id="chat-file" type="file" onChange={this.handleChangeFile} multiple/>
 									<div className="send-btn" onClick={this.handleClickSend}>
@@ -389,11 +393,12 @@ class Chat extends Component {
 	}
 }
 
-const stateToProps = ({searched,chats,user}) => ({searched,chats,user});
+const stateToProps = ({dialogs,searched,chats,user}) => ({dialogs,searched,chats,user});
 const actionToProps = {
 	fetchSearchUser,
 	fetchSearchUsers,
 	fetchSendChat,
-	fetchGetChats
+	fetchGetChats,
+	fetchGetDialogs
 };
 export default connect(stateToProps, actionToProps)(Chat);
