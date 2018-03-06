@@ -332,8 +332,11 @@
       color: #999; }
 
 .chat-dialogs-active {
-  background-color: rgba(255, 92, 62, 0.8) !important;
-  color: white !important; }
+  background-color: rgba(255, 92, 62, 0.8) !important; }
+  .chat-dialogs-active .chat-dialogs-time {
+    color: white !important; }
+  .chat-dialogs-active .chat-dialogs-message-wrap .chat-dialogs-message-text {
+    color: white !important; }
 
 .chat-layer {
   display: none;

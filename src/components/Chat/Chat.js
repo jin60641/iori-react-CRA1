@@ -24,10 +24,10 @@ class Dialog extends Component {
         super(props);
     }
     render(){
-        const { dialog, cx, user, openChat } = this.props;
+        const { dialog, cx, user, openChat, active } = this.props;
 		const my = user.id === dialog.from.id;
         return(
-            <div className="chat-dialogs" onClick={ ()=>{openChat(my?dialog.to:dialog.from,"user")} }>
+            <div className={cx("chat-dialogs",{"chat-dialogs-active":active})} onClick={ ()=>{openChat(my?dialog.to:dialog.from,"user")} }>
                 <div className="chat-dialogs-time">
                     time
                 </div>
@@ -335,7 +335,7 @@ class Chat extends Component {
 						</div>
 						<div className="chat-dialog-box">
 							{ Object.keys(dialogs).map( key => {
-								return(<Dialog cx={cx} user={user} dialog={dialogs[key]} key={`dialog-${key}`} openChat={this.openChat} />);
+								return(<Dialog cx={cx} user={user} active={to.id===parseInt(key)} dialog={dialogs[key]} key={`dialog-${key}`} openChat={this.openChat} />);
 							})}
 						</div>
 					</div>

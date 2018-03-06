@@ -402,7 +402,14 @@ $chat-dialog-width : 230px;
 
 .chat-dialogs-active {
 	background-color: rgba($color-normal, 0.8) !important;
-	color: white !important;
+	.chat-dialogs-time {
+		color : white !important;
+	}
+	.chat-dialogs-message-wrap {
+		.chat-dialogs-message-text {
+			color : white !important;
+		}
+	}
 }
 
 
