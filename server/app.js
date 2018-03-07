@@ -19,8 +19,11 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+let sessionstore = require('sessionstore');
+global.store = sessionstore.createSessionStore();
 let session = require('express-session')
 let sessionMiddleware = {
+	store : global.store,
     secret: require('./config/settings.js').sessionSecret,
 	resave: false,
 	saveUninitialized: true

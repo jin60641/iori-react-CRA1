@@ -46,11 +46,17 @@ obj.sendChat = (req,res) => {
 					const dir = path.join(__dirname,'..','..','public','files','chat');
 					fs.move(req.file.path,path.join(dir,cid+".png"));
 				}
+				const socketId = socketIds[to];
+				if( socketId && req.user.id != to ){
+					console.log("mondainai");
+					console.log(io.sockets.connected);
+					io.sockets.connected[socketId].emit( 'getchat', { from : req.user, type, chat } );
+				}
 				res.send({ 
 					"data" : {
 						type,
 						to : chat.to,
-						chats : [ chat ]
+						chat
 					}
 				})
 			})
@@ -86,16 +92,16 @@ obj.getDialogs = ( req, res ) => {
 }
 
 obj.getChats = ( req, res ) => {
-	let { limit, offset, to, type } = req.body;
+	let { limit, offset, from, type } = req.body;
 	limit = limit?limit:10;
 	offset = offset?offset:0;
 	db.Chat.findAll({
 		where : {
 			$or : [{
 				toId : req.user.id,
-				fromId : to.id
+				fromId : from.id
 			},{
-				toId : to.id,
+				toId : from.id,
 				fromId : req.user.id
 			}]
 		},
@@ -110,7 +116,7 @@ obj.getChats = ( req, res ) => {
 		res.send({ 
 			"data" : {
 				type,
-				to,
+				from,
 				chats : chats.map( chat => { return chat.get({ plain : true }); } )
 			}
 		});

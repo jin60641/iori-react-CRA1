@@ -1,16 +1,18 @@
 import {createAction} from 'redux-actions';
 
 export const getChats = createAction('GETCHATS');
+export const getChat = createAction('GETCHAT');
 export const getDialogs = createAction('GETDIALOGS');
 export const sendChat = createAction('SENDCHAT');
 
-const getDialogsUri = '/api/chat/getdialogs';
 const getChatsUri = '/api/chat/getchats';
+const getDialogsUri = '/api/chat/getdialogs';
 const sendChatUri = '/api/chat/sendchat';
 
 export const chatSocket = (socket,dispatch) => {
-	socket.on( 'chat new', (data) => {
-		dispatch(sendChat(data));
+	socket.on( 'getchat', data => {
+		console.log(data);
+		dispatch(getChat(data));
 	});
 };
 

@@ -19,11 +19,13 @@ class App extends Component {
 		const { fetchLoggedIn, fetchConnectSocket } = this.props;
 		fetchLoggedIn()
 		.then( (action) => {
+			if( !action.error ){
+				fetchConnectSocket();
+			}
 			this.setState({
 				init : true
 			})
 		})
-		fetchConnectSocket();
 	}
 	componentWillReceiveProps(nextProps){
 		const { socket } = this.props;
@@ -35,14 +37,14 @@ class App extends Component {
 		}
 	}
 	render() {
-		const { fetchJoin, fetchLogin, fetchLogout, fetchLoggedIn, user, socket } = this.props;
+		const { fetchLogout, fetchLoggedIn, user, socket } = this.props;
 		const { init } = this.state;
 		return (
 			<Router>
 				<div>
 					<Header fetchLogout={ fetchLogout } user={ user } />
 					{ init ?
-						<Body user={ user } fetchLogin={ fetchLogin } fetchJoin={ fetchJoin } />
+						<Body user={ user } />
 						: <div></div>
 					}
 				</div>

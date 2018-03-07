@@ -11,10 +11,14 @@ class Login extends Component {
 	componentWillMount() {
 	}
 	handleLogin = (email, password) => {
-		const { fetchLogin, history } = this.props;
+		const { fetchLogin, fetchConnectSocket, history } = this.props;
 		fetchLogin({email,password})
 			.then( (action) => {
 				if(!action.error) {
+					fetchConnectSocket()
+					.then( action => {
+						console.log(action);
+					});
 					history.push('/');
 				} else {
 					this.setState({

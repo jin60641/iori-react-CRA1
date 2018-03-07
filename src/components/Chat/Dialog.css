@@ -29,6 +29,7 @@
       color: black;
       font-weight: 700; }
     .Dialog .dialog-message-wrap .dialog-message-text {
+      margin-top: 2px;
       color: #999; }
 
 .Dialog-active {

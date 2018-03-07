@@ -59,7 +59,7 @@ class Layer extends Component {
             return false;
         }
         if( type === "user" ){
-            const to = keys[selected[0]];
+            const to = selected[keys[0]];
 			inviteUsers([to]);
         } else if( type === "group" ){
         }
@@ -75,12 +75,12 @@ class Layer extends Component {
 					<div className="layer-box-close" onClick={()=>showChatLayer(null)}></div>
 					<div className="layer-title">Title</div>
 					<div className="layer-search-box">
-						<input type="text" className="layer-search" placeholder="검색" value={query} onChange={this.handleLayerSearch} />
+						<input type="text" className="layer-search" placeholder="검색" value={query} onChange={this.handleSearch} />
 					</div>
 					<div className="layer-list">
 					{ searched.users.map( (result) => {
 						return(
-							<div className={cx("layer-list-item",{"layer-list-item-active":selected[result.id]})} key={`layer-list-${result.id}`} onClick={()=>this.handleLayerSelect(result)}>
+							<div className={cx("layer-list-item",{"layer-list-item-active":selected[result.id]})} key={`layer-list-${result.id}`} onClick={()=>this.handleSelect(result)}>
 								<img className="layer-list-img" />
 								<div className="layer-list-wrap">
 									<div className="layer-list-name">{result.name}</div>

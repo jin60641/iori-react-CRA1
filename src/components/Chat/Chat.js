@@ -46,9 +46,9 @@ class Chat extends Component {
 			});
 		}
 	}
-	getChats = (to,type,offset) => {
+	getChats = (from,type,offset) => {
 		const { fetchGetChats } = this.props;
-		fetchGetChats({ to, type, limit, offset })
+		fetchGetChats({ from, type, limit, offset })
 		.then( action => {
 			
 		});
@@ -57,7 +57,7 @@ class Chat extends Component {
 		const { chats } = this.props;
 		const { to, type } = this.state;
 		if( to ){
-			this.getChats(to,type,chats[to.handle].length);
+			this.getChats(to,type,chats[to.handle]?chats[to.handle].length:0);
 		}
 	}
 	handleClickMenu = (e) => {
@@ -80,7 +80,7 @@ class Chat extends Component {
 		});
 	}
 	openChat = (to,type) => {
-		const { history } = this.props;
+		const { history, chats } = this.props;
 		history.push(`/chat/@${to.handle}`);
 		this.setState({
 			layerSelected : {},
@@ -88,7 +88,9 @@ class Chat extends Component {
 			type,
 			to
 		});
-		this.getChats(to,type);
+		if( !chats[to.handle] ){
+			this.getChats(to,type);
+		}
 	}
 	inviteUsers = users => {
 		const { layer } = this.state;
@@ -162,9 +164,8 @@ class Chat extends Component {
 		}
 	}
 	render(){
-		const { searched, chats, user, dialogs } = this.props;
+		const { fetchSearchUsers, searched, chats, user, dialogs } = this.props;
 		const { to, menu, layer, type, text } = this.state;
-		console.log(layer);
 		return(
 			<div className="Chat">
 				<div className="chat-wrap" onClick={this.handleClickOutside} >
@@ -220,7 +221,7 @@ class Chat extends Component {
 				</div>
 				{ layer === null ? 
 					<div /> 
-					: <Layer type={layer} showChatLayer={this.showChatLayer} fetchSearchUsers={fetchSearchUsers} searched={searched} />
+					: <Layer type={layer} showChatLayer={this.showChatLayer} fetchSearchUsers={fetchSearchUsers} searched={searched} inviteUsers={this.inviteUsers} />
 				}
 			</div>
 		);

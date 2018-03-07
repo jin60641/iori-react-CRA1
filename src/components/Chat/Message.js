@@ -27,7 +27,7 @@ class Message extends Component {
 				*/ }
 				<div className="message-body">
 					<div className="message-body-name">
-						{ chat.to.name }
+						{ chat.from.name }
 					</div>
 					{
 						chat.file ?

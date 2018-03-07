@@ -114,6 +114,53 @@ $layer-search-height : 32px;
 		overflow-y : overlay;
 		padding-top : 7px;
 		height : calc( 100% - #{$layer-header-height} - #{$layer-search-height} );
+		.layer-list-item {
+			cursor : pointer;
+			padding : 6px 10px 8px 15px;
+			position : relative;
+			&:hover {
+				background-color : rgba($color-normal,.3);
+			}
+			.layer-list-img {
+				background-color : white;
+				width : 48px;
+				height : 48px;
+				vertical-align : middle;
+				border-radius : 50%;
+				overflow : hidden;
+				margin-right : 15px;
+				display : inline-block;
+			}
+			.layer-list-wrap {
+				vertical-align : middle;
+				font-size : 13px;
+				display : inline-block;
+				word-wrap : break-word;
+				overflow : hidden;
+				.layer-list-name {
+					color : black;
+					font-weight : 700;
+				}
+				.layer-list-handle {
+					margin-top : 2px;
+					color : #999;
+				}
+			}
+		}
+		.layer-list-item-active {
+			background-color: rgba($color-normal, 0.8) !important;
+			.layer-list-time {
+				color : white !important;
+			}
+			.layer-list-wrap {
+				.layer-list-name {
+					color : white !important;
+				}
+				.layer-list-handle {
+					color : white !important;
+				}
+			}
+		}
 	}
 
 	.layer-group {

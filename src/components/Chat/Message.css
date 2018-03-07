@@ -11,7 +11,6 @@
     overflow: hidden; }
     .Message .message-body-caret .message-body-caret-outer, .Message .message-body-caret .message-body-caret-inner {
       position: absolute;
-      left: 0;
       display: inline-block;
       margin-left: -1px; }
   .Message .message-profileimg {

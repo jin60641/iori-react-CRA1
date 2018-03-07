@@ -95,6 +95,41 @@
     overflow-y: overlay;
     padding-top: 7px;
     height: calc( 100% - 54px - 32px); }
+    .layer-box .layer-list .layer-list-item {
+      cursor: pointer;
+      padding: 6px 10px 8px 15px;
+      position: relative; }
+      .layer-box .layer-list .layer-list-item:hover {
+        background-color: rgba(255, 92, 62, 0.3); }
+      .layer-box .layer-list .layer-list-item .layer-list-img {
+        background-color: white;
+        width: 48px;
+        height: 48px;
+        vertical-align: middle;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 15px;
+        display: inline-block; }
+      .layer-box .layer-list .layer-list-item .layer-list-wrap {
+        vertical-align: middle;
+        font-size: 13px;
+        display: inline-block;
+        word-wrap: break-word;
+        overflow: hidden; }
+        .layer-box .layer-list .layer-list-item .layer-list-wrap .layer-list-name {
+          color: black;
+          font-weight: 700; }
+        .layer-box .layer-list .layer-list-item .layer-list-wrap .layer-list-handle {
+          margin-top: 2px;
+          color: #999; }
+    .layer-box .layer-list .layer-list-item-active {
+      background-color: rgba(255, 92, 62, 0.8) !important; }
+      .layer-box .layer-list .layer-list-item-active .layer-list-time {
+        color: white !important; }
+      .layer-box .layer-list .layer-list-item-active .layer-list-wrap .layer-list-name {
+        color: white !important; }
+      .layer-box .layer-list .layer-list-item-active .layer-list-wrap .layer-list-handle {
+        color: white !important; }
   .layer-box .layer-group {
     display: none; }
     .layer-box .layer-group .layer-group-label {
