@@ -1,0 +1,56 @@
+import React, { Component } from 'react';
+import styles from './Message.css';
+import classNames from 'classnames/bind';
+const cx = classNames.bind(styles);
+
+class Message extends Component {
+	constructor(props){
+		super(props);
+	}
+	componentDidUpdate = () => {
+		const { handleScrollBottom } = this.props;
+		handleScrollBottom();
+	}
+	componentDidMount = () => {
+		const { handleScrollBottom } = this.props;
+		handleScrollBottom();
+	}
+	render(){
+		const { user, chat } = this.props;
+		const my = user.id === chat.from.id;
+		return(
+			<div className={cx("Message",{"Message-my":my})}>
+				{ /*
+					my ?
+						null
+						: <a className="message-profileimg" href={`/profile${chat.from.handle}`}></a>
+				*/ }
+				<div className="message-body">
+					<div className="message-body-name">
+						{ chat.to.name }
+					</div>
+					{
+						chat.file ?
+							<img className="message-body-file" src={`/files/chat/${chat.id}.png`} />
+						:
+							<div>
+								<div className="message-body-caret">
+									<div className="message-body-caret-outer" />
+									<div className="message-body-caret-inner" />
+								</div>
+								<div className="message-body-text">
+									{ chat.text }
+								</div>
+							</div>
+					}
+				</div>
+				{/* 
+					my ?
+						<span className="message-profileimg"></span>
+						: null
+				*/}
+			</div>
+		);
+	}
+}
+export default Message;

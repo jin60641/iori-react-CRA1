@@ -53,7 +53,6 @@ class Body extends Component {
 					<Route path="/chat/:handle" render={(props) => (
 						this.isLoggedIn() ? 
 							<Chat {...props }
-								cx = { cx }
 								showScroll = { this.showScroll }
 							/>
 						: <Redirect to="/auth/login/chat" />
@@ -61,7 +60,6 @@ class Body extends Component {
 					<Route path="/chat" render={(props) => (
 						this.isLoggedIn() ? 
 							<Chat {...props }
-								cx = { cx }
 								showScroll = { this.showScroll }
 							/>
 						: <Redirect to="/auth/login/chat" />

@@ -1,142 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ReactDOM from 'react-dom';
-import './Chat.css';
+
+import Dialog from './Dialog';
+import Panel from './Panel';
+import Layer from './Layer';
 
 import { fetchSearchUser, fetchSearchUsers } from '../../actions/search';
 import { fetchSendChat, fetchGetChats, fetchGetDialogs } from '../../actions/chat';
+
+import styles from './Chat.css';
+import classNames from 'classnames/bind';
+const cx = classNames.bind(styles);
+
 
 const initialState = {
 	menu : false,
 	layer : null,
 	chats : {},
-	layerSelected : {},
 	type : null,
 	to : null,
 	text : "",
-	layerQuery : ""
 }
 
 const limit = 10;
-
-class Dialog extends Component {
-    constructor(props){
-        super(props);
-    }
-    render(){
-        const { dialog, cx, user, openChat, active } = this.props;
-		const my = user.id === dialog.from.id;
-        return(
-            <div className={cx("chat-dialogs",{"chat-dialogs-active":active})} onClick={ ()=>{openChat(my?dialog.to:dialog.from,"user")} }>
-                <div className="chat-dialogs-time">
-                    time
-                </div>
-                <img className="chat-dialogs-img" src="/images/profile.png" />
-                <div className="chat-dialogs-message-wrap">
-                    <div className="chat-dialogs-message-name">
-                        { my ? dialog.to.name : dialog.from.name }
-                    </div>
-                    <div className="chat-dialogs-message-text">
-                        { my ? `나 : ${dialog.text}`  : dialog.text }
-                    </div>
-                </div>
-            </div>
-        );
-    }
-}
-
-class Panel extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
-			isBottom : true,
-			timer : null
-		}
-		this.handleScroll = this.handleScroll.bind(this);
-	}
-	componentDidMount(){
-		ReactDOM.findDOMNode(this.refs.Panel).addEventListener('scroll',this.handleScroll);
-	}
-	componentWillUnmount(){
-		ReactDOM.findDOMNode(this.refs.Panel).removeEventListener('scroll',this.handleScroll);
-	}
-	handleScroll(e){
-		const dom = e.target;
-		this.setState({ isBottom : dom.scrollHeight - dom.scrollTop === dom.clientHeight });
-	}
-	handleScrollBottom = () => {
-		const { isBottom } = this.state;
-		const dom = ReactDOM.findDOMNode(this.refs.Panel);
-		dom.scrollTop = dom.scrollHeight;
-	}
-	render(){
-		const { chats, to, user, cx } = this.props;
-		return(
-			<div className="chat-panel" ref="Panel">
-			{ 
-				chats[to.handle] ? 
-					chats[to.handle].map( chat => {
-						return(<Message chat={chat} user={user} cx={cx} key={`chat-message-${chat.id}`}  handleScrollBottom={this.handleScrollBottom} />);
-					})
-				:
-					<div></div>
-			}
-			</div>
-		);
-	}
-}
-
-class Message extends Component {
-	constructor(props){
-		super(props);
-	}
-	componentDidUpdate = () => {
-		const { handleScrollBottom } = this.props;
-		handleScrollBottom();
-	}
-	componentDidMount = () => {
-		const { handleScrollBottom } = this.props;
-		handleScrollBottom();
-	}
-	render(){
-		const { user, chat, cx } = this.props;
-		const my = user.id === chat.from.id;
-		return(
-			<div className={cx("chat-message",{"chat-message-my":my})}>
-				{ /*
-					my ?
-						null
-						: <a className="chat-message-profileimg" href={`/profile${chat.from.handle}`}></a>
-				*/ }
-				<div className="chat-message-body">
-					<div className="chat-message-body-name">
-						{ chat.to.name }
-					</div>
-					{ 
-						chat.file ?
-							<img className="chat-message-body-file" src={`/files/chat/${chat.id}.png`} />
-						:
-							<div>
-								<div className="chat-message-body-caret">
-									<div className="chat-message-body-caret-outer" />
-									<div className="chat-message-body-caret-inner" />
-								</div>
-								<div className="chat-message-body-text">
-									{ chat.text }
-								</div>
-							</div>
-					}
-				</div>
-				{/* 
-					my ?
-						<span className="chat-message-profileimg"></span>
-						: null
-				*/}
-			</div>
-		);
-	}
-}
-
 
 class Chat extends Component {
 	constructor(props){
@@ -160,6 +46,20 @@ class Chat extends Component {
 			});
 		}
 	}
+	getChats = (to,type,offset) => {
+		const { fetchGetChats } = this.props;
+		fetchGetChats({ to, type, limit, offset })
+		.then( action => {
+			
+		});
+	}
+	handleScrollTop = (callback) => {
+		const { chats } = this.props;
+		const { to, type } = this.state;
+		if( to ){
+			this.getChats(to,type,chats[to.handle].length);
+		}
+	}
 	handleClickMenu = (e) => {
 		e.stopPropagation();
 		this.showChatMenu(true);
@@ -176,17 +76,11 @@ class Chat extends Component {
 	}
 	showChatLayer = (type) => {
 		this.setState({
-			layer : type,
-			layerSelected : {},
-			layerQuery : ""
+			layer : type
 		});
-		const data = { query : "" };
-		const { fetchSearchUsers } = this.props;
-		fetchSearchUsers(data)
-		.then( () => {});
 	}
 	openChat = (to,type) => {
-		const { history, fetchGetChats } = this.props;
+		const { history } = this.props;
 		history.push(`/chat/@${to.handle}`);
 		this.setState({
 			layerSelected : {},
@@ -194,53 +88,15 @@ class Chat extends Component {
 			type,
 			to
 		});
-		fetchGetChats({ to, type : "user", limit })
-		.then( action => {
-		});
+		this.getChats(to,type);
 	}
-	handleClickInvite = () => {
-		const { layer, layerSelected } = this.state;
-		const selected = Object.keys(layerSelected);
-		if( !selected.length ){
-			return false;
-		}
+	inviteUsers = users => {
+		const { layer } = this.state;
 		if( layer === "user" ){
-			const to = layerSelected[selected[0]];
-			this.openChat(to,layer);
+			this.openChat(users[0],layer);
 		} else if( layer === "group" ){
+			// group invite
 		}
-	} 
-	handleLayerSelect = (user) => {
-		const prev = this.state.layerSelected;
-		let layerSelected = {};
-		if( this.state.type === "user" ){
-			layerSelected[user.id] = user;
-		} else {
-			layerSelected = Object.assign({},prev);
-			if( prev[user.id] ){
-				delete layerSelected[user.id];
-			} else {
-				layerSelected[user.id] = user;
-			}
-		}
-		this.setState({layerSelected});
-	}
-	handleLayerSearch = (e) => {
-		const { fetchSearchUsers } = this.props;
-		const query = e.target.value
-		this.setState({
-			layerQuery : query
-		})
-		if( !query.length ){
-			return null;
-		}
-		const data = { query };
-		fetchSearchUsers(data)
-		.then( (action) => {
-			if( !action.error ){
-			} else {
-			}
-		});
 	}
 	componentWillUnmount = () => {
 		const { showScroll } = this.props;
@@ -306,8 +162,9 @@ class Chat extends Component {
 		}
 	}
 	render(){
-		const { cx, searched, chats, user, dialogs } = this.props;
-		const { to, menu, layer, layerSelected, layerQuery, type, text } = this.state;
+		const { searched, chats, user, dialogs } = this.props;
+		const { to, menu, layer, type, text } = this.state;
+		console.log(layer);
 		return(
 			<div className="Chat">
 				<div className="chat-wrap" onClick={this.handleClickOutside} >
@@ -330,19 +187,19 @@ class Chat extends Component {
 						</div>
 					</div>
 					<div className="chat-dialog">
-						<div className={cx("chat-dialogs","chat-dialog-search")}>
+						<div className={cx("Dialog","chat-dialog-search")}>
 							<input type="text" className="chat-search" placeholder="검색" />
 						</div>
 						<div className="chat-dialog-box">
 							{ Object.keys(dialogs).map( key => {
-								return(<Dialog cx={cx} user={user} active={to.id===parseInt(key)} dialog={dialogs[key]} key={`dialog-${key}`} openChat={this.openChat} />);
+								return(<Dialog cx={cx} user={user} active={to?(to.id===parseInt(key)):false} dialog={dialogs[key]} key={`dialog-${key}`} openChat={this.openChat} />);
 							})}
 						</div>
 					</div>
 					{ 
 						type ? 
 							<div className="chat-box">
-								<Panel chats={chats} to={to} cx={cx} user={user} />
+								<Panel chats={chats} to={to} cx={cx} user={user} handleScrollTop={this.handleScrollTop} />
 								<div className="send-panel">
 									<textarea className="send-textarea" value={text} placeholder="메시지를 입력하세요" 
 										onChange={ this.handleChangeText } 
@@ -361,33 +218,10 @@ class Chat extends Component {
 							</div>
 					}
 				</div>
-				<div className={cx("chat-layer",{"chat-layer-active":layer})} onClick={()=>this.showChatLayer(null)} >
-					<div className="chat-layer-close"></div>
-					<div className="chat-layer-box" onClick={(e)=>e.stopPropagation()}>
-						<div className="chat-layer-box-close" onClick={()=>this.showChatLayer(null)}></div>
-						<div className="chat-layer-title">Title</div>
-						<div className="chat-layer-search-box">
-							<input type="text" className="chat-layer-search" placeholder="검색" value={layerQuery} onChange={this.handleLayerSearch} />
-						</div>
-						<div className={cx("chat-layer-list","chat-layer-div")}>
-						{ searched.users.map( (result) => {
-							return(
-								<div className={cx("chat-dialogs",{"chat-dialogs-active":layerSelected[result.id]})} key={`chat-layer-list-${result.id}`} onClick={()=>this.handleLayerSelect(result)}>
-									<img className="chat-dialogs-img" />
-									<div className="chat-dialogs-message-wrap">
-										<div className="chat-dialogs-message-name">{result.name}</div>
-										<div className="chat-dialogs-message-handle">@{result.handle}</div>
-									</div>
-								</div>
-							);
-						}) }
-						</div>
-						<div className="chat-layer-menu">
-							<div className={cx("chat-layer-menu-item","chat-layer-menu-active")} onClick={()=>this.showChatLayer(null)} >취소</div>
-							<div className={cx("chat-layer-menu-item",{"chat-layer-menu-active":Object.keys(layerSelected).length})} onClick={this.handleClickInvite}>초대</div>
-						</div>
-					</div>
-				</div>
+				{ layer === null ? 
+					<div /> 
+					: <Layer type={layer} showChatLayer={this.showChatLayer} fetchSearchUsers={fetchSearchUsers} searched={searched} />
+				}
 			</div>
 		);
 	}

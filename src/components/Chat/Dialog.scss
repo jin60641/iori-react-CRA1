@@ -1,0 +1,60 @@
+@import "../../styles/utils.scss";
+
+$chat-dialog-width : 230px;
+
+.Dialog {
+	cursor : pointer;
+	padding : 6px 10px 8px 15px;
+	position : relative;
+	&:hover {
+		background-color : rgba($color-normal,.3);
+	}
+	.dialog-time {
+		letter-spacing : -1px;
+		position : absolute;
+		right : 14px;
+		top : 10px;
+		font-size : 12px;
+	}
+	.dialog-img {
+		background-color : white;
+		width : 48px;
+		height : 48px;
+		vertical-align : middle;
+		border-radius : 50%;
+		overflow : hidden;
+		margin-right : 15px;
+		display : inline-block;
+	}
+	.dialog-message-wrap {
+		vertical-align : middle;
+		font-size : 13px;
+		display : inline-block;
+		word-wrap : break-word;
+		overflow : hidden;
+		.dialog-message-name {
+			color : black;
+			font-weight : 700;
+		}
+		.dialog-message-text {
+			color : #999;
+		}
+	}
+}
+
+.Dialog-active {
+	background-color: rgba($color-normal, 0.8) !important;
+	.dialog-time {
+		color : white !important;
+	}
+	.dialog-message-wrap {
+		.dialog-message-name {
+			color : white !important;
+		}
+		.dialog-message-text {
+			color : white !important;
+		}
+	}
+}
+
+

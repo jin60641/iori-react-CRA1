@@ -1,0 +1,94 @@
+.Write {
+  box-sizing: border-box;
+  width: 100%;
+  font-family: inherit;
+  word-wrap: break-word;
+  background-color: white;
+  position: relative;
+  font-size: 13px;
+  letter-spacing: 0px;
+  border: 1px solid;
+  border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+  border-radius: 3px;
+  display: block;
+  margin-bottom: 10px;
+  transition: opacity .3s linear;
+  text-decoration: none;
+  cursor: default;
+  color: black;
+  padding: 10px;
+  padding-bottom: 50px; }
+  @media (max-width: 649px) {
+    .Write {
+      border-top: 0px;
+      border-left: 0px;
+      border-right: 0px;
+      margin-bottom: 0px;
+      border-radius: 0px; } }
+  .Write .write-text {
+    -webkit-appearance: none;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    border-left: 0px;
+    border-right: 0px;
+    border-radius: 0px;
+    overflow-y: hidden;
+    display: block;
+    font-size: 14px;
+    width: 100%;
+    height: 100px;
+    vertical-align: top;
+    padding-left: 3px;
+    transition: border-top .1s linear, border-bottom .1s linear;
+    box-sizing: border-box;
+    resize: none; }
+    .Write .write-text:focus {
+      outline: 0;
+      border-top: 1px solid #ff5c3e;
+      border-bottom: 1px solid #ff5c3e; }
+  .Write .write-submit {
+    margin-top: 8px;
+    float: right;
+    color: white;
+    border-radius: 2px;
+    box-sizing: border-box;
+    text-align: center;
+    line-height: 32px;
+    background-color: #ff5c3e;
+    font-size: 16px;
+    width: 60px;
+    height: 33px; }
+    .Write .write-submit:hover {
+      cursor: pointer; }
+  .Write .write-label {
+    margin-right: 14px;
+    margin-top: 8px;
+    width: 32px;
+    height: 32px;
+    float: right;
+    border-radius: 2px;
+    background: url("/images/upload-image.png");
+    background-color: #ff5c3e;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center center; }
+    .Write .write-label:hover {
+      cursor: pointer; }
+  .Write .write-file {
+    display: none; }
+  .Write .write-preview {
+    width: 100%;
+    white-space: nowrap;
+    overflow-y: hidden;
+    margin-bottom: 3px; }
+    .Write .write-preview .write-img {
+      padding: 3px;
+      margin-top: 10px;
+      border: 2px solid #ff5c3e;
+      width: 82px;
+      height: 82px;
+      margin-left: 4px;
+      margin-right: 5px;
+      position: relative;
+      display: inline-block; }

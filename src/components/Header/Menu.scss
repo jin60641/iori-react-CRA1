@@ -1,0 +1,19 @@
+.Menu {
+	.menu-profile {
+		right : 40px;
+		display : block;
+		position : absolute;
+		top : 7px;
+		cursor : pointer;
+		text-decoration : none;
+		vertical-align : bottom;
+		border-radius : 20px;
+		width : 30px;
+		height : 30px;
+		transition : all .4s ease-out;
+		
+		&:hover {
+		    transform : scale(1.1,1.1);
+		}
+	}
+}

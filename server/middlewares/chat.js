@@ -88,7 +88,7 @@ obj.getDialogs = ( req, res ) => {
 obj.getChats = ( req, res ) => {
 	let { limit, offset, to, type } = req.body;
 	limit = limit?limit:10;
-	offset = offset?offest:0;
+	offset = offset?offset:0;
 	db.Chat.findAll({
 		where : {
 			$or : [{

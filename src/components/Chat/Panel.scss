@@ -1,0 +1,20 @@
+@import "../../styles/utils.scss";
+
+$send-panel-height : 48px;
+
+.Panel {
+	overflow : hidden;
+	padding-right : 2px;
+	height : calc( 100% - #{$send-panel-height} );
+	&:hover {
+		padding-right : 0px;
+		overflow-y : scroll;
+	}
+	&::-webkit-scrollbar {
+		width : 2px;
+	}
+	&::-webkit-scrollbar-thumb {
+		background-color : rgba($color-normal,.6);
+		background-clip : padding-box;
+	}
+}

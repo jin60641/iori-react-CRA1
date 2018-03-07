@@ -1,0 +1,111 @@
+@import "../../styles/utils.scss";
+
+.Message {
+	margin : 10px;
+	.message-body-caret {
+		left : -8px;
+		display : inline-block;
+		margin : 0px;
+		position : absolute;
+		top : 28px;
+		width : 10px;
+		height : 18px;
+		overflow : hidden;
+		.message-body-caret-outer, .message-body-caret-inner {
+			position : absolute;
+			left : 0;
+			display : inline-block;
+			margin-left : -1px;
+		}
+	}
+
+	.message-profileimg {
+		background-size : 100% 100%;
+		cursor : pointer;
+		width : 50px;
+		height : 50px;
+		border-radius : 50%;
+		display : inline-block;
+		vertical-align : top;
+	}
+	.message-body {
+		display : inline-block;
+		margin : 4px;
+		margin-top : 0px;
+		position : relative;
+		vertical-align : top;
+		.message-body-div {
+			margin : 5px;
+		}
+		.message-body-name {
+			margin-left : 9px;
+			margin-bottom : 5px;
+			display : block;
+			text-decoration : none;
+			cursor : pointer;
+			color : rgba($color-normal,8);
+			font-weight : 600;
+			margin-top : 2px;
+		}
+		.message-body-text {
+			display : inline-block;
+			color : black;
+			font-size : 15px;
+			background-color : white;
+			border : 1px solid rgba($color-normal,8);
+			padding : 8px 10px 10px 10px;
+			border-radius : 4px;
+			margin-top : 0px;
+		}
+		.message-body-file {
+			cursor : pointer;
+			max-height : 140px;
+			display : block;
+			margin : 10px;
+			margin-top : 0px;
+			margin-bottom : 15px;
+			border-radius : 4px;
+		}
+	}
+	.message-body-caret-outer {
+		border-right : 10px solid rgba($color-normal,0.8);
+		border-bottom : 10px solid transparent;
+		height : auto;
+		left : 0;
+		top : 0;
+		width : auto;
+	}
+	.message-body-caret-inner {
+		top : 1px;
+		left : 2px;
+		border-right : 9px solid white;
+		border-bottom : 9px solid transparent;
+	}
+}
+.Message-my {
+	text-align : right;
+	.message-body {
+		.message-body-name {
+			margin-left : 0px;
+		}
+		.message-body-text {
+			margin-right : 9px;
+		}
+	}
+	.message-body-caret {
+		left : auto;
+		right : 0px;
+		.message-body-caret-outer {
+			border-right : 0;
+			border-left : 10px solid rgba($color-normal,0.8);
+			left : auto;
+			right : 0px;
+		}
+		.message-body-caret-inner {
+			border-right : 0;
+			border-left : 9px solid white;
+			left : auto;
+			right : 2px;
+		}
+	}
+}

@@ -1,0 +1,12 @@
+.Panel {
+  overflow: hidden;
+  padding-right: 2px;
+  height: calc( 100% - 48px); }
+  .Panel:hover {
+    padding-right: 0px;
+    overflow-y: scroll; }
+  .Panel::-webkit-scrollbar {
+    width: 2px; }
+  .Panel::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 92, 62, 0.6);
+    background-clip: padding-box; }

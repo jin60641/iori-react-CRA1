@@ -60,25 +60,4 @@
 			}
 		}
 	}
-	.HeaderMenu {
-		right : 40px;
-		display : block;
-		position : absolute;
-		top : 7px;
-		cursor : pointer;
-		text-decoration : none;
-		vertical-align : bottom;
-		border-radius : 20px;
-		width : 30px;
-		height : 30px;
-		-webkit-transition :all .4s ease-out;
-		-moz-transition :	all .4s ease-out;
-		-o-transition :		all .4s ease-out;
-		-ms-transition :	all .4s ease-out;
-		transition :		all .4s ease-out;
-		
-		&:hover {
-			transform : scale(1.1,1.1);
-		}
-	}
 }

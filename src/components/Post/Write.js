@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styles from './Post.css';
+import styles from './Write.css';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 const initialState = {
@@ -46,16 +46,16 @@ class PostWrite extends Component {
 	}
 	render() {
 		return (
-			<div className={cx('Post','PostWrite')}>
-				<textarea className="post-write-text" value={this.state.text} onChange={this.handleChangeText} placeholder="글을 입력하세요" />
-				<div className="post-write-preview">
+			<div className="Write">
+				<textarea className="write-text" value={this.state.text} onChange={this.handleChangeText} placeholder="글을 입력하세요" />
+				<div className="write-preview">
 					{ this.state.files.map((file) => {
-						return (<img key={ file.url }src={ file.url } className="post-write-img" alt="post-write-img" />);
+						return (<img key={ file.url }src={ file.url } className="write-img" alt="write-img" />);
 					})}
 				</div>
-				<div className="post-write-submit" onClick={ this.handleSubmit } > 게시 </div>
-				<label className="post-write-label" htmlFor="file" />
-				<input ref="file" id="file" type="file" className="post-write-file" multiple onChange={this.handleChangeFile} />
+				<div className="write-submit" onClick={ this.handleSubmit } > 게시 </div>
+				<label className="write-label" htmlFor="file" />
+				<input ref="file" id="file" type="file" className="write-file" multiple onChange={this.handleChangeFile} />
 			</div>
 		);
 	}

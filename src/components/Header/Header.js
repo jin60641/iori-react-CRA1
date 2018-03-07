@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { NavLink, withRouter } from "react-router-dom";
 
 import './Header.css';
-import HeaderMenu from './HeaderMenu';
+import Menu from './Menu';
 
 class Header extends Component {
 	constructor(props) {
@@ -36,10 +36,10 @@ class Header extends Component {
 			<div className="Header">
 				<div className="header-tabs">
 					{ tabs.map((tab) => {
-						return (<NavLink exact={true} className="header-tab" to={tab.link} key={tab.key} activeClassName="header-tab-active" > {tab.name} </NavLink>);
+						return (<NavLink exact={"/"===tab.link} className="header-tab" to={tab.link} key={tab.key} activeClassName="header-tab-active" > {tab.name} </NavLink>);
 					})}
 				</div>
-				<HeaderMenu user={ user } />
+				<Menu user={ user } />
 			</div>
 		);
 	}
