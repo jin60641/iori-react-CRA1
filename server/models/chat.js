@@ -11,6 +11,7 @@ module.exports = function(sequelize, DataTypes) {
 	Chat.associate = function(models) {
 		Chat.belongsTo(models.User, { as : 'to', foreignKey : 'toId', targetKey : 'id' });
 		Chat.belongsTo(models.User, { as : 'from', foreignKey : 'fromId', targetKey : 'id' });
+		Chat.belongsTo(models.Group, { as : 'group', foreignKey : 'groupId', targetKey : 'id' });
 	}
 	return Chat;
 };

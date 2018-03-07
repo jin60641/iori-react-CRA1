@@ -6,7 +6,6 @@ import styles from './Panel.css';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
-
 class Panel extends Component {
 	constructor(props){
 		super(props);
@@ -36,7 +35,6 @@ class Panel extends Component {
 			e.preventDefault();
 			return false;
 		}
-		console.log(dom.scrollTop);
 		if( dom.scrollTop < 80 ){
 			e.preventDefault();
 			this.setState({
@@ -96,12 +94,12 @@ class Panel extends Component {
 		}
 	}
 	render(){
-		const { chats, to, user } = this.props;
+		const { chats, to, user, handle } = this.props;
 		return(
 			<div className="Panel" ref="Panel">
 			{
-				chats[to.handle] ?
-					chats[to.handle].map( chat => {
+				chats[handle] ?
+					chats[handle].map( chat => {
 						return(<Message chat={chat} user={user}  key={`chat-message-${chat.id}`}  handleScrollBottom={this.handleScrollBottom} />);
 					})
 				:

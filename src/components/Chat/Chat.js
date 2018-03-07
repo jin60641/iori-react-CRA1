@@ -12,6 +12,14 @@ import styles from './Chat.css';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
+const charToStr = {
+	'@' : 'user',
+	'#' : 'group'
+}
+const strToChar = {
+	'user' : '@',
+	'group' : '#',
+}
 
 const initialState = {
 	menu : false,
@@ -29,6 +37,9 @@ class Chat extends Component {
 		super(props);
 		this.state = Object.assign({},initialState);
 	}
+	getFullHandle = (type,handle) => {
+		return strToChar[type] + handle;
+	}
 	componentWillMount = (e) => {
 		const chatHandle = this.props.match.params.handle;
 		const { fetchSearchUser, fetchGetChats, fetchGetDialogs } = this.props;
@@ -36,7 +47,7 @@ class Chat extends Component {
 		.then( action => {
 		});
 		if( chatHandle ){
-			const type = chatHandle[0]==='@'?'user':(chatHandle[0]==='g'?'group':null);;
+			const type = charToStr[chatHandle[0]];
 			const handle = chatHandle.substr(1);
 			fetchSearchUser({ query : handle })
 			.then( action => {
@@ -50,14 +61,13 @@ class Chat extends Component {
 		const { fetchGetChats } = this.props;
 		fetchGetChats({ from, type, limit, offset })
 		.then( action => {
-			
 		});
 	}
 	handleScrollTop = (callback) => {
-		const { chats } = this.props;
 		const { to, type } = this.state;
+		const chats = this.props.chats[this.getFullHandle(type,to.handle)];
 		if( to ){
-			this.getChats(to,type,chats[to.handle]?chats[to.handle].length:0);
+			this.getChats(to,type,chats?chats.length:0);
 		}
 	}
 	handleClickMenu = (e) => {
@@ -81,7 +91,7 @@ class Chat extends Component {
 	}
 	openChat = (to,type) => {
 		const { history, chats } = this.props;
-		history.push(`/chat/@${to.handle}`);
+		history.push(`/chat/${this.getFullHandle(type,to.handle)}`);
 		this.setState({
 			layerSelected : {},
 			layer : null,
@@ -200,7 +210,7 @@ class Chat extends Component {
 					{ 
 						type ? 
 							<div className="chat-box">
-								<Panel chats={chats} to={to} cx={cx} user={user} handleScrollTop={this.handleScrollTop} />
+								<Panel chats={chats} to={to} cx={cx} user={user} handleScrollTop={this.handleScrollTop} handle={this.getFullHandle(type,to.handle)}/>
 								<div className="send-panel">
 									<textarea className="send-textarea" value={text} placeholder="메시지를 입력하세요" 
 										onChange={ this.handleChangeText } 

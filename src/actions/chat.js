@@ -11,7 +11,6 @@ const sendChatUri = '/api/chat/sendchat';
 
 export const chatSocket = (socket,dispatch) => {
 	socket.on( 'getchat', data => {
-		console.log(data);
 		dispatch(getChat(data));
 	});
 };
