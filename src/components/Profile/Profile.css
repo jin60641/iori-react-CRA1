@@ -1,0 +1,26 @@
+.Profile {
+  width: 100vw;
+  position: relative;
+  background-color: white;
+  z-index: 1; }
+  .Profile .profile-container {
+    position: fixed;
+    width: 100vw;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: white; }
+  .Profile .profile-header {
+    width: 100%;
+    height: calc( 100% - 60px);
+    position: relative; }
+    .Profile .profile-header .profile-header-label {
+      height: 100%; }
+    .Profile .profile-header .profile-header-back {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-clip: content-box;
+      box-shadow: inset 0px 0px 1px 1px rgba(0, 0, 0, 0.1);
+      background-color: #ff5c3e; }
+    .Profile .profile-header .profile-header-file {
+      display: none; }

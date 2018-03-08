@@ -6,7 +6,7 @@ let initialState = {
 };
 
 export default handleActions({
-	[searchUsers]: function(state, action) {
+	[searchUsers]: (state, action) => {
 		if( action.error ) {
 			return state;
 		}

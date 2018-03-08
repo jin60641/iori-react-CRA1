@@ -11,6 +11,7 @@ import Slider from '../Slider/Slider';
 import Mail from '../Mail/Mail';
 import Auth from '../Auth/Auth';
 import Chat from '../Chat/Chat';
+import Profile from '../Profile/Profile';
 
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
@@ -21,8 +22,10 @@ class Body extends Component {
 		super(props);
 		this.handleScroll = this.handleScroll.bind(this);
 		this.state = {
+			isTop : true,
 			isBottom : false,
-			scrollBar : true
+			scrollBar : true,
+			scrollTop : 0
 		}
 	}
 	componentDidMount(){
@@ -34,7 +37,11 @@ class Body extends Component {
 	handleScroll(e){
 		if( this.state.scrollBar ){
 			const dom = e.target;
-			this.setState({ isBottom : dom.scrollHeight - dom.scrollTop < dom.clientHeight + 100 });
+			this.setState({ 
+				isBottom : dom.scrollHeight - dom.scrollTop < dom.clientHeight + 100,
+				isTop : 0 === dom.scrollTop,
+				scrollTop : dom.scrollTop
+			});
 		}
 	}
 	showScroll = (bool) => {
@@ -47,9 +54,25 @@ class Body extends Component {
 		return user && user.verify;
 	}
 	render(){
+		const { isTop, isBottom, scrollTop, scrollBar } = this.state;
+		const { fetchGetPosts, fetchWritePost } = this.props;
 		return(
-			<div className={cx('Body',{ 'body-scroll' : this.state.scrollBar })} ref="Body" >
+			<div className={cx('Body',{ 'body-scroll' : scrollBar })} ref="Body" >
 				<Switch>
+					<Route path="/profile/:handle" render={(props) => (
+						<div>
+							<Profile {...props }
+								scrollTop = { scrollTop }
+							/>
+							<Newsfeed {...props}
+								isBottom = { this.state.isBottom }
+								options = { {} }
+								posts = { [] }
+								fetchGetPosts = { fetchGetPosts }
+								fetchWritePost = { fetchWritePost }
+							/> 
+						</div>
+					)}/>
 					<Route path="/chat/:handle" render={(props) => (
 						this.isLoggedIn() ? 
 							<Chat {...props }
@@ -85,8 +108,8 @@ class Body extends Component {
 								isBottom = { this.state.isBottom }
 								options = { {} }
 								posts = { [] }
-								fetchGetPosts = { this.props.fetchGetPosts }
-								fetchWritePost = { this.props.fetchWritePost }
+								fetchGetPosts = { fetchGetPosts }
+								fetchWritePost = { fetchWritePost }
 							/> 
 						:
 							<Slider {...props} 

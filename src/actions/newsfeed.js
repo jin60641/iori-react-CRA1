@@ -2,9 +2,16 @@ import {createAction} from 'redux-actions';
 
 export const writePost = createAction('WRITEPOST');
 export const getPosts = createAction('GETPOSTS');
+export const getPost = createAction('GETPOST');
 
 const writePostUri = '/api/newsfeed/writepost';
 const getPostsUri = '/api/newsfeed/getposts';
+
+export const newsfeedSocket = (socket,dispatch) => {
+	socket.on( 'getpost', data => {
+		dispatch(getPost(data));
+	});
+};
 
 export const fetchWritePost = (data) => {
 	return async (dispatch) => {

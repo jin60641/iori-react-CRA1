@@ -13,7 +13,7 @@ class Menu extends Component {
 			<div className="Menu">
 				{ 
 					( user && user.verify ) ?
-						<Link to="/profile">
+						<Link to={`/profile/${user.handle}`}>
 							{	user.profile ?
 								<img src={ `/files/profile/${user.id}.png` } className="menu-profile" />
 								: <img src={ defaultProfileUri } className="menu-profile" />

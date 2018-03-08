@@ -1,5 +1,6 @@
 import {createAction} from 'redux-actions';
 import {chatSocket} from './chat.js';
+import {newsfeedSocket} from './newsfeed.js';
 import io from 'socket.io-client';
 
 export const connectSocket = createAction('CONNECT_SOCKET');
@@ -34,6 +35,7 @@ export const fetchConnectSocket = () => {
 
 			init(socket, dispatch);
 			chatSocket(socket, dispatch);
+			newsfeedSocket(socket, dispatch);
 
 			return dispatch(connectSocket(socket));
 		}

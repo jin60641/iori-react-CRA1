@@ -4,7 +4,7 @@ import { getDialogs } from '../actions/chat';
 const initialState = {};
 
 export default handleActions({
-	[getDialogs]: function(state, action) {
+	[getDialogs]: (state, action) => {
 		if( action.error ) {
 			return state;
 		}

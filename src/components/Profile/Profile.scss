@@ -1,0 +1,37 @@
+@import "../../styles/utils.scss";
+
+$container-nav-height : 60px;
+
+.Profile {
+	width : 100vw;
+	position : relative;
+	background-color : white;
+	z-index : 1;
+
+	.profile-container {
+		position : fixed;
+		width : 100vw;
+		box-shadow : 0px 4px 8px rgba(0,0,0,.2);
+		background-color : white;
+	}
+	.profile-header {
+		width : 100%;
+		height : calc( 100% - #{$container-nav-height} );
+		position : relative;
+		.profile-header-label { 
+			height : 100%;
+		}
+		.profile-header-back { 
+			display : block;
+			width : 100%;
+			height : 100%;
+			background-size : cover;
+			background-clip : content-box;
+			box-shadow : inset 0px 0px 1px 1px rgba(0,0,0,0.1);
+			background-color : $color-normal;
+		}
+		.profile-header-file {
+			display : none;
+		}
+	}
+}

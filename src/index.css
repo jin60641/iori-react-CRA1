@@ -36,16 +36,23 @@ body {
 input {
   outline: none; }
 
-::-webkit-scrollbar {
-  width: 0.5em;
-  height: 0.5em; }
+/*
+@mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, white, 50%)) {
+	::-webkit-scrollbar {
+		width:	$size;
+		height: $size;
+	}
+	::-webkit-scrollbar-thumb {
+		background: $foreground-color;
+	}
 
-::-webkit-scrollbar-thumb {
-  background: slategray; }
-
-::-webkit-scrollbar-track {
-  background: #b8c0c8; }
-
-body {
-  scrollbar-face-color: slategray;
-  scrollbar-track-color: #b8c0c8; }
+	::-webkit-scrollbar-track {
+		background: rgba($background-color,0);
+	}
+	body {
+		scrollbar-face-color: $foreground-color;
+		scrollbar-track-color: $background-color;
+	}
+}
+@include scrollbars(.5em, slategray);
+*/

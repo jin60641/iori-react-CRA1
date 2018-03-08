@@ -7,9 +7,11 @@ import Write from '../Post/Write';
 class Newsfeed extends Component {
 	constructor(props) {
 		super(props);
+		console.log(this.props);
 		const initialState = {
 			offset : 0,
-			limit : 10
+			limit : 10,
+			handle : this.props.match.params.handle
 		}
 		this.state = Object.assign(
 			this.props.options,
@@ -31,7 +33,6 @@ class Newsfeed extends Component {
 	}
 	handleGetPosts = (options = {}) => {
 		const { fetchGetPosts } = this.props;
-		this.setState({ offset : this.state.offset + this.state.limit });
 		const data = Object.assign( this.state, options );
 		fetchGetPosts(data)
 			.then( (action) => {
@@ -41,10 +42,15 @@ class Newsfeed extends Component {
 			});
 	}
 	render() {
+		const { posts, fetchWritePost } = this.props;
+		const { handle } = this.state;
 		return (
 			<div className="Newsfeed">
-				<Write fetchWritePost={this.props.fetchWritePost} />
-				{ this.props.posts.map((post,i) => {
+				{ !handle ?
+					<Write fetchWritePost={fetchWritePost} />
+					: null
+				}
+				{ posts.map((post,i) => {
 					return (<Post data={post} key={post.id} />);
 				})}
 			</div>

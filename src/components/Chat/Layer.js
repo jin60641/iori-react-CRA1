@@ -22,8 +22,10 @@ class Layer extends Component {
 	handleSelect = (user) => {
 		const prev = this.state.selected;
 		let selected = {};
-		if( this.state.type === "user" ){
-			selected[user.id] = user;
+		if( this.props.type === "user" ){
+			if( !prev[user.id] ){
+				selected[user.id] = user;
+			}
 		} else {
 			selected = Object.assign({},prev);
 			if( prev[user.id] ){
@@ -38,7 +40,8 @@ class Layer extends Component {
 		const { fetchSearchUsers } = this.props;
 		const query = e.target.value
 		this.setState({
-			query
+			query,
+			selected : {}
 		})
 		if( !query.length ){
 			return null;
@@ -67,13 +70,12 @@ class Layer extends Component {
 	render(){
 		const { showChatLayer, searched, type } = this.props
 		const { query, selected } = this.state;
-		console.log(type);
 		return(
 			<div className="Layer" onClick={()=>showChatLayer(null)} >
 				<div className="layer-close" />
 				<div className="layer-box" onClick={(e)=>e.stopPropagation()}>
 					<div className="layer-box-close" onClick={()=>showChatLayer(null)}></div>
-					<div className="layer-title">Title</div>
+					<div className="layer-title">{ type === "user" ? "1:1 대화" : "그룹 초대" }</div>
 					<div className="layer-search-box">
 						<input type="text" className="layer-search" placeholder="검색" value={query} onChange={this.handleSearch} />
 					</div>
