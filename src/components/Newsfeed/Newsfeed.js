@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { fetchGetPosts, fetchWritePost } from '../../actions/newsfeed';
 import './Newsfeed.css';
 import Post from '../Post/Post';
 import Write from '../Post/Write';
 
+const initialState = {
+	offset : 0,
+	limit : 10
+}
 class Newsfeed extends Component {
 	constructor(props) {
 		super(props);
-		console.log(this.props);
-		const initialState = {
-			offset : 0,
-			limit : 10,
-			handle : this.props.match.params.handle
-		}
 		this.state = Object.assign(
 			this.props.options,
 			initialState
@@ -58,4 +57,8 @@ class Newsfeed extends Component {
 	}
 };
 const stateToProps = ({posts}) => ({posts});
-export default connect(stateToProps, undefined)(Newsfeed);
+const actionToProps = {
+	fetchGetPosts,
+	fetchWritePost
+}
+export default connect(stateToProps, actionToProps)(Newsfeed);

@@ -51,11 +51,10 @@ obj.writePost = (req,res) => {
 }
 
 obj.getPosts = ( req, res ) => {
-	const limit = req.body['limit']?req.body['limit']:10;
-	const offset = req.body['offset']?req.body['offset']:0;
+	let { limit, offset, userId } = req.body;
 	db.Post.findAll({ 
 		where : {
-			userId : req.user.id
+			userId : userId?userId:req.user.id
 		},
 		include : { model : db.User, as : 'user' },
 		order : [ ['id','DESC'] ], 

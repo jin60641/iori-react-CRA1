@@ -33,11 +33,11 @@ class Post extends Component {
 		const profileUri = data.user.profile?`/files/profile/${data.user.id}.png`:'/images/profile.png';
 		return (
 			<div className="Post">
-				<Link to={`/profile/${data.user.id}`} className="post-profile"> 
+				<Link to={`/profile/${data.user.handle}`} className="post-profile"> 
 					<img src={profileUri} className="post-profile-img" alt={"profile"} />
 				</Link>
 				<div className="post-inform">
-					<Link to={`/profile/${data.user.id}`} className="post-user"> 
+					<Link to={`/profile/${data.user.handle}`} className="post-user"> 
 						{data.user.name} 
 					</Link>
 					<div className="post-date"> {this.getDateString(data.createdAt)} </div>

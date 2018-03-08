@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { fetchGetPosts, fetchWritePost } from '../../actions/newsfeed';
 import ReactDOM from 'react-dom';
 import styles from './Body.css';
 
@@ -55,7 +53,6 @@ class Body extends Component {
 	}
 	render(){
 		const { isTop, isBottom, scrollTop, scrollBar } = this.state;
-		const { fetchGetPosts, fetchWritePost } = this.props;
 		return(
 			<div className={cx('Body',{ 'body-scroll' : scrollBar })} ref="Body" >
 				<Switch>
@@ -63,13 +60,7 @@ class Body extends Component {
 						<div>
 							<Profile {...props }
 								scrollTop = { scrollTop }
-							/>
-							<Newsfeed {...props}
 								isBottom = { this.state.isBottom }
-								options = { {} }
-								posts = { [] }
-								fetchGetPosts = { fetchGetPosts }
-								fetchWritePost = { fetchWritePost }
 							/> 
 						</div>
 					)}/>
@@ -107,9 +98,6 @@ class Body extends Component {
 							<Newsfeed {...props}
 								isBottom = { this.state.isBottom }
 								options = { {} }
-								posts = { [] }
-								fetchGetPosts = { fetchGetPosts }
-								fetchWritePost = { fetchWritePost }
 							/> 
 						:
 							<Slider {...props} 
@@ -123,9 +111,5 @@ class Body extends Component {
 		);
 	}
 }
-const actionToProps = {
-	fetchGetPosts,
-	fetchWritePost
-};
 
-export default withRouter(connect(undefined, actionToProps)(Body));
+export default withRouter(Body);
