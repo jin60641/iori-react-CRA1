@@ -98,7 +98,7 @@ class Chat extends Component {
 			type,
 			to
 		});
-		if( !chats[to.handle] ){
+		if( !chats[this.getFullHandle(type,to.handle)] ){
 			this.getChats(to,type);
 		}
 	}
