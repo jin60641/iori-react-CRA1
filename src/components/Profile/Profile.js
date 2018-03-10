@@ -12,7 +12,15 @@ const initialState = {
 	user : null,
 	isSetting : false,
 	helper : null,
-	header : null
+	moving : false,
+	header : {
+		img : new Image(),
+		x : 0,
+		y : 0,
+		width : 0,
+		height : 0,
+		scale : 1
+	}
 }
 class Profile extends Component {
 	constructor(props){
@@ -33,9 +41,11 @@ class Profile extends Component {
 		});
 	}
 	handleClickSetting = bool => {
+		const { helper, header } = initialState;
 		this.setState({
 			isSetting : bool,
-			helper : null
+			helper,
+			header
 		});
 	}
 	handleClickSettingSave = () => {
@@ -53,30 +63,90 @@ class Profile extends Component {
 			const dataURL = event.target.result;
 			const img = new Image();
 			img.src = dataURL;
-			const label = this.refs.header;
-			label.style.backgroundImage = "url('" + dataURL + "')";
+			img.onload = (e) => {
+				const { width, height } = img;
+				const nextState = Object.assign(initialState.header,{ img, width, height });
+				this.setState({
+					header : nextState
+				})
+			}
 			//label.style.backgroundPositionX = "0px";
 			//label.style.backgroundPositionY = "0px";
-			this.setState({
-				header : img
-			})
 		});
 		reader.readAsDataURL(input.files[0]);
 	}
+	handleMouseDown = e => {
+		this.setState({
+			moving : true,
+			helper : null
+		});
+	}
+	handleMouseUp = e => {
+		this.setState({
+			moving : false
+		});
+	}
+	handleMouseMove = (e,type) => {
+		const label = e.target;
+		const moving = this.state.moving;
+		const obj = this.state[type];
+		let { x,y,img, width, height, scale } = obj;
+		if( moving && obj.img.src ){
+			y += e.nativeEvent.movementY * 2;
+			x += e.nativeEvent.movementX * 2;
+			let direction;
+			if( img.width < label.clientWidth || img.height < label.clientHeight ){
+				direction = (img.width/label.clientWidth < img.height/label.clientHeight)?"width":"height";
+			}
+		
+			if( x >= 0 ){
+				x = 0;
+			} else if( !direction && width >= label.clientWidth && x < - label.clientWidth - width ){
+				x = - label.clientWidth - width;
+			} else if( direction == "height" && x < label.clientWidth - label.clientHeight/img.height * width ){
+				x = label.clientWidth - label.clientHeight/img.height * width;
+			} else if( direction == "width" && x < label.clientWidth - label.clientWidth * scale ){
+				x = label.clientWidth - label.clientWidth * scale;
+			} else if( !direction && x < label.clientWidth - width ){
+				x = label.clientWidth - width;
+			}
+	
+			if( y >= 0 ){
+				y = 0;
+			} else if( !direction && height >= label.clientHeight && y < - label.clientHeight - height ){
+				y = - label.clientHeight - height;
+			} else if( direction == "width" && y < label.clientHeight - label.clientWidth/img.width * height ){
+				y = label.clientHeight - label.clientWidth/img.width * height;
+			} else if( direction == "height" && y < label.clientHeight - label.clientHeight * scale){
+				y = label.clientHeight - height * scale;
+			} else if( !direction && y < label.clientHeight - height ){
+				y = label.clientHeight - height;
+			}
+			const nextState = {	...this.state };
+			nextState[type].x = x;
+			nextState[type].y = y;
+			this.setState(nextState);
+		}
+	}
 	render(){
-		const { user, isSetting, helper, header } = this.state;
+		const { user, isSetting, helper, header, moving } = this.state;
 		const { isBottom, isTop } = this.props;
 		if( !user ){
 			return( null );
 		} else {
+			const labelStyle = {
+				backgroundImage : `url("${header.img.src}")`,
+				backgroundPosition : `${header.x}px ${header.y}px`,
+				backgroundSize : `${header.width}px ${header.height}px`
+			}
 			return(
 				<div>
 					<div className={ cx("Profile",{"Profile-top":isTop,"Profile-top-header":isTop&&(isSetting||user.header)}) }>
 						<div className="profile-container" >
 							<form className="profile-header">
-								<div className={cx("profile-header-label",{"profile-label-active":isSetting,"profile-label-uploaded":header})}  onClick={()=>this.handleClickHelper((helper==="header"||header)?null:"header")} ref="header">
-									<div className={cx("profile-header-helper",{"profile-helper-active":helper==="header"} )} onClick={e=>{e.stopPropagation();this.handleClickHelper("header")}}>
-										<div className="profile-header-helper-menu">
+								<div className={cx("profile-header-label",{"profile-label-active":isSetting,"profile-label-uploaded":header.img.src})} style={ labelStyle } ref="header" onMouseMove={e=>this.handleMouseMove(e,"header")} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp}>
+									<div className={cx("profile-header-helper",{"profile-helper-clicked":helper==="header","profile-helper-active":!moving})} onMouseDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();this.handleClickHelper("header")}}>
+										<div className="profile-header-helper-menu" onClick={e=>{e.stopPropagation();this.handleClickHelper(""); return 0;}}>
 											<label className="profile-header-helper-menu-item" htmlFor="profile-header-file">
 												추가
 											</label>

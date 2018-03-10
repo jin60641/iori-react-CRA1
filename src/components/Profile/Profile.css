@@ -45,9 +45,11 @@
       height: 100%;
       position: absolute;
       background-color: rgba(0, 0, 0, 0.6);
-      cursor: pointer;
       background-repeat: no-repeat; }
       .Profile .profile-header .profile-header-label .profile-header-helper {
+        display: none;
+        border: 1px solid white;
+        box-sizing: border-box;
         cursor: pointer;
         margin: auto;
         width: 64px;
@@ -72,7 +74,7 @@
           text-align: center;
           box-sizing: border-box;
           width: 100px;
-          left: -23px;
+          left: -18px;
           z-index: 200; }
           .Profile .profile-header .profile-header-label .profile-header-helper .profile-header-helper-menu .profile-header-helper-menu-item {
             display: block;
@@ -83,7 +85,9 @@
               cursor: pointer;
               color: #ffffff;
               background-color: #ff5c3e; }
-    .Profile .profile-header .profile-helper-active .profile-header-helper-menu, .Profile .profile-header .profile-helper-active .profile-header-helper-caret {
+    .Profile .profile-header .profile-helper-active {
+      display: block !important; }
+    .Profile .profile-header .profile-helper-clicked .profile-header-helper-menu, .Profile .profile-header .profile-helper-clicked .profile-header-helper-caret {
       display: block !important; }
     .Profile .profile-header .profile-label-active {
       display: block !important; }
