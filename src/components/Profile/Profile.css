@@ -2,18 +2,93 @@
   width: 100vw;
   position: relative;
   background-color: white;
+  height: 80px;
+  transition: height .3s;
   z-index: 1; }
   .Profile .profile-container {
     position: fixed;
+    height: 80px;
     width: 100vw;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: white; }
+    background-color: white;
+    transition: height .3s; }
+  .Profile .profile-nav {
+    height: 50px;
+    text-align: right; }
+    .Profile .profile-nav .profile-btn {
+      text-align: center;
+      display: none;
+      width: 78px;
+      padding: 9px;
+      background-color: white;
+      border: 1px solid #e1e8ed;
+      border-radius: 4px;
+      color: #66757f;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 7px;
+      margin-right: 7px; }
+      .Profile .profile-nav .profile-btn:first-of-type {
+        margin-right: 15px; }
+      .Profile .profile-nav .profile-btn:hover {
+        background-color: #f5f5f5; }
+    .Profile .profile-nav .profile-btn-active {
+      display: inline-block; }
   .Profile .profile-header {
     width: 100%;
-    height: calc( 100% - 60px);
+    height: calc( 100% - 50px);
     position: relative; }
     .Profile .profile-header .profile-header-label {
-      height: 100%; }
+      display: none;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+      background-repeat: no-repeat; }
+      .Profile .profile-header .profile-header-label .profile-header-helper {
+        cursor: pointer;
+        margin: auto;
+        width: 64px;
+        height: 64px;
+        position: absolute;
+        background-image: url("/img/photohelper.png");
+        background-size: 64px;
+        background-repeat: no-repeat;
+        left: calc( 50% - 32px);
+        top: calc( 50% - 32px); }
+        .Profile .profile-header .profile-header-label .profile-header-helper .profile-header-helper-caret {
+          right: 42px; }
+        .Profile .profile-header .profile-header-label .profile-header-helper .profile-header-helper-menu {
+          background-color: white;
+          display: none;
+          border-radius: 3px;
+          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(0, 0, 0, 0.15);
+          position: absolute;
+          padding-top: 8px;
+          top: 80px;
+          text-align: center;
+          box-sizing: border-box;
+          width: 100px;
+          left: -23px;
+          z-index: 200; }
+          .Profile .profile-header .profile-header-label .profile-header-helper .profile-header-helper-menu .profile-header-helper-menu-item {
+            display: block;
+            padding: 8px;
+            margin: 8px;
+            margin-top: 0px; }
+            .Profile .profile-header .profile-header-label .profile-header-helper .profile-header-helper-menu .profile-header-helper-menu-item:hover {
+              cursor: pointer;
+              color: #ffffff;
+              background-color: #ff5c3e; }
+    .Profile .profile-header .profile-helper-active .profile-header-helper-menu, .Profile .profile-header .profile-helper-active .profile-header-helper-caret {
+      display: block !important; }
+    .Profile .profile-header .profile-label-active {
+      display: block !important; }
+    .Profile .profile-header .profile-label-uploaded {
+      cursor: move; }
     .Profile .profile-header .profile-header-back {
       display: block;
       width: 100%;
@@ -24,3 +99,38 @@
       background-color: #ff5c3e; }
     .Profile .profile-header .profile-header-file {
       display: none; }
+  .Profile .profile-img {
+    bottom: 0px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: white;
+    border: 5px white solid;
+    position: absolute;
+    left: 50px;
+    transition: top .7s, width .3s, height .3s, bottom .3s, left .3s;
+    box-sizing: border-box; }
+    .Profile .profile-img .profile-img-file {
+      display: none; }
+    .Profile .profile-img .profile-img-back {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-size: cover;
+      background-clip: content-box;
+      background-color: #ff5c3e; }
+
+.Profile-top {
+  height: 160px; }
+  .Profile-top .profile-container {
+    height: 160px; }
+  .Profile-top .profile-img {
+    bottom: -35px;
+    width: 150px;
+    height: 150px; }
+
+.Profile-top-header {
+  height: 300px; }
+  .Profile-top-header .profile-container {
+    height: 300px; }

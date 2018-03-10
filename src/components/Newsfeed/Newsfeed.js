@@ -41,11 +41,10 @@ class Newsfeed extends Component {
 			});
 	}
 	render() {
-		const { posts, fetchWritePost } = this.props;
-		const { handle } = this.state;
+		const { posts, fetchWritePost, options } = this.props;
 		return (
 			<div className="Newsfeed">
-				{ !handle ?
+				{ !options.user ?
 					<Write fetchWritePost={fetchWritePost} />
 					: null
 				}

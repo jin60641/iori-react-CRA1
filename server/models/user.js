@@ -7,7 +7,8 @@ module.exports = function(sequelize, DataTypes){
 		handle : { type : DataTypes.STRING(32), allowNull : false },
 		password : { type : DataTypes.STRING, allowNull : false },
 		verify : { type : DataTypes.BOOLEAN, defaultValue : false },
-		profile : { type : DataTypes.BOOLEAN, defaultValue : false }
+		profile : { type : DataTypes.BOOLEAN, defaultValue : false },
+		header : { type : DataTypes.BOOLEAN, defaultValue : false }
 	},{
 		timestamps : true,
 		paranoid : true,

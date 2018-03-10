@@ -22,8 +22,7 @@ class Body extends Component {
 		this.state = {
 			isTop : true,
 			isBottom : false,
-			scrollBar : true,
-			scrollTop : 0
+			scrollBar : true
 		}
 	}
 	componentDidMount(){
@@ -37,8 +36,7 @@ class Body extends Component {
 			const dom = e.target;
 			this.setState({ 
 				isBottom : dom.scrollHeight - dom.scrollTop < dom.clientHeight + 100,
-				isTop : 0 === dom.scrollTop,
-				scrollTop : dom.scrollTop
+				isTop : 0 === dom.scrollTop
 			});
 		}
 	}
@@ -52,15 +50,15 @@ class Body extends Component {
 		return user && user.verify;
 	}
 	render(){
-		const { isTop, isBottom, scrollTop, scrollBar } = this.state;
+		const { isTop, isBottom, scrollBar } = this.state;
 		return(
 			<div className={cx('Body',{ 'body-scroll' : scrollBar })} ref="Body" >
 				<Switch>
 					<Route path="/profile/:handle" render={(props) => (
 						<div>
 							<Profile {...props }
-								scrollTop = { scrollTop }
-								isBottom = { this.state.isBottom }
+								isBottom = { isBottom }
+								isTop = { isTop }
 							/> 
 						</div>
 					)}/>
@@ -96,7 +94,7 @@ class Body extends Component {
 					<Route exact path="/" render={(props) => (
 						this.isLoggedIn() ? 
 							<Newsfeed {...props}
-								isBottom = { this.state.isBottom }
+								isBottom = { isBottom }
 								options = { {} }
 							/> 
 						:
