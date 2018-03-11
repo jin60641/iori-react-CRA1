@@ -50,76 +50,15 @@ $container-nav-height : 50px;
 			display : inline-block;
 		}
 	}
+	.profile-img {
+		.profile-label {
+			border-radius : 50%;
+		}
+	}
 	.profile-header {
 		width : 100%;
 		height : calc( 100% - #{$container-nav-height} );
 		position : relative;
-		.profile-header-label { 
-			display : none;
-			width : 100%;
-			height : 100%;
-			position : absolute;
-			background-color : rgba(0,0,0,.6);
-			background-repeat : no-repeat;
-			.profile-header-helper {
-				display : none;
-				border : 1px solid white;
-				box-sizing : border-box;
-				cursor : pointer;
-				margin : auto;
-				width : 64px;
-				height : 64px;
-				position : absolute;
-				background-image : url('/img/photohelper.png');
-				background-size : 64px;
-				background-repeat : no-repeat;
-				left : calc( 50% - 32px );
-				top : calc( 50% - 32px );
-				.profile-header-helper-caret {
-					right : 42px;
-				}
-				.profile-header-helper-menu {
-					background-color : white;
-					display : none;
-					border-radius : 3px;
-					box-shadow : 0 3px 8px rgba(0,0,0,0.2);
-					border : 1px solid rgba(0,0,0,0.15);
-					position : absolute;
-					padding-top : 8px;
-					top : 80px;
-					text-align : center;
-					box-sizing : border-box;
-					width : 100px;
-					left : -18px;
-					z-index : 200;
-					.profile-header-helper-menu-item {
-						display : block;
-						padding : 8px;
-						margin : 8px;
-						margin-top : 0px;
-						&:hover {
-							cursor: pointer;
-							color: #ffffff;
-							background-color: $color-normal;
-						}
-					}
-				}
-			}
-		}
-		.profile-helper-active {
-			display : block !important;
-		}
-		.profile-helper-clicked {
-			.profile-header-helper-menu, .profile-header-helper-caret {
-				display : block !important;
-			}
-		}
-		.profile-label-active { 
-			display : block !important;
-		}
-		.profile-label-uploaded { 
-			cursor : move;
-		}
 		.profile-header-back { 
 			display : block;
 			width : 100%;
@@ -132,6 +71,72 @@ $container-nav-height : 50px;
 		.profile-header-file {
 			display : none;
 		}
+	}
+	.profile-label { 
+		display : none;
+		width : 100%;
+		height : 100%;
+		position : absolute;
+		background-color : rgba(0,0,0,.6);
+		background-repeat : no-repeat;
+		.profile-helper {
+			display : none;
+			border : 1px solid white;
+			box-sizing : border-box;
+			cursor : pointer;
+			margin : auto;
+			width : 64px;
+			height : 64px;
+			position : absolute;
+			background-image : url('/img/photohelper.png');
+			background-size : 64px;
+			background-repeat : no-repeat;
+			left : calc( 50% - 32px );
+			top : calc( 50% - 32px );
+			.profile-helper-caret {
+				right : 42px;
+			}
+			.profile-helper-menu {
+				background-color : white;
+				display : none;
+				border-radius : 3px;
+				box-shadow : 0 3px 8px rgba(0,0,0,0.2);
+				border : 1px solid rgba(0,0,0,0.15);
+				position : absolute;
+				padding-top : 8px;
+				top : 80px;
+				text-align : center;
+				box-sizing : border-box;
+				width : 100px;
+				left : -18px;
+				z-index : 200;
+				.profile-helper-menu-item {
+					display : block;
+					padding : 8px;
+					margin : 8px;
+					margin-top : 0px;
+					&:hover {
+						cursor: pointer;
+						color: #ffffff;
+						background-color: $color-normal;
+					}
+				}
+			}
+		}
+		.profile-helper-active {
+			display : block !important;
+		}
+		.profile-helper-clicked {
+			.profile-helper-menu, .profile-helper-caret {
+				display : block !important;
+			}
+		}
+	}
+	.profile-label-active { 
+		display : block !important;
+	}
+	.profile-label-uploaded { 
+		cursor : move;
 	}
 	.profile-img {
 		bottom : 0px;

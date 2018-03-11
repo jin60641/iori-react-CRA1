@@ -12,8 +12,16 @@ const initialState = {
 	user : null,
 	isSetting : false,
 	helper : null,
-	moving : false,
+	moving : null,
 	header : {
+		img : new Image(),
+		x : 0,
+		y : 0,
+		width : 0,
+		height : 0,
+		scale : 1
+	},
+	profile : {
 		img : new Image(),
 		x : 0,
 		y : 0,
@@ -32,7 +40,6 @@ class Profile extends Component {
 		const { handle } = this.props.match.params;
 		fetchSearchUser({ query : handle })
 		.then( action => {
-			console.log(action);
 			if( !action.error ){
 				this.setState({
 					user : action.payload
@@ -56,7 +63,7 @@ class Profile extends Component {
 			helper : str
 		})
 	}
-	handleChangeFile = (e) => {
+	handleChangeFile = (e,type) => {
 		const input = e.target;
 		const reader = new FileReader();
 		reader.addEventListener("load",(event) => {
@@ -65,25 +72,24 @@ class Profile extends Component {
 			img.src = dataURL;
 			img.onload = (e) => {
 				const { width, height } = img;
-				const nextState = Object.assign(initialState.header,{ img, width, height });
-				this.setState({
-					header : nextState
-				})
+				const nextState = {};
+				nextState[type] = Object.assign(initialState[type],{ img, width, height });
+				this.setState(nextState);
 			}
 			//label.style.backgroundPositionX = "0px";
 			//label.style.backgroundPositionY = "0px";
 		});
 		reader.readAsDataURL(input.files[0]);
 	}
-	handleMouseDown = e => {
+	handleMouseDown = (type) => {
 		this.setState({
-			moving : true,
+			moving : type,
 			helper : null
 		});
 	}
-	handleMouseUp = e => {
+	handleMouseUp = () => {
 		this.setState({
-			moving : false
+			moving : null
 		});
 	}
 	handleMouseMove = (e,type) => {
@@ -91,7 +97,7 @@ class Profile extends Component {
 		const moving = this.state.moving;
 		const obj = this.state[type];
 		let { x,y,img, width, height, scale } = obj;
-		if( moving && obj.img.src ){
+		if( moving && type && moving === type && obj.img.src ){
 			y += e.nativeEvent.movementY * 2;
 			x += e.nativeEvent.movementX * 2;
 			let direction;
@@ -128,53 +134,133 @@ class Profile extends Component {
 			this.setState(nextState);
 		}
 	}
+	handleMouseWheel = (e,type) => {
+		const { img } = this.state[type];
+		if( !img.src ){
+			return 1;
+		}
+		e.preventDefault();
+		const nextState = { ...this.state };
+		const label = e.target;
+		let scale = nextState[type].scale - 0.001 * e.deltaY;
+		if( scale < 1 ){
+			scale = 1;
+		} else if( scale > 2 ){
+			scale = 2;
+		}
+		let direction;
+		let multi;
+		if( img.width < label.clientWidth || img.height < label.clientHeight ){
+			direction = (img.width/label.clientWidth < img.height/label.clientHeight)?"width":"height";
+		}
+		nextState[type].scale = scale;
+		if( direction == "width" ){
+			multi = label.clientWidth/img.width;
+			nextState[type].width = label.clientWidth * scale;
+			nextState[type].height = img.height * multi * scale;
+		} else if( direction == "height" ){
+			multi = label.clientHeight/img.height;
+			nextState[type].width = img.width * multi * scale;
+			nextState[type].height = label.clientHeight * scale;
+		} else {
+			nextState[type].width = img.width * scale;
+			nextState[type].height = img.height * scale;
+		}
+		this.setState(nextState);
+	}
 	render(){
-		const { user, isSetting, helper, header, moving } = this.state;
-		const { isBottom, isTop } = this.props;
+		const { user, isSetting, helper, header, moving, profile } = this.state;
+		const { isTop, isBottom } = this.props;
 		if( !user ){
 			return( null );
 		} else {
-			const labelStyle = {
+			const my = user.id === this.props.user.id;
+			const headerLabelStyle = {
 				backgroundImage : `url("${header.img.src}")`,
 				backgroundPosition : `${header.x}px ${header.y}px`,
 				backgroundSize : `${header.width}px ${header.height}px`
+			}
+			const profileLabelStyle = {
+				backgroundImage : `url("${profile.img.src}")`,
+				backgroundPosition : `${profile.x}px ${profile.y}px`,
+				backgroundSize : `${profile.width}px ${profile.height}px`
 			}
 			return(
 				<div>
 					<div className={ cx("Profile",{"Profile-top":isTop,"Profile-top-header":isTop&&(isSetting||user.header)}) }>
 						<div className="profile-container" >
 							<form className="profile-header">
-								<div className={cx("profile-header-label",{"profile-label-active":isSetting,"profile-label-uploaded":header.img.src})} style={ labelStyle } ref="header" onMouseMove={e=>this.handleMouseMove(e,"header")} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp}>
-									<div className={cx("profile-header-helper",{"profile-helper-clicked":helper==="header","profile-helper-active":!moving})} onMouseDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();this.handleClickHelper("header")}}>
-										<div className="profile-header-helper-menu" onClick={e=>{e.stopPropagation();this.handleClickHelper(""); return 0;}}>
-											<label className="profile-header-helper-menu-item" htmlFor="profile-header-file">
-												추가
-											</label>
-											<div className="profile-header-helper-menu-item">
-												삭제
+								<div className={cx("profile-label",{"profile-label-active":isSetting,"profile-label-uploaded":header.img.src})} style={ headerLabelStyle } ref="header" onMouseMove={e=>this.handleMouseMove(e,"header")} onMouseDown={()=>this.handleMouseDown("header")} onMouseUp={this.handleMouseUp} onWheel={e=>this.handleMouseWheel(e,"header")}>
+									<div className={cx("profile-helper",{"profile-helper-clicked":helper==="header","profile-helper-active":!moving})} onMouseDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();this.handleClickHelper("header")}}>
+										<div className="profile-helper-menu" onClick={e=>{e.stopPropagation();this.handleClickHelper(""); return 0;}}>
+										{ header.img.src ? 
+											<div>
+												<label className="profile-helper-menu-item" htmlFor="profile-header-file">
+													변경
+												</label>
+												<div className="profile-helper-menu-item">
+													삭제
+												</div>
 											</div>
+											: <div>
+												<label className="profile-helper-menu-item" htmlFor="profile-header-file">
+													추가
+												</label>
+											</div>
+										}
 										</div>
 									</div>
 								</div>
 								<div className="profile-header-back" />
-								<input className="profile-header-file" id="profile-header-file" type="file" onChange={this.handleChangeFile}/>
+								<input className="profile-header-file" id="profile-header-file" type="file" onChange={e=>this.handleChangeFile(e,"header")}/>
 							</form>
 							<form className="profile-img">
-								<label className={cx("profile-img-label",{"profile-label-active":!isSetting})} />
+								<div className={cx("profile-label",{"profile-label-active":isSetting,"profile-label-uploaded":profile.img.src})} style={ profileLabelStyle } ref="profile" onMouseMove={e=>this.handleMouseMove(e,"profile")} onMouseDown={()=>this.handleMouseDown("profile")} onMouseUp={this.handleMouseUp} onWheel={e=>this.handleMouseWheel(e,"profile")}>
+									<div className={cx("profile-helper",{"profile-helper-clicked":helper==="profile","profile-helper-active":!moving})} onMouseDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();this.handleClickHelper("profile")}}>
+										<div className="profile-helper-menu" onClick={e=>{e.stopPropagation();this.handleClickHelper(""); return 0;}}>
+										{ profile.img.src ? 
+											<div>
+												<label className="profile-helper-menu-item" htmlFor="profile-img-file">
+													변경
+												</label>
+												<div className="profile-helper-menu-item">
+													삭제
+												</div>
+											</div>
+											: <div>
+												<label className="profile-helper-menu-item" htmlFor="profile-img-file">
+													추가
+												</label>
+											</div>
+										}
+										</div>
+									</div>
+								</div>
 								<div className="profile-img-back" />
-								<input className="profile-img-file" type="file" />
+								<input className="profile-img-file" type="file" id="profile-img-file" onChange={e=>this.handleChangeFile(e,"profile")}/>
 							</form>
-							<div className="profile-nav">
-								<div className={cx("profile-btn",{"profile-btn-active":!isSetting})} onClick={()=>this.handleClickSetting(true)} >
-									프로필 설정
+							{ my ? 
+								<div className="profile-nav">
+									<div className={cx("profile-btn",{"profile-btn-active":!isSetting})} onClick={()=>this.handleClickSetting(true)} >
+										프로필 설정
+									</div>
+									<div className={cx("profile-btn",{"profile-btn-active":isSetting})} onClick={()=>this.handleClickSetting(false)} >
+										설정 취소
+									</div>
+									<div className={cx("profile-btn",{"profile-btn-active":isSetting})} onClick={this.handleClickSettingSave} >
+										설정 저장
+									</div>
+								</div> 
+							:
+								<div className="profile-nav">
+									<div className={cx("profile-btn","profile-btn-active")} >
+										팔로우
+									</div>
+									<div className={cx("profile-btn","profile-btn-active")} >
+										쪽지
+									</div>
 								</div>
-								<div className={cx("profile-btn",{"profile-btn-active":isSetting})} onClick={()=>this.handleClickSetting(false)} >
-									설정 취소
-								</div>
-								<div className={cx("profile-btn",{"profile-btn-active":isSetting})} onClick={this.handleClickSettingSave} >
-									설정 저장
-								</div>
-							</div>
+							}
 						</div>
 					</div>
 					<Newsfeed
@@ -186,7 +272,7 @@ class Profile extends Component {
 		}
 	}
 }
-const stateToProps = ({searched}) => ({searched});
+const stateToProps = ({searched,user}) => ({searched,user});
 
 const actionToProps = {
 	fetchSearchUser

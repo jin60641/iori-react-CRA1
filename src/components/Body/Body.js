@@ -55,12 +55,10 @@ class Body extends Component {
 			<div className={cx('Body',{ 'body-scroll' : scrollBar })} ref="Body" >
 				<Switch>
 					<Route path="/profile/:handle" render={(props) => (
-						<div>
-							<Profile {...props }
-								isBottom = { isBottom }
-								isTop = { isTop }
-							/> 
-						</div>
+						<Profile {...props }
+							isTop = { isTop }
+							isBottom = { isBottom }
+						/> 
 					)}/>
 					<Route path="/chat/:handle" render={(props) => (
 						this.isLoggedIn() ? 

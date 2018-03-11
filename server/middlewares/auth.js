@@ -211,7 +211,8 @@ obj.join = function( req, res ){
 			handle
 		};
 		db.User.create(current).then( function(task){
-			let string = "https://iori.kr/mail/" + email + "/" + link;
+			//let string = "https://iori.kr/mail/" + email + "/" + link;
+			let string = "localhost:3000/mail/" + email + "/" + link;
 			smtpTransport.sendMail({
 				from: 'iori <jinsang@ajou.ac.kr>',
 				to: email,
