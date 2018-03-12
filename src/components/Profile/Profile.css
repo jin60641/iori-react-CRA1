@@ -124,8 +124,7 @@
       height: 100%;
       border-radius: 50%;
       background-size: cover;
-      background-clip: content-box;
-      background-color: #ff5c3e; }
+      background-clip: content-box; }
 
 .Profile-top {
   height: 160px; }

@@ -30,6 +30,7 @@ const initialState = {
 		scale : 1
 	}
 }
+
 class Profile extends Component {
 	constructor(props){
 		super(props);
@@ -74,10 +75,9 @@ class Profile extends Component {
 				const { width, height } = img;
 				const nextState = {};
 				nextState[type] = Object.assign(initialState[type],{ img, width, height });
+				this.handleMouseWheel(null,type);
 				this.setState(nextState);
 			}
-			//label.style.backgroundPositionX = "0px";
-			//label.style.backgroundPositionY = "0px";
 		});
 		reader.readAsDataURL(input.files[0]);
 	}
@@ -92,14 +92,16 @@ class Profile extends Component {
 			moving : null
 		});
 	}
-	handleMouseMove = (e,type) => {
-		const label = e.target;
+	handleMouseMove = (e,type,force) => {
+		const label = this.refs[type];;
 		const moving = this.state.moving;
 		const obj = this.state[type];
 		let { x,y,img, width, height, scale } = obj;
-		if( moving && type && moving === type && obj.img.src ){
-			y += e.nativeEvent.movementY * 2;
-			x += e.nativeEvent.movementX * 2;
+		if( force || ( moving && type && moving === type && obj.img.src ) ){
+			if( !force ){
+				y += e.nativeEvent.movementY * 2;
+				x += e.nativeEvent.movementX * 2;
+			}
 			let direction;
 			if( img.width < label.clientWidth || img.height < label.clientHeight ){
 				direction = (img.width/label.clientWidth < img.height/label.clientHeight)?"width":"height";
@@ -107,26 +109,26 @@ class Profile extends Component {
 		
 			if( x >= 0 ){
 				x = 0;
+			} else if( x < label.clientWidth - width ) {
+				x = label.clientWidth - width;
 			} else if( !direction && width >= label.clientWidth && x < - label.clientWidth - width ){
 				x = - label.clientWidth - width;
 			} else if( direction == "height" && x < label.clientWidth - label.clientHeight/img.height * width ){
 				x = label.clientWidth - label.clientHeight/img.height * width;
 			} else if( direction == "width" && x < label.clientWidth - label.clientWidth * scale ){
 				x = label.clientWidth - label.clientWidth * scale;
-			} else if( !direction && x < label.clientWidth - width ){
-				x = label.clientWidth - width;
 			}
 	
 			if( y >= 0 ){
 				y = 0;
+			} else if( y < label.clientHeight - height ){
+				y = label.clientHeight - height;
 			} else if( !direction && height >= label.clientHeight && y < - label.clientHeight - height ){
 				y = - label.clientHeight - height;
 			} else if( direction == "width" && y < label.clientHeight - label.clientWidth/img.width * height ){
 				y = label.clientHeight - label.clientWidth/img.width * height;
 			} else if( direction == "height" && y < label.clientHeight - label.clientHeight * scale){
 				y = label.clientHeight - height * scale;
-			} else if( !direction && y < label.clientHeight - height ){
-				y = label.clientHeight - height;
 			}
 			const nextState = {	...this.state };
 			nextState[type].x = x;
@@ -139,10 +141,12 @@ class Profile extends Component {
 		if( !img.src ){
 			return 1;
 		}
-		e.preventDefault();
+		if( e ){
+			e.preventDefault();
+		}
+		const label = this.refs[type];
 		const nextState = { ...this.state };
-		const label = e.target;
-		let scale = nextState[type].scale - 0.001 * e.deltaY;
+		let scale = nextState[type].scale - 0.001 * (e?e.deltaY:0);
 		if( scale < 1 ){
 			scale = 1;
 		} else if( scale > 2 ){
@@ -166,7 +170,9 @@ class Profile extends Component {
 			nextState[type].width = img.width * scale;
 			nextState[type].height = img.height * scale;
 		}
+		console.log(nextState[type].scale);
 		this.setState(nextState);
+		this.handleMouseMove(null,type,true);
 	}
 	render(){
 		const { user, isSetting, helper, header, moving, profile } = this.state;
@@ -236,7 +242,10 @@ class Profile extends Component {
 										</div>
 									</div>
 								</div>
-								<div className="profile-img-back" />
+								{ user.profile ?
+									<div className="profile-img-back" style={ { backgroundImage : "url(`/files/profile/${user.id}`)" } }/>
+									: <div className="profile-img-back" style={ { backgroundImage : "url('/images/profile.png')" } }/>
+								}
 								<input className="profile-img-file" type="file" id="profile-img-file" onChange={e=>this.handleChangeFile(e,"profile")}/>
 							</form>
 							{ my ? 
