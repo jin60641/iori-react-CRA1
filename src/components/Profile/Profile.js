@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchSearchUser } from '../../actions/search';
+import { fetchSetProfile } from '../../actions/setting';
 
 import Newsfeed from '../Newsfeed/Newsfeed';
 import styles from './Profile.css';
@@ -15,6 +16,7 @@ const initialState = {
 	moving : null,
 	header : {
 		img : new Image(),
+		file : null,
 		x : 0,
 		y : 0,
 		width : 0,
@@ -23,6 +25,7 @@ const initialState = {
 	},
 	profile : {
 		img : new Image(),
+		file : null,
 		x : 0,
 		y : 0,
 		width : 0,
@@ -34,7 +37,11 @@ const initialState = {
 class Profile extends Component {
 	constructor(props){
 		super(props);
-		this.state = initialState;
+		this.state = { ...initialState };
+	}
+	componentWillUnmount = () => {
+		const { showScroll } = this.props;
+		showScroll(true);
 	}
 	componentWillMount = () => {
 		const { fetchSearchUser } = this.props;
@@ -42,6 +49,29 @@ class Profile extends Component {
 		fetchSearchUser({ query : handle })
 		.then( action => {
 			if( !action.error ){
+				const user = action.payload;
+				if( user.profile ){
+					const type = "profile";
+					const img = new Image();
+					img.src = `/images/files/profile/${user.id}.png`;
+					img.onload = (e) => {
+						const { width, height } = img;
+						const nextState = {};
+						nextState[type] = { ...initialState[type], img, width, height };
+						this.setState(nextState);
+					}
+				}
+				if( user.header ){
+					const type = "header";
+					const img = new Image();
+					img.src = `/images/files/header/${user.id}.png`;
+					img.onload = (e) => {
+						const { width, height } = img;
+						const nextState = {};
+						nextState[type] = { ...initialState[type], img, width, height };
+						this.setState(nextState);
+					}
+				}
 				this.setState({
 					user : action.payload
 				})
@@ -49,15 +79,43 @@ class Profile extends Component {
 		});
 	}
 	handleClickSetting = bool => {
+		const { showScroll, scrollToTop } = this.props;
 		const { helper, header } = initialState;
+		if( bool ){
+			scrollToTop();
+		}
+		showScroll(!bool);
 		this.setState({
 			isSetting : bool,
 			helper,
 			header
 		});
 	}
+	sendSetting = type => {
+		const obj = this.state[type];
+		let formData = new FormData();
+		Object.entries(obj).map( key => {
+			formData.append(key,obj[key]);
+		})
+		fetchSetProfile(formData)
+		.then( action => {
+			if( !action.error ){
+				if( action.payload ){
+					
+				}
+			}
+		});
+	}
 	handleClickSettingSave = () => {
-		
+		const { showScroll } = this.props;
+		showScroll(true);
+		this.sendSetting("header");
+		this.sendSetting("profile");
+	}
+	handleClickRemove = (type) => {
+		const nextState = { ...this.state };
+		nextState[type] = { ...initialState[type] };
+		this.setState(nextState);
 	}
 	handleClickHelper = str => {
 		this.setState({
@@ -67,6 +125,7 @@ class Profile extends Component {
 	handleChangeFile = (e,type) => {
 		const input = e.target;
 		const reader = new FileReader();
+		const file = input.files[0];
 		reader.addEventListener("load",(event) => {
 			const dataURL = event.target.result;
 			const img = new Image();
@@ -74,12 +133,12 @@ class Profile extends Component {
 			img.onload = (e) => {
 				const { width, height } = img;
 				const nextState = {};
-				nextState[type] = Object.assign(initialState[type],{ img, width, height });
+				nextState[type] = { ...initialState[type], img, width, height, file };
 				this.handleMouseWheel(null,type);
 				this.setState(nextState);
 			}
 		});
-		reader.readAsDataURL(input.files[0]);
+		reader.readAsDataURL(file);
 	}
 	handleMouseDown = (type) => {
 		this.setState({
@@ -170,7 +229,6 @@ class Profile extends Component {
 			nextState[type].width = img.width * scale;
 			nextState[type].height = img.height * scale;
 		}
-		console.log(nextState[type].scale);
 		this.setState(nextState);
 		this.handleMouseMove(null,type,true);
 	}
@@ -204,7 +262,7 @@ class Profile extends Component {
 												<label className="profile-helper-menu-item" htmlFor="profile-header-file">
 													변경
 												</label>
-												<div className="profile-helper-menu-item">
+												<div className="profile-helper-menu-item" onClick={()=>this.handleClickRemove("header")}>
 													삭제
 												</div>
 											</div>
@@ -229,7 +287,7 @@ class Profile extends Component {
 												<label className="profile-helper-menu-item" htmlFor="profile-img-file">
 													변경
 												</label>
-												<div className="profile-helper-menu-item">
+												<div className="profile-helper-menu-item" onClick={()=>this.handleClickRemove("profile")}>
 													삭제
 												</div>
 											</div>

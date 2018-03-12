@@ -49,6 +49,12 @@ class Body extends Component {
 		const { user } = this.props;
 		return user && user.verify;
 	}
+	scrollToTop = () => {
+		this.refs.Body.scrollTop = 0;
+		this.setState({
+			isTop : true
+		})
+	}
 	render(){
 		const { isTop, isBottom, scrollBar } = this.state;
 		return(
@@ -58,6 +64,8 @@ class Body extends Component {
 						<Profile {...props }
 							isTop = { isTop }
 							isBottom = { isBottom }
+							showScroll = { this.showScroll }
+							scrollToTop = { this.scrollToTop }
 						/> 
 					)}/>
 					<Route path="/chat/:handle" render={(props) => (

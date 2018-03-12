@@ -49,9 +49,10 @@
       margin-top: 0px; }
     .Message .message-body .message-body-file {
       cursor: pointer;
-      max-width: 100%;
+      max-width: 60%;
       max-height: 140px;
       display: block;
+      margin-left: auto;
       margin-top: 0px;
       margin-bottom: 15px;
       border-radius: 4px; }
