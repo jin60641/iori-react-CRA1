@@ -93,10 +93,18 @@ class Profile extends Component {
 	}
 	sendSetting = type => {
 		const obj = this.state[type];
+		const { x, y, width, height, file, img } = obj;
+		const label = this.refs[type];;
 		let formData = new FormData();
-		Object.entries(obj).map( key => {
-			formData.append(key,obj[key]);
-		})
+		formData.append("type",type);
+		if( file ){
+			formData.append("x",-x);
+			formData.append("y",-y);
+			formData.append("width",label.clientWidth/width*img.width);
+			formData.append("height",label.clinetHeight/height*img.height));
+			formData.append("file",file);
+		}
+		
 		fetchSetProfile(formData)
 		.then( action => {
 			if( !action.error ){
@@ -342,7 +350,8 @@ class Profile extends Component {
 const stateToProps = ({searched,user}) => ({searched,user});
 
 const actionToProps = {
-	fetchSearchUser
+	fetchSearchUser,
+	fetchSetProfile
 }
 
 export default connect(stateToProps,actionToProps)(Profile);
