@@ -22,6 +22,7 @@
     display: inline-block;
     vertical-align: top; }
   .Message .message-body {
+    width: 100%;
     display: inline-block;
     margin: 4px;
     margin-top: 0px;
@@ -48,11 +49,10 @@
       border-radius: 4px;
       margin-top: 0px; }
     .Message .message-body .message-body-file {
+      max-width: 50%;
       cursor: pointer;
-      max-width: 60%;
       max-height: 140px;
       display: block;
-      margin-left: auto;
       margin-top: 0px;
       margin-bottom: 15px;
       border-radius: 4px; }
@@ -75,6 +75,8 @@
     margin-left: 0px; }
   .Message-my .message-body .message-body-text {
     margin-right: 9px; }
+  .Message-my .message-body .message-body-file {
+    margin-left: auto; }
   .Message-my .message-body-caret {
     left: auto;
     right: 0px; }

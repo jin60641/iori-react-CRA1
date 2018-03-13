@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 import Header from './components/Header/Header';
 import Body from './components/Body/Body';
@@ -28,16 +28,16 @@ class App extends Component {
 		})
 	}
 	componentWillReceiveProps(nextProps){
-		const { socket } = this.props;
 		//console.log(socket,nextProps);
 		if( !this.props.socket && nextProps.socket ){
-			nextProps.socket.on( 'say', (stream) => {
-				//console.log(stream);
+			/*
+			nextProps.socket.on( 'say', (data) => {
 			});
+			*/
 		}
 	}
 	render() {
-		const { fetchLogout, fetchLoggedIn, user, socket } = this.props;
+		const { fetchLogout, user } = this.props;
 		const { init } = this.state;
 		return (
 			<Router>

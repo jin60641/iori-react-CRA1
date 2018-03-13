@@ -9,12 +9,11 @@ class Menu extends Component {
 	}
 	render(){
 		const { user } = this.props;
-		console.log(user);
 		return( 
 			<div className="Menu">
 				{ 
 					( user && user.verify ) ?
-						<Link to={`/profile/${user.handle}`}>
+						<Link to={`/@${user.handle}`}>
 							{	user.profile ?
 								<img src={ `/files/profile/${user.id}.png` } className="menu-profile" />
 								: <img src={ defaultProfileUri } className="menu-profile" />

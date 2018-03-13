@@ -13,10 +13,10 @@ class Switch extends Component {
 		super(props);
 	}
 	render(){
-		const { page, fetchLogin, fetchJoin, fetchConnectSocket, history } = this.props;
+		const { page, fetchLogin, fetchJoin, fetchConnectSocket, pushState } = this.props;
 		switch(page){
 			case "login":
-				return(<Login fetchLogin={fetchLogin} cx={cx} history={history} fetchConnectSocket={fetchConnectSocket} />);
+				return(<Login fetchLogin={fetchLogin} cx={cx} pushState={ pushState } fetchConnectSocket={fetchConnectSocket} />);
 			case "join":
 				return(<Join fetchJoin={fetchJoin} cx={cx}/>);
 		}
@@ -35,13 +35,18 @@ class Auth extends Component {
 		const { showScroll } = this.props;
 		showScroll(true);
 	}
+	pushState = (url) => {
+		const { history, showScroll } = this.props;
+		showScroll(true);
+		history.push(url);
+	}
 	render(){
 		const page = this.props.match.params.page;
-		const { fetchLogin, fetchJoin, fetchConnectSocket, history } = this.props;
+		const { fetchLogin, fetchJoin, fetchConnectSocket } = this.props;
 		return(
 			<div className="Auth">
 				<div className="auth-helper"></div>
-				<Switch page={ page } fetchLogin={ fetchLogin } fetchJoin={ fetchJoin } fetchConnectSocket={ fetchConnectSocket } history={ history } />
+				<Switch page={ page } fetchLogin={ fetchLogin } fetchJoin={ fetchJoin } fetchConnectSocket={ fetchConnectSocket } pushState={ this.pushState } />
 			</div>
 		);
 	}

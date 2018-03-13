@@ -47,12 +47,15 @@ obj.sendChat = (req,res) => {
 						const dir = path.join(__dirname,'..','..','public','files','chat');
 						fs.move(req.file.path,path.join(dir,cid+".png"));
 					}
+					chat.with = chat.to.id;
+					chat.handle = '@' + chat.to.handle;
 					const socketId = socketIds[to];
 					if( socketId && req.user.id != to ){
 						io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle : '@' + req.user.handle, chat } );
 					}
 					res.send({ 
 						"data" : {
+							with : chat.to.id,
 							handle : '@' + chat.to.handle,
 							chat
 						}
@@ -75,6 +78,7 @@ obj.sendChat = (req,res) => {
 					}
 					res.send({ 
 						"data" : {
+							with : chat.group.id,
 							handle : '#' + chat.group.id,
 							chat
 						}
@@ -102,13 +106,15 @@ obj.getDialogs = ( req, res ) => {
 		],
 		order : [ ['id'] ]
 	}).then( chats => {
-		let ret = {};
+		let obj = {};
 		chats
-			.map( chat => { return chat.get({ plain : true }); } )
-			.forEach( chat => { 
-				ret[ chat.toId === req.user.id ?chat.fromId:chat.toId ] = chat;
-			})
-		res.send({ "data" : ret });
+		.map( chat => { return chat.get({ plain : true }); } )
+		.forEach( chat => { 
+			chat.handle = '@' + (chat.toId === req.user.id?chat.from.handle:chat.to.handle);
+			chat.with = chat.toId === req.user.id?chat.from.id:chat.to.id;
+			obj[ chat.handle ] = chat;
+		});
+		res.send({ "data" : obj });
 	});
 }
 

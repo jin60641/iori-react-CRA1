@@ -40,8 +40,7 @@ class Layer extends Component {
 		const { fetchSearchUsers } = this.props;
 		const query = e.target.value
 		this.setState({
-			query,
-			selected : {}
+			query
 		})
 		if( !query.length ){
 			return null;
@@ -70,23 +69,29 @@ class Layer extends Component {
 	render(){
 		const { showChatLayer, searched, type } = this.props
 		const { query, selected } = this.state;
+		const selectedCount = Object.keys(selected).length;
 		return(
 			<div className="Layer" onClick={()=>showChatLayer(null)} >
 				<div className="layer-close" />
 				<div className="layer-box" onClick={(e)=>e.stopPropagation()}>
 					<div className="layer-box-close" onClick={()=>showChatLayer(null)}></div>
-					<div className="layer-title">{ type === "user" ? "1:1 대화" : "그룹 초대" }</div>
+					<div className="layer-title">
+					{ type === "user" ? 
+						"1:1 대화" 
+						: (selectedCount?selectedCount+"명":"그룹")+" 초대" 
+					}
+					</div>
 					<div className="layer-search-box">
 						<input type="text" className="layer-search" placeholder="검색" value={query} onChange={this.handleSearch} />
 					</div>
 					<div className="layer-list">
-					{ searched.users.map( (result) => {
+					{ searched.users.map( (user) => {
 						return(
-							<div className={cx("layer-list-item",{"layer-list-item-active":selected[result.id]})} key={`layer-list-${result.id}`} onClick={()=>this.handleSelect(result)}>
-								<img className="layer-list-img" />
+							<div className={cx("layer-list-item",{"layer-list-item-active":selected[user.id]})} key={`layer-list-${user.id}`} onClick={()=>this.handleSelect(user)}>
+								<img className="layer-list-img" src={ user.profile?`/files/profile/${user.id}.png`:"/images/profile.png" }/>
 								<div className="layer-list-wrap">
-									<div className="layer-list-name">{result.name}</div>
-									<div className="layer-list-handle">@{result.handle}</div>
+									<div className="layer-list-name">{user.name}</div>
+									<div className="layer-list-handle">@{user.handle}</div>
 								</div>
 							</div>
 						);

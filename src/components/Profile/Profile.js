@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { fetchSearchUser } from '../../actions/search';
 import { fetchSetProfile } from '../../actions/setting';
@@ -60,6 +61,10 @@ class Profile extends Component {
 	}
 	getImage = (user,type) => {
 		const nextState = {};
+		if( this.state.user ){
+			nextState.user = {};
+			nextState.user[type] = user[type];
+		}
 		if( user[type] ){
 			const img = new Image();
 			img.src = `/files/${type}/${user.id}.png`;
@@ -75,21 +80,18 @@ class Profile extends Component {
 	}
 	handleClickSetting = bool => {
 		const { showScroll, scrollToTop } = this.props;
-		const { helper, header } = initialState;
 		if( bool ){
 			scrollToTop();
 		}
 		showScroll(!bool);
 		this.setState({
-			isSetting : bool,
-			helper,
-			header
+			isSetting : bool
 		});
 	}
 	sendSetting = type => {
 		const obj = this.state[type];
 		const { x, y, width, height, file, img } = obj;
-		if( !file && img ){
+		if( !file && img.src ){
 			return 0;
 		}
 		const { fetchSetProfile, user } = this.props;
@@ -179,9 +181,9 @@ class Profile extends Component {
 				x = label.clientWidth - width;
 			} else if( !direction && width >= label.clientWidth && x < - label.clientWidth - width ){
 				x = - label.clientWidth - width;
-			} else if( direction == "height" && x < label.clientWidth - label.clientHeight/img.height * width ){
+			} else if( direction === "height" && x < label.clientWidth - label.clientHeight/img.height * width ){
 				x = label.clientWidth - label.clientHeight/img.height * width;
-			} else if( direction == "width" && x < label.clientWidth - label.clientWidth * scale ){
+			} else if( direction === "width" && x < label.clientWidth - label.clientWidth * scale ){
 				x = label.clientWidth - label.clientWidth * scale;
 			}
 	
@@ -191,9 +193,9 @@ class Profile extends Component {
 				y = label.clientHeight - height;
 			} else if( !direction && height >= label.clientHeight && y < - label.clientHeight - height ){
 				y = - label.clientHeight - height;
-			} else if( direction == "width" && y < label.clientHeight - label.clientWidth/img.width * height ){
+			} else if( direction === "width" && y < label.clientHeight - label.clientWidth/img.width * height ){
 				y = label.clientHeight - label.clientWidth/img.width * height;
-			} else if( direction == "height" && y < label.clientHeight - label.clientHeight * scale){
+			} else if( direction === "height" && y < label.clientHeight - label.clientHeight * scale){
 				y = label.clientHeight - height * scale;
 			}
 			const nextState = {	...this.state };
@@ -224,11 +226,11 @@ class Profile extends Component {
 			direction = (img.width/label.clientWidth < img.height/label.clientHeight)?"width":"height";
 		}
 		nextState[type].scale = scale;
-		if( direction == "width" ){
+		if( direction === "width" ){
 			multi = label.clientWidth/img.width;
 			nextState[type].width = label.clientWidth * scale;
 			nextState[type].height = img.height * multi * scale;
-		} else if( direction == "height" ){
+		} else if( direction === "height" ){
 			multi = label.clientHeight/img.height;
 			nextState[type].width = img.width * multi * scale;
 			nextState[type].height = label.clientHeight * scale;
@@ -282,8 +284,8 @@ class Profile extends Component {
 										</div>
 									</div>
 								</div>
-								{ user.header ?
-									<div className="profile-header-back" style={ { backgroundImage : `url(/files/header/${user.id}.png)` } }/>
+								{ header.img.src ?
+									<div className="profile-header-back" style={ { backgroundImage : `url(${header.img.src})` } }/>
 									: <div className="profile-header-back" />
 								}
 								<input className="profile-header-file" id="profile-header-file" type="file" onChange={e=>this.handleChangeFile(e,"header")}/>
@@ -310,8 +312,8 @@ class Profile extends Component {
 										</div>
 									</div>
 								</div>
-								{ user.profile ?
-									<div className="profile-img-back" style={ { backgroundImage : `url(/files/profile/${user.id}.png)` } }/>
+								{ profile.img.src ?
+									<div className="profile-img-back" style={ { backgroundImage : `url(${profile.img.src})` } }/>
 									: <div className="profile-img-back" style={ { backgroundImage : "url('/images/profile.png')" } }/>
 								}
 								<input className="profile-img-file" type="file" id="profile-img-file" onChange={e=>this.handleChangeFile(e,"profile")}/>
@@ -333,9 +335,9 @@ class Profile extends Component {
 									<div className={cx("profile-btn","profile-btn-active")} >
 										팔로우
 									</div>
-									<div className={cx("profile-btn","profile-btn-active")} >
+									<Link to={`/chat/@${user.handle}`} className={cx("profile-btn","profile-btn-active")} >
 										쪽지
-									</div>
+									</Link>
 								</div>
 							}
 						</div>

@@ -26,7 +26,7 @@ class Newsfeed extends Component {
 	}
 	componentWillReceiveProps(nextProps){
 		this.setState({ offset : nextProps.posts.length });
-		if( nextProps.isBottom && this.props.isBottom == false ){
+		if( nextProps.isBottom && this.props.isBottom === false ){
 			this.handleGetPosts();
 		}
 	}

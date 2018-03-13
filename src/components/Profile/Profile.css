@@ -16,6 +16,7 @@
     height: 50px;
     text-align: right; }
     .Profile .profile-nav .profile-btn {
+      text-decoration: none;
       text-align: center;
       display: none;
       width: 78px;

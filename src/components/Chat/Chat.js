@@ -6,7 +6,7 @@ import Panel from './Panel';
 import Layer from './Layer';
 
 import { fetchSearchUser, fetchSearchUsers } from '../../actions/search';
-import { fetchSendChat, fetchGetChats, fetchGetDialogs } from '../../actions/chat';
+import { fetchSendChat, fetchGetChats, fetchGetDialogs, fetchMakeGroup } from '../../actions/chat';
 
 import styles from './Chat.css';
 import classNames from 'classnames/bind';
@@ -28,6 +28,7 @@ const initialState = {
 	type : null,
 	to : null,
 	text : "",
+	loading : false
 }
 
 const limit = 10;
@@ -58,16 +59,24 @@ class Chat extends Component {
 		}
 	}
 	getChats = (from,type,offset) => {
-		const { fetchGetChats } = this.props;
-		fetchGetChats({ from, type, limit, offset })
-		.then( action => {
-		});
+		const { loading } = this.state;
+		if( loading === false ){
+			this.setState({loading : true });
+			const { fetchGetChats } = this.props;
+			fetchGetChats({ from, type, limit, offset })
+			.then( action => {
+				this.setState({loading : false });
+			});
+		}
 	}
-	handleScrollTop = (callback) => {
+	handleScrollTop = async (callback) => {
 		const { to, type } = this.state;
 		const chats = this.props.chats[this.getFullHandle(type,to.handle)];
 		if( to ){
-			this.getChats(to,type,chats?chats.length:0);
+			await this.getChats(to,type,chats?chats.length:0);
+		}
+		if( callback ){
+			callback();
 		}
 	}
 	handleClickMenu = (e) => {
@@ -168,7 +177,7 @@ class Chat extends Component {
 		})
 	}
 	handleChatKeyDown = e => {
-		if( e.keyCode == 13 && !e.shiftKey){
+		if( e.keyCode === 13 && !e.shiftKey){
 			this.handleClickSend();
 			e.preventDefault();
 		}
@@ -202,8 +211,8 @@ class Chat extends Component {
 							<input type="text" className="chat-search" placeholder="검색" />
 						</div>
 						<div className="chat-dialog-box">
-							{ Object.keys(dialogs).map( key => {
-								return(<Dialog cx={cx} user={user} active={to?(to.id===parseInt(key)):false} dialog={dialogs[key]} key={`dialog-${key}`} openChat={this.openChat} />);
+							{ dialogs.map( dialog => {
+								return(<Dialog cx={cx} user={user} active={to?(to.id===dialog.with):false} dialog={dialog} key={`dialog-${dialog.id}`} openChat={this.openChat} />);
 							})}
 						</div>
 					</div>
@@ -244,6 +253,7 @@ const actionToProps = {
 	fetchSearchUsers,
 	fetchSendChat,
 	fetchGetChats,
-	fetchGetDialogs
+	fetchGetDialogs,
+	fetchMakeGroup
 };
 export default connect(stateToProps, actionToProps)(Chat);

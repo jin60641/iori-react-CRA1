@@ -148,7 +148,7 @@ $layer-search-height : 32px;
 			}
 		}
 		.layer-list-item-active {
-			background-color: rgba($color-normal, 0.8) !important;
+			background-color: $color-normal !important;
 			.layer-list-time {
 				color : white !important;
 			}
@@ -221,10 +221,12 @@ $layer-search-height : 32px;
 
 	.layer-search-box {
 		height : $layer-search-height;
+		width : 100%;
 		box-sizing : border-box;
 		padding : 6px 10px 8px 15px;
 		box-shadow: 0 1px 1px rgba(0,0,0,.15);
 		.layer-search {
+			width : 100%;
 			background-color : white;
 			border : 0;
 		}

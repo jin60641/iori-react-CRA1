@@ -10,7 +10,6 @@ class Panel extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			loading : false,
 			isBottom : true,
 			timer : null,
 			isTop : false
@@ -23,13 +22,12 @@ class Panel extends Component {
 	componentWillUnmount(){
 		const { timer } = this.state;
 		this.setState({
-			loading : false,
 			timer : clearInterval(timer)
 		});
 		ReactDOM.findDOMNode(this.refs.Panel).removeEventListener('scroll',this.handleScroll);
 	}
 	handleScroll(e){
-		const { loading } = this.state;
+		const { loading } = this.props;
 		const dom = e.target;
 		if( loading ){
 			e.preventDefault();
@@ -37,9 +35,6 @@ class Panel extends Component {
 		}
 		if( dom.scrollTop < 80 ){
 			e.preventDefault();
-			this.setState({
-				loading : true
-			});
 			const { handleScrollTop } = this.props;
 			handleScrollTop();
 			return false;
@@ -78,7 +73,6 @@ class Panel extends Component {
 						handleScrollTop();
 					} else {
 						this.setState({
-							loading : false,
 							timer : clearInterval(timer)
 						});
 					}

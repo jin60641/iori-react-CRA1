@@ -16,6 +16,9 @@ class PostWrite extends Component {
 		const { fetchWritePost } = this.props;
 		const { text, files } = this.state;
 		let formData = new FormData();
+		if( !( text.length || files.length ) ){
+			return 0;
+		}
 		formData.append("text",text);
 		Array.from(files).forEach( file => {
 			formData.append('file',file.data);

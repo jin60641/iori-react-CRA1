@@ -11,7 +11,7 @@ class Login extends Component {
 	componentWillMount() {
 	}
 	handleLogin = (email, password) => {
-		const { fetchLogin, fetchConnectSocket, history } = this.props;
+		const { fetchLogin, fetchConnectSocket, pushState } = this.props;
 		fetchLogin({email,password})
 			.then( (action) => {
 				if(!action.error) {
@@ -19,7 +19,7 @@ class Login extends Component {
 					.then( action => {
 						console.log(action);
 					});
-					history.push('/');
+					pushState('/');
 				} else {
 					this.setState({
 						message : action.payload.message
@@ -32,15 +32,15 @@ class Login extends Component {
 
 		const email = this.refs.email.value;
 		const password = this.refs.password.value;
-		if( email.length == 0 ){
+		if( email.length === 0 ){
 			this.setState({
 				message : "이메일을 입력해 주세요."
 			});
-		} else if( email.match(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/g ) == undefined ){
+		} else if( email.match(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/g ) === undefined ){
 			this.setState({
 				message : "유효하지 않은 이메일입니다."
 			});
-		} else if( password.length == 0 ){
+		} else if( password.length === 0 ){
 			this.setState({
 				message : "비밀번호를 입력해 주세요."
 			});

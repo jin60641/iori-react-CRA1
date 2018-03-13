@@ -31,23 +31,23 @@ class Join extends Component {
 		const passwordCheck = this.refs.passwordCheck.value;
 		const handle = this.refs.handle.value;
 		const name = this.refs.name.value;
-		if( email.length == 0 ){
+		if( email.length === 0 ){
 			this.setState({
 				message : "이메일을 입력해 주세요."
 			});
-		} else if( email.match(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/g ) == undefined ){
+		} else if( email.match(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/g ) === undefined ){
 			this.setState({
 				message : "유효하지 않은 이메일입니다."
 			});
-		} else if( handle.length == 0 ){
+		} else if( handle.length === 0 ){
 			this.setState({
 				message : "핸들을 입력해 주세요."
 			});
-		} else if( name.length == 0 ){
+		} else if( name.length === 0 ){
 			this.setState({
 				message : "이름을 입력해 주세요."
 			});
-		} else if( password.length == 0 ){
+		} else if( password.length === 0 ){
 			this.setState({
 				message : "비밀번호를 입력해 주세요."
 			});

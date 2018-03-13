@@ -28,6 +28,7 @@
 		vertical-align : top;
 	}
 	.message-body {
+		width : 100%;
 		display : inline-block;
 		margin : 4px;
 		margin-top : 0px;
@@ -57,11 +58,10 @@
 			margin-top : 0px;
 		}
 		.message-body-file {
+			max-width : 50%;
 			cursor : pointer;
-			max-width : 60%;
 			max-height : 140px;
 			display : block;
-			margin-left : auto;
 			margin-top : 0px;
 			margin-bottom : 15px;
 			border-radius : 4px;
@@ -90,6 +90,9 @@
 		}
 		.message-body-text {
 			margin-right : 9px;
+		}
+		.message-body-file {
+			margin-left : auto;
 		}
 	}
 	.message-body-caret {

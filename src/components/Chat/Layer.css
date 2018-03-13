@@ -123,7 +123,7 @@
           margin-top: 2px;
           color: #999; }
     .layer-box .layer-list .layer-list-item-active {
-      background-color: rgba(255, 92, 62, 0.8) !important; }
+      background-color: #ff5c3e !important; }
       .layer-box .layer-list .layer-list-item-active .layer-list-time {
         color: white !important; }
       .layer-box .layer-list .layer-list-item-active .layer-list-wrap .layer-list-name {
@@ -179,9 +179,11 @@
       cursor: pointer; }
   .layer-box .layer-search-box {
     height: 32px;
+    width: 100%;
     box-sizing: border-box;
     padding: 6px 10px 8px 15px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15); }
     .layer-box .layer-search-box .layer-search {
+      width: 100%;
       background-color: white;
       border: 0; }
