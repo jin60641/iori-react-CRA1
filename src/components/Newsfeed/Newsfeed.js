@@ -44,7 +44,7 @@ class Newsfeed extends Component {
 		const { posts, fetchWritePost, options } = this.props;
 		return (
 			<div className="Newsfeed">
-				{ !options.user ?
+				{ !options.userId ?
 					<Write fetchWritePost={fetchWritePost} />
 					: null
 				}

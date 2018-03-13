@@ -50,33 +50,28 @@ class Profile extends Component {
 		.then( action => {
 			if( !action.error ){
 				const user = action.payload;
-				if( user.profile ){
-					const type = "profile";
-					const img = new Image();
-					img.src = `/images/files/profile/${user.id}.png`;
-					img.onload = (e) => {
-						const { width, height } = img;
-						const nextState = {};
-						nextState[type] = { ...initialState[type], img, width, height };
-						this.setState(nextState);
-					}
-				}
-				if( user.header ){
-					const type = "header";
-					const img = new Image();
-					img.src = `/images/files/header/${user.id}.png`;
-					img.onload = (e) => {
-						const { width, height } = img;
-						const nextState = {};
-						nextState[type] = { ...initialState[type], img, width, height };
-						this.setState(nextState);
-					}
-				}
+				this.getImage(user,"profile");
+				this.getImage(user,"header");
 				this.setState({
 					user : action.payload
 				})
 			}
 		});
+	}
+	getImage = (user,type) => {
+		const nextState = {};
+		if( user[type] ){
+			const img = new Image();
+			img.src = `/files/${type}/${user.id}.png`;
+			img.onload = (e) => {
+				const { width, height } = img;
+				nextState[type] = { ...initialState[type], img, width, height };
+				this.setState(nextState);
+			}
+		} else {
+			nextState[type] = { ...initialState[type] };
+			this.setState(nextState);
+		}
 	}
 	handleClickSetting = bool => {
 		const { showScroll, scrollToTop } = this.props;
@@ -94,6 +89,10 @@ class Profile extends Component {
 	sendSetting = type => {
 		const obj = this.state[type];
 		const { x, y, width, height, file, img } = obj;
+		if( !file && img ){
+			return 0;
+		}
+		const { fetchSetProfile, user } = this.props;
 		const label = this.refs[type];;
 		let formData = new FormData();
 		formData.append("type",type);
@@ -101,15 +100,15 @@ class Profile extends Component {
 			formData.append("x",-x);
 			formData.append("y",-y);
 			formData.append("width",label.clientWidth/width*img.width);
-			formData.append("height",label.clinetHeight/height*img.height));
+			formData.append("height",label.clientHeight/height*img.height);
 			formData.append("file",file);
 		}
-		
 		fetchSetProfile(formData)
 		.then( action => {
 			if( !action.error ){
 				if( action.payload ){
-					
+					this.getImage(user,type);
+					this.handleClickSetting(false);
 				}
 			}
 		});
@@ -246,7 +245,7 @@ class Profile extends Component {
 		if( !user ){
 			return( null );
 		} else {
-			const my = user.id === this.props.user.id;
+			const my = this.props.user && ( user.id === this.props.user.id );
 			const headerLabelStyle = {
 				backgroundImage : `url("${header.img.src}")`,
 				backgroundPosition : `${header.x}px ${header.y}px`,
@@ -283,7 +282,10 @@ class Profile extends Component {
 										</div>
 									</div>
 								</div>
-								<div className="profile-header-back" />
+								{ user.header ?
+									<div className="profile-header-back" style={ { backgroundImage : `url(/files/header/${user.id}.png)` } }/>
+									: <div className="profile-header-back" />
+								}
 								<input className="profile-header-file" id="profile-header-file" type="file" onChange={e=>this.handleChangeFile(e,"header")}/>
 							</form>
 							<form className="profile-img">
@@ -309,7 +311,7 @@ class Profile extends Component {
 									</div>
 								</div>
 								{ user.profile ?
-									<div className="profile-img-back" style={ { backgroundImage : "url(`/files/profile/${user.id}`)" } }/>
+									<div className="profile-img-back" style={ { backgroundImage : `url(/files/profile/${user.id}.png)` } }/>
 									: <div className="profile-img-back" style={ { backgroundImage : "url('/images/profile.png')" } }/>
 								}
 								<input className="profile-img-file" type="file" id="profile-img-file" onChange={e=>this.handleChangeFile(e,"profile")}/>
@@ -340,7 +342,7 @@ class Profile extends Component {
 					</div>
 					<Newsfeed
 						isBottom = { isBottom }
-						options = { { user } }
+						options = { { userId : user.id } }
 					/>
 				</div>
 			);

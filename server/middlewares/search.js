@@ -2,7 +2,7 @@ let obj = {}
 let db = require('../models/index.js');
 
 const filter = {
-	User : ["id","handle","name","profile"]
+	User : ["id","handle","name","profile","header"]
 };
 
 
