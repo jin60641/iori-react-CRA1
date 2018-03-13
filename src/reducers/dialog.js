@@ -9,14 +9,7 @@ export default handleActions({
 		if( action.error ) {
 			return state;
 		}
-		let nextState = [].concat(state);
-		Object.keys(action.payload).map( handle => { return action.payload[handle] }).forEach( dialog => {
-			const index = handleToIndex[dialog.handle];
-			if( index >= 0 ) {
-				nextState.splice(index,1);
-			}
-			nextState = [dialog].concat(nextState);
-		});
+		let nextState = Object.keys(action.payload).map( handle => { return action.payload[handle] });
 		nextState.sort( (a,b) => { return a.id < b.id }).forEach( (dialog,key) => { handleToIndex[dialog.handle] = key; } );
 		return nextState;
 	},
