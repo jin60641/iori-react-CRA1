@@ -5,7 +5,7 @@ import Dialog from './Dialog';
 import Panel from './Panel';
 import Layer from './Layer';
 
-import { fetchSearchUser, fetchSearchUsers } from '../../actions/search';
+import { fetchSearchGroup, fetchSearchUser, fetchSearchUsers } from '../../actions/search';
 import { fetchSendChat, fetchGetChats, fetchGetDialogs, fetchMakeGroup } from '../../actions/chat';
 
 import styles from './Chat.css';
@@ -14,11 +14,11 @@ const cx = classNames.bind(styles);
 
 const charToStr = {
 	'@' : 'user',
-	'#' : 'group'
+	'$' : 'group'
 }
 const strToChar = {
 	'user' : '@',
-	'group' : '#',
+	'group' : '$',
 }
 
 const initialState = {
@@ -43,19 +43,33 @@ class Chat extends Component {
 	}
 	componentWillMount = (e) => {
 		const chatHandle = this.props.match.params.handle;
-		const { fetchSearchUser, fetchGetChats, fetchGetDialogs } = this.props;
+		console.log(this.props.match);
+		const { fetchSearchGroup, fetchSearchUser, fetchGetChats, fetchGetDialogs } = this.props;
 		fetchGetDialogs()
 		.then( action => {
 		});
 		if( chatHandle ){
 			const type = charToStr[chatHandle[0]];
 			const handle = chatHandle.substr(1);
-			fetchSearchUser({ query : handle })
-			.then( action => {
-				if( !action.error ){
-					this.openChat(action.payload,type);
-				}
-			});
+			const data = {
+				"query" : handle
+			}
+			if( type === "user" ){
+				fetchSearchUser(data)
+				.then( action => {
+					if( !action.error ){
+						this.openChat(action.payload,type);
+					}
+				});
+			} else {
+		console.log(data);
+				fetchSearchGroup(data)
+				.then( action => {
+					if( !action.error ){
+						this.openChat(action.payload,type);
+					}
+				});
+			}
 		}
 	}
 	getChats = (from,type,offset) => {
@@ -113,10 +127,18 @@ class Chat extends Component {
 	}
 	inviteUsers = users => {
 		const { layer } = this.state;
+		console.log(layer);
 		if( layer === "user" ){
 			this.openChat(users[0],layer);
 		} else if( layer === "group" ){
-			// group invite
+			const { fetchMakeGroup, history } = this.props;
+			fetchMakeGroup({ userIds : users.map( user => user.id )  })
+			.then( action => {
+				if( !action.error ){
+			console.log(action.payload);
+					this.openChat(action.payload,layer);
+				}
+			});
 		}
 	}
 	componentWillUnmount = () => {
@@ -251,6 +273,7 @@ const stateToProps = ({dialogs,searched,chats,user}) => ({dialogs,searched,chats
 const actionToProps = {
 	fetchSearchUser,
 	fetchSearchUsers,
+	fetchSearchGroup,
 	fetchSendChat,
 	fetchGetChats,
 	fetchGetDialogs,

@@ -148,10 +148,29 @@ obj.getChats = ( req, res ) => {
 				}
 			});
 		}).catch( err => {
-			console.log(err);
 			res.send({ "msg" : "fail" });
 		});
 	}
 };
+
+obj.makeGroup = (req,res) => {
+	const { userIds } = req.body;
+	db.User.findAll({ where : { id : { $in : userIds } }})
+	.then( users => {
+		const names = users.map( (user,key) => { return user.get({ plain : true }).name });
+		if( names.length === userIds.length ){
+			const current = {
+				userIds,
+				name : names.join(", ")
+			}
+			db.Group.create(current)
+			.then( group => {
+				res.send({ "data" : group.get({ plain : true }) });
+			});
+		}
+	}).catch( e => {
+		console.log(e);
+	});
+}
 
 module.exports = obj;

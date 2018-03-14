@@ -61,9 +61,9 @@ class Layer extends Component {
             return false;
         }
         if( type === "user" ){
-            const to = selected[keys[0]];
-			inviteUsers([to]);
+			inviteUsers([selected[keys[0]]]);
         } else if( type === "group" ){
+			inviteUsers(keys.map( key => { return selected[key] } ));
         }
 	}
 	render(){
@@ -85,17 +85,20 @@ class Layer extends Component {
 						<input type="text" className="layer-search" placeholder="검색" value={query} onChange={this.handleSearch} />
 					</div>
 					<div className="layer-list">
-					{ searched.users.map( (user) => {
-						return(
-							<div className={cx("layer-list-item",{"layer-list-item-active":selected[user.id]})} key={`layer-list-${user.id}`} onClick={()=>this.handleSelect(user)}>
-								<img className="layer-list-img" src={ user.profile?`/files/profile/${user.id}.png`:"/images/profile.png" }/>
-								<div className="layer-list-wrap">
-									<div className="layer-list-name">{user.name}</div>
-									<div className="layer-list-handle">@{user.handle}</div>
-								</div>
+					{ query ? 
+						searched.users.map( (user) => {
+							return(
+								<div className={cx("layer-list-item",{"layer-list-item-active":selected[user.id]})} key={`layer-list-${user.id}`} onClick={()=>this.handleSelect(user)}>
+									<img className="layer-list-img" src={ user.profile?`/files/profile/${user.id}.png`:"/images/profile.png" }/>
+									<div className="layer-list-wrap">
+										<div className="layer-list-name">{user.name}</div>
+										<div className="layer-list-handle">@{user.handle}</div>
+									</div>
 							</div>
-						);
-					}) }
+							);
+						})
+						: null
+					}
 					</div>
 					<div className="layer-menu">
 						<div className={cx("layer-menu-item","layer-menu-active")} onClick={()=>showChatLayer(null)} >취소</div>
