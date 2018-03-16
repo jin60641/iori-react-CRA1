@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes){
 		name : { type : DataTypes.STRING(32), allowNull : false },
 		handle : { type : DataTypes.STRING(32), allowNull : false },
 		password : { type : DataTypes.STRING, allowNull : false },
-		verify : { type : DataTypes.BOOLEAN, defaultValue : false },
+		verify : { type : DataTypes.BOOLEAN, defaultValue : true },
 		profile : { type : DataTypes.BOOLEAN, defaultValue : false },
 		header : { type : DataTypes.BOOLEAN, defaultValue : false }
 	},{

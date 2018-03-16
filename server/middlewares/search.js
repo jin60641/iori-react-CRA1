@@ -3,9 +3,13 @@ let db = require('../models/index.js');
 
 const filter = {
 	User : ["id","handle","name","profile","header"],
-	Group : ["id","userIds","handle","name"]
+	Group : ["id","handle","name"]
 };
 
+const include = {
+	User : [{ model : db.Group, as : 'groups' }],
+	Group : [{ model : db.Group, as : 'users' }]
+}
 
 
 obj.searchGroup = (req,res) => {
@@ -14,9 +18,9 @@ obj.searchGroup = (req,res) => {
 		const where = {
 			id : query
 		}
-		db.Group.find({ where, attributes : filter.Group })
-		.then( function(group){
-			res.send({ data : group.get({ plain : true }) });
+		db.Group.find({ where, include : include.Group, attributes : filter.Group })
+		.then( result => {
+			res.send({ data : result.get({ plain : true }) });
 		})
 	}
 }
@@ -27,9 +31,9 @@ obj.searchUser = (req,res) => {
 		const where = {
 			handle : query
 		}
-		db.User.find({ where, attributes : filter.User, raw : true })
-		.then( function(result){
-			res.send({ data : result });
+		db.User.find({ where, include : include.User, attributes : filter.User })
+		.then( result => {
+			res.send({ data : result.get({ plain : true }) });
 		})
 	}
 }
@@ -42,9 +46,9 @@ obj.searchUsers = (req,res) => {
 			handle : { $like : `%${query}%` }
 		}
 	}
-	db.User.findAll({ where, attributes : filter.User, raw : true })
-	.then( function(result){
-		res.send({ data : result });
+	db.User.findAll({ where, include : include.User, attributes : filter.User })
+	.then( result => {
+		res.send({ data : result.map( obj => obj.get({ plain : true }) ) });
 	})
 }
 

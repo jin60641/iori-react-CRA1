@@ -1,15 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
 	const Group =  sequelize.define('Group', {
 		id : { type : DataTypes.INTEGER, primaryKey : true, autoIncrement : true },
-		userIds : { 
-			type : DataTypes.STRING,
-			get : function(){
-				return this.getDataValue('userIds').split(',')
-			},
-			set: function (val) {
-				this.setDataValue('userIds',val.toString());
-			}
-		},
 		handle : {
 			type : DataTypes.STRING,
 			get : function(){
@@ -21,5 +12,11 @@ module.exports = function(sequelize, DataTypes) {
 		timestamps : true,
 		paranoid : true,
 	});
+	Group.associate = function(models) {
+		models.User.belongsToMany(Group, { as : 'groups', through : models.UserGroup });
+		Group.belongsToMany(models.User, { as : 'users', through : models.UserGroup });
+		//Group.hasMany(models.User, { as : 'users', foreignKey : 'userIds', targetKey : 'id' });
+		//models.User.hasMany(Group, { as : 'groups', foreignKey : 'groupIds', targetKey : 'id' });
+	}
 	return Group;
 };

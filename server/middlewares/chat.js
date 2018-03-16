@@ -160,9 +160,11 @@ obj.makeGroup = (req,res) => {
 				userIds,
 				name : names.join(", ")
 			}
-			db.Group.create(current)
-			.then( group => {
-				res.send({ "data" : group.get({ plain : true }) });
+			db.Group.create(current,{ include : [{ model : db.User, as : 'users'}] })
+			.then( created => {
+				const group = created.get({ plain : true });
+				result.forEach( user => { user.addGroup(created, { through : { groupId : group.id } }) });
+				res.send({ "data" : group });
 			});
 		}
 	}).catch( e => {
