@@ -231,7 +231,7 @@ class Chat extends Component {
 						</div>
 						<div className="chat-dialog-box">
 							{ dialogs.map( dialog => {
-								return(<Dialog cx={cx} user={user} active={to?(to.id===dialog.with):false} dialog={dialog} key={`dialog-${dialog.id}`} openChat={this.openChat} />);
+								return(<Dialog cx={cx} user={user} active={to?(this.getFullHandle(dialog.type,to.handle)===dialog.handle):false} dialog={dialog} key={`dialog-${dialog.id}`} openChat={this.openChat} />);
 							})}
 						</div>
 					</div>
