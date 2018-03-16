@@ -87,6 +87,7 @@ class Layer extends Component {
 					<div className="layer-list">
 					{ query ? 
 						searched.users.map( (user) => {
+							if( user.id === this.props.user.id ) return null;
 							return(
 								<div className={cx("layer-list-item",{"layer-list-item-active":selected[user.id]})} key={`layer-list-${user.id}`} onClick={()=>this.handleSelect(user)}>
 									<img className="layer-list-img" src={ user.profile?`/files/profile/${user.id}.png`:"/images/profile.png" }/>

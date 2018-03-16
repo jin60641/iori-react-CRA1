@@ -8,7 +8,7 @@ const filter = {
 
 const include = {
 	User : [{ model : db.Group, as : 'groups' }],
-	Group : [{ model : db.Group, as : 'users' }]
+	Group : [{ model : db.User, as : 'users' }]
 }
 
 

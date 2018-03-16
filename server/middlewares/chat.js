@@ -48,7 +48,7 @@ obj.sendChat = (req,res) => {
 				include : [
 					{ model : db.User, as : 'from' },
 					{ model : db.User, as : 'to' },
-					{ model : db.Group, as : 'group' }
+					{ model : db.Group,	as : 'group', include : [{ model : db.User, as : 'users'}] }
 				]
 			}).then( result => {
 				const chat = result.get({ plain : true });
@@ -59,9 +59,10 @@ obj.sendChat = (req,res) => {
 				}
 				chat.with = chat.to.id;
 				chat.handle = strToChar[chat.type] + chat.to.handle;
-				(chat.group?chat.group.userIds:[to]).forEach( userId => {
-					const socketId = socketIds[userId];
-					if( socketId && req.user.id != userId ){
+				console.log(chat.group);
+				(chat.group?chat.group.users:[chat.to]).forEach( user => {
+					const socketId = socketIds[user.id];
+					if( socketId && req.user.id != user.id ){
 						io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle : chat.handle, chat } );
 					}
 				})
@@ -80,12 +81,15 @@ obj.sendChat = (req,res) => {
 }
 
 obj.getDialogs = ( req, res ) => {
+	console.log(req.user);
 	db.Chat.findAll({
 		where : {
 			$or : [{
 				toId : req.user.id,
 			},{
 				fromId : req.user.id
+			},{
+				groupId : { $in : [ req.user.groups ] }
 			}]
 		},
 		include : [
@@ -105,6 +109,7 @@ obj.getDialogs = ( req, res ) => {
 			obj[ chat.handle ] = chat;
 		});
 		res.send({ "data" : obj });
+	}).catch( e => {
 	});
 }
 
@@ -115,7 +120,8 @@ obj.getChats = ( req, res ) => {
 	const query = {
 		include : [
 			{ model : db.User, as : 'from' },
-			{ model : db.User, as : 'to' }
+			{ model : db.User, as : 'to' },
+			{ model : db.Group, as : 'group' }
 		],
 		order : [ ['id','DESC'] ], 
 		limit, 
@@ -150,7 +156,8 @@ obj.getChats = ( req, res ) => {
 };
 
 obj.makeGroup = (req,res) => {
-	const { userIds } = req.body;
+	let { userIds } = req.body;
+	userIds.push(req.user.id);
 	db.User.findAll({ where : { id : { $in : userIds } }})
 	.then( result => {
 		const users = result.map( user => { return user.get({ plain : true}) } );

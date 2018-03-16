@@ -70,6 +70,7 @@
     .auth-form .login-local:hover {
       background-color: #ff5c3e; }
   .auth-form .login-facebook {
+    display: none;
     background-color: #537bbd;
     margin-top: 8px;
     margin-bottom: 30px; }
@@ -78,6 +79,7 @@
     .auth-form .login-facebook .auth-facebook-img {
       margin-right: 4px; }
   .auth-form .login-twitter {
+    display: none;
     background-color: #1da1f2;
     margin-bottom: 30px; }
     .auth-form .login-twitter:hover {

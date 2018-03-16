@@ -8,11 +8,16 @@ let obj = {
 }
 
 let LocalStrategy = require('passport-local').Strategy;
-obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'password' }, function( email, password, next ){
-	db.User.findOne({ where : { email : email }, raw : true }).then( function( user ){
-		if(!user){
+obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'password' }, ( email, password, next ) => {
+	db.User.findOne({ 
+		where : { 
+			email
+		}
+	}).then( result => {
+		if(!result){
 			return next(new Error("이메일 또는 비밀번호가 잘못되었습니다."));
 		} else {
+			const user = result.get({ plain : true });
 			let shasum = crypto.createHash('sha1');
 			shasum.update(password);
 			let sha_pw = shasum.digest('hex');

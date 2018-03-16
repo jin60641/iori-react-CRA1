@@ -1,3 +1,5 @@
+@import "../../styles/utils.scss";
+
 .Auth {
 	height : 100%;
 	text-align : center;
@@ -83,6 +85,7 @@
 		}
 	}
 	.login-facebook {
+		display : none;
 		background-color : #537bbd;
 		margin-top : 8px;
 		margin-bottom : 30px;
@@ -94,6 +97,7 @@
 		}
 	}
 	.login-twitter {
+		display : none;
 		background-color : #1da1f2;
 		margin-bottom : 30px;
 		&:hover {

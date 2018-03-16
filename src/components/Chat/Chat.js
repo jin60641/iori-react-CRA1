@@ -112,6 +112,7 @@ class Chat extends Component {
 	}
 	openChat = (to,type) => {
 		const { history, chats } = this.props;
+		console.log(to);
 		history.push(`/chat/${this.getFullHandle(type,to.handle)}`);
 		this.setState({
 			layerSelected : {},
@@ -258,7 +259,7 @@ class Chat extends Component {
 				</div>
 				{ layer === null ? 
 					<div /> 
-					: <Layer type={layer} showChatLayer={this.showChatLayer} fetchSearchUsers={fetchSearchUsers} searched={searched} inviteUsers={this.inviteUsers} />
+					: <Layer user={user} type={layer} showChatLayer={this.showChatLayer} fetchSearchUsers={fetchSearchUsers} searched={searched} inviteUsers={this.inviteUsers} />
 				}
 			</div>
 		);
