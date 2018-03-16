@@ -43,7 +43,6 @@ class Chat extends Component {
 	}
 	componentWillMount = (e) => {
 		const chatHandle = this.props.match.params.handle;
-		console.log(this.props.match);
 		const { fetchSearchGroup, fetchSearchUser, fetchGetChats, fetchGetDialogs } = this.props;
 		fetchGetDialogs()
 		.then( action => {
@@ -62,7 +61,6 @@ class Chat extends Component {
 					}
 				});
 			} else {
-		console.log(data);
 				fetchSearchGroup(data)
 				.then( action => {
 					if( !action.error ){
@@ -127,7 +125,6 @@ class Chat extends Component {
 	}
 	inviteUsers = users => {
 		const { layer } = this.state;
-		console.log(layer);
 		if( layer === "user" ){
 			this.openChat(users[0],layer);
 		} else if( layer === "group" ){
@@ -135,7 +132,6 @@ class Chat extends Component {
 			fetchMakeGroup({ userIds : users.map( user => user.id )  })
 			.then( action => {
 				if( !action.error ){
-			console.log(action.payload);
 					this.openChat(action.payload,layer);
 				}
 			});

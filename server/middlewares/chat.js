@@ -20,71 +20,59 @@ obj.filter = multer({
 	}
 });
 
+const strToChar = {
+    'user' : '@',
+    'group' : '$',
+}
+
 obj.sendChat = (req,res) => {
 	try {
 		const { to, text, type } = req.body;
-		const current = {
+		let current = {
 			fromId : req.user.id,
-			toId : to,
 			text : text.trim().substr(0,120),
 			file : req.file?true:false,
 			type
 		}
+		if( type === "user" ){
+			current.toId = to;
+		} else if( type === "group" ){
+			current.groupId = to;
+		}
 		db.Chat.create(current).then( model => {
 			const cid = model.dataValues.id;
-			if( type === "user" ){
-				db.Chat.findOne({
-					where : {
-						id : cid
-					},
-					include : [
-						{ model : db.User, as : 'from' },
-						{ model : db.User, as : 'to' }
-					]
-				}).then( result => {
-					const chat = result.get({ plain : true });
-					if( req.file ){
-						const dir = path.join(__dirname,'..','..','public','files','chat');
-						fs.move(req.file.path,path.join(dir,cid+".png"));
+			db.Chat.findOne({
+				where : {
+					id : cid
+				},
+				include : [
+					{ model : db.User, as : 'from' },
+					{ model : db.User, as : 'to' },
+					{ model : db.Group, as : 'group' }
+				]
+			}).then( result => {
+				const chat = result.get({ plain : true });
+				chat.to = chat.type==="user"?chat.to:chat.group;
+				if( req.file ){
+					const dir = path.join(__dirname,'..','..','public','files','chat');
+					fs.move(req.file.path,path.join(dir,cid+".png"));
+				}
+				chat.with = chat.to.id;
+				chat.handle = strToChar[chat.type] + chat.to.handle;
+				(chat.group?chat.group.userIds:[to]).forEach( userId => {
+					const socketId = socketIds[userId];
+					if( socketId && req.user.id != userId ){
+						io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle : chat.handle, chat } );
 					}
-					chat.with = chat.to.id;
-					chat.handle = '@' + chat.to.handle;
-					const socketId = socketIds[to];
-					if( socketId && req.user.id != to ){
-						io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle : '@' + req.user.handle, chat } );
-					}
-					res.send({ 
-						"data" : {
-							with : chat.to.id,
-							handle : '@' + chat.to.handle,
-							chat
-						}
-					})
 				})
-			} else {
-				db.Chat.findOne({
-					where : {
-						id : cid
-					},
-					include : [
-						{ model : db.User, as : 'from' },
-						{ model : db.Group, as : 'to' }
-					]
-				}).then( result => {
-					const chat = result.get({ plain : true });
-					if( req.file ){
-						const dir = path.join(__dirname,'..','..','public','files','chat');
-						fs.move(req.file.path,path.join(dir,cid+".png"));
+				res.send({ 
+					"data" : {
+						with : chat.to.id,
+						handle : chat.handle,
+						chat
 					}
-					res.send({ 
-						"data" : {
-							with : chat.group.id,
-							handle : '#' + chat.group.id,
-							chat
-						}
-					})
 				})
-			}
+			})
 		})
 	} catch(e){
 		res.send({  msg : e.message });
@@ -102,7 +90,8 @@ obj.getDialogs = ( req, res ) => {
 		},
 		include : [
 			{ model : db.User, as : 'from' },
-			{ model : db.User, as : 'to' }
+			{ model : db.User, as : 'to' },
+			{ model : db.Group, as : 'group' }
 		],
 		order : [ ['id'] ]
 	}).then( chats => {
@@ -110,7 +99,8 @@ obj.getDialogs = ( req, res ) => {
 		chats
 		.map( chat => { return chat.get({ plain : true }); } )
 		.forEach( chat => { 
-			chat.handle = '@' + (chat.toId === req.user.id?chat.from.handle:chat.to.handle);
+			chat.to = chat.type==="user"?chat.to:chat.group;
+			chat.handle = strToChar[chat.type] + (chat.toId === req.user.id?chat.from.handle:chat.to.handle);
 			chat.with = chat.toId === req.user.id?chat.from.id:chat.to.id;
 			obj[ chat.handle ] = chat;
 		});
@@ -122,42 +112,49 @@ obj.getChats = ( req, res ) => {
 	let { limit, offset, from, type } = req.body;
 	limit = limit?limit:10;
 	offset = offset?offset:0;
+	const query = {
+		include : [
+			{ model : db.User, as : 'from' },
+			{ model : db.User, as : 'to' }
+		],
+		order : [ ['id','DESC'] ], 
+		limit, 
+		offset
+	};
 	if( type === "user" ){
-		db.Chat.findAll({
-			where : {
-				$or : [{
-					toId : req.user.id,
-					fromId : from.id
-				},{
-					toId : from.id,
-					fromId : req.user.id
-				}]
-			},
-			include : [
-				{ model : db.User, as : 'from' },
-				{ model : db.User, as : 'to' }
-			],
-			order : [ ['id','DESC'] ], 
-			limit, 
-			offset
-		}).then( chats => {
-			res.send({ 
-				"data" : {
-					handle : '@' + from.handle,
-					chats : chats.map( chat => { return chat.get({ plain : true }); } )
-				}
-			});
-		}).catch( err => {
-			res.send({ "msg" : "fail" });
-		});
+		query.where = {
+			$or : [{
+				toId : req.user.id,
+				fromId : from.id
+			},{
+				toId : from.id,
+				fromId : req.user.id
+			}]
+		}
+	} else if( type === "group" ){
+		query.where = {
+			groupId : from.id
+		}
 	}
+	db.Chat.findAll(query)
+	.then( chats => {
+		res.send({ 
+			"data" : {
+				handle : strToChar[type] + from.handle,
+				chats : chats.map( chat => { return chat.get({ plain : true }); } )
+			}
+		});
+	}).catch( err => {
+		res.send({ "msg" : "fail" });
+	});
 };
 
 obj.makeGroup = (req,res) => {
 	const { userIds } = req.body;
 	db.User.findAll({ where : { id : { $in : userIds } }})
-	.then( users => {
-		const names = users.map( (user,key) => { return user.get({ plain : true }).name });
+	.then( result => {
+		const users = result.map( user => { return user.get({ plain : true}) } );
+		const names = users.map( user => { return user.name });
 		if( names.length === userIds.length ){
 			const current = {
 				userIds,

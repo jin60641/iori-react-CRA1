@@ -14,9 +14,9 @@ obj.searchGroup = (req,res) => {
 		const where = {
 			id : query
 		}
-		db.Group.find({ where, attributes : filter.Group, raw : true })
-		.then( function(result){
-			res.send({ data : result });
+		db.Group.find({ where, attributes : filter.Group })
+		.then( function(group){
+			res.send({ data : group.get({ plain : true }) });
 		})
 	}
 }

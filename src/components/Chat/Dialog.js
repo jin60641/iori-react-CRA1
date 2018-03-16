@@ -22,15 +22,16 @@ class Dialog extends Component {
     render(){
         const { dialog, user, openChat, active } = this.props;
         const my = user.id === dialog.from.id;
+		const to = dialog.type==="user"?dialog.to:dialog.group;
         return(
-            <div className={cx("Dialog",{"Dialog-active":active})} onClick={ ()=>{openChat(my?dialog.to:dialog.from,"user")} }>
+            <div className={cx("Dialog",{"Dialog-active":active})} onClick={ ()=>{openChat(my?to:dialog.from,dialog.type)} }>
                 <div className="dialog-time">
                     { this.getDateString(dialog.createdAt) }
                 </div>
                 <img className="dialog-img" src="/images/profile.png" />
                 <div className="dialog-message-wrap">
                     <div className="dialog-message-name">
-                        { my ? dialog.to.name : dialog.from.name }
+                        { my ? to.name : dialog.from.name }
                     </div>
                     <div className="dialog-message-text">
                         { my ? `나 : ${dialog.text}`  : dialog.text }
