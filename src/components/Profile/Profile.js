@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { fetchSearchUser } from '../../actions/search';
 import { fetchSetProfile } from '../../actions/setting';
+import { fetchFollow } from '../../actions/relation';
 
 import Newsfeed from '../Newsfeed/Newsfeed';
 import styles from './Profile.css';
@@ -58,6 +59,23 @@ class Profile extends Component {
 				})
 			}
 		});
+	}
+	componentWillReceiveProps = nextProps => {
+		const { fetchSearchUser } = this.props;
+		const handle = nextProps.match.params.handle;
+		if( this.props.match.params.handle !== handle ){
+			fetchSearchUser({ query : handle })
+			.then( action => {
+				if( !action.error ){
+					const user = action.payload;
+					this.getImage(user,"profile");
+					this.getImage(user,"header");
+					this.setState({
+						user : action.payload
+					})
+				}
+			});
+		}
 	}
 	getImage = (user,type) => {
 		const nextState = {};
@@ -241,13 +259,23 @@ class Profile extends Component {
 		this.setState(nextState);
 		this.handleMouseMove(null,type,true);
 	}
+	handleClickFollow = () => {
+		const { fetchFollow } = this.props;
+		fetchFollow({ to : this.state.user.id })
+		.then( action => {
+			console.log(action);
+			const nextState = { ...this.state };
+			nextState.user.following = action.payload;
+			this.setState(nextState);
+		});
+	}
 	render(){
 		const { user, isSetting, helper, header, moving, profile } = this.state;
-		const { isTop, isBottom } = this.props;
+		const { isTop, isBottom, isLoggedIn } = this.props;
 		if( !user ){
 			return( null );
 		} else {
-			const my = this.props.user && ( user.id === this.props.user.id );
+			const my = isLoggedIn() && user.id === this.props.user.id;
 			const headerLabelStyle = {
 				backgroundImage : `url("${header.img.src}")`,
 				backgroundPosition : `${header.x}px ${header.y}px`,
@@ -332,9 +360,15 @@ class Profile extends Component {
 								</div> 
 							:
 								<div className="profile-nav">
-									<div className={cx("profile-btn","profile-btn-active")} >
-										팔로우
-									</div>
+									{ isLoggedIn() ? 
+										<div className={cx("profile-btn","profile-btn-active")} onClick={this.handleClickFollow}>
+											{ user.following?"언팔로우":"팔로우" }
+										</div>
+									:
+										<Link to="/auth/login" className={cx("profile-btn","profile-btn-active")} >
+											팔로우
+										</Link>
+									}
 									<Link to={`/chat/@${user.handle}`} className={cx("profile-btn","profile-btn-active")} >
 										쪽지
 									</Link>
@@ -355,7 +389,8 @@ const stateToProps = ({searched,user}) => ({searched,user});
 
 const actionToProps = {
 	fetchSearchUser,
-	fetchSetProfile
+	fetchSetProfile,
+	fetchFollow
 }
 
 export default connect(stateToProps,actionToProps)(Profile);

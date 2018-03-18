@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import './Auth.css';
+import styles from './Login.css';
+import classNames from 'classnames/bind'
+const cx = classNames.bind(styles);
 
 class Login extends Component {
 	constructor(props) {
@@ -51,7 +55,6 @@ class Login extends Component {
 	componentWillUnmount() {
 	}
 	render(){
-		const { cx } = this.props;
 		const { message } = this.state;
 		return (
 			<form className="auth-form" onSubmit={this.handleSubmit} >

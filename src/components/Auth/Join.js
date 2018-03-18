@@ -75,7 +75,7 @@ class Join extends Component {
 				<input ref="password" type="password" className="auth-input" placeholder="" /> 
 				<label className="auth-label" htmlFor="passwordCheck">비밀번호 확인</label>
 				<input ref="passwordCheck" type="password" className="auth-input" placeholder="" /> 
-				<div className={ cx('auth-btn','login-local') } onClick={this.handleSubmit} >회원가입</div>
+				<div className="auth-btn" onClick={this.handleSubmit} >회원가입</div>
 				<div className="auth-message"> { message } </div>
 				<input type="submit" hidden />
 			</form>

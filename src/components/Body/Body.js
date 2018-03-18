@@ -66,6 +66,7 @@ class Body extends Component {
 							isBottom = { isBottom }
 							showScroll = { this.showScroll }
 							scrollToTop = { this.scrollToTop }
+							isLoggedIn = { this.isLoggedIn }
 						/> 
 					)}/>
 					<Route path="/chat/:handle" render={(props) => (

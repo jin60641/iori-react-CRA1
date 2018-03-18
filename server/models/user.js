@@ -13,5 +13,8 @@ module.exports = function(sequelize, DataTypes){
 		timestamps : true,
 		paranoid : true,
 	});
+	User.associate = models => {
+		User.include = { model : models.Group, as : 'groups'};
+	}
 	return User;
 };

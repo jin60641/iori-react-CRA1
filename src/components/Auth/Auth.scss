@@ -77,37 +77,10 @@
 		.auth-btn-img {
 			vertical-align : top;
 		}
-	}
-	.login-local {
-		background-color : rgba($color-normal,0.9);
-		&:hover {
-			background-color : $color-normal;
-		}
-	}
-	.login-facebook {
-		display : none;
-		background-color : #537bbd;
-		margin-top : 8px;
-		margin-bottom : 30px;
-		&:hover {
-			background-color : #2e4f84;
-		}
-		.auth-facebook-img {
-			margin-right : 4px;
-		}
-	}
-	.login-twitter {
-		display : none;
-		background-color : #1da1f2;
-		margin-bottom : 30px;
-		&:hover {
-			background-color : #1da1f2;
-		}
-		.auth-twitter-img {
-			width : 36px;
-			height : 36px;
-			margin-top : -7px;
-		}
+        background-color : rgba($color-normal,0.9);
+        &:hover {
+            background-color : $color-normal;
+        }
 	}
 	.auth-text {
 		display : block;

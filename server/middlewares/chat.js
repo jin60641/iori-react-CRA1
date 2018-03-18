@@ -45,11 +45,7 @@ obj.sendChat = (req,res) => {
 				where : {
 					id : cid
 				},
-				include : [
-					{ model : db.User, as : 'from' },
-					{ model : db.User, as : 'to' },
-					{ model : db.Group,	as : 'group', include : [{ model : db.User, as : 'users'}] }
-				]
+				include : db.Chat.include
 			}).then( result => {
 				const chat = result.get({ plain : true });
 				chat.to = chat.type==="user"?chat.to:chat.group;
@@ -59,7 +55,6 @@ obj.sendChat = (req,res) => {
 				}
 				chat.with = chat.to.id;
 				chat.handle = strToChar[chat.type] + chat.to.handle;
-				console.log(chat.group);
 				(chat.group?chat.group.users:[chat.to]).forEach( user => {
 					const socketId = socketIds[user.id];
 					if( socketId && req.user.id != user.id ){
@@ -81,7 +76,6 @@ obj.sendChat = (req,res) => {
 }
 
 obj.getDialogs = ( req, res ) => {
-	console.log(req.user);
 	db.Chat.findAll({
 		where : {
 			$or : [{
@@ -92,11 +86,7 @@ obj.getDialogs = ( req, res ) => {
 				groupId : { $in : [ req.user.groups ] }
 			}]
 		},
-		include : [
-			{ model : db.User, as : 'from' },
-			{ model : db.User, as : 'to' },
-			{ model : db.Group, as : 'group' }
-		],
+		include : db.Chat.include,
 		order : [ ['id'] ]
 	}).then( chats => {
 		let obj = {};
@@ -118,11 +108,7 @@ obj.getChats = ( req, res ) => {
 	limit = limit?limit:10;
 	offset = offset?offset:0;
 	const query = {
-		include : [
-			{ model : db.User, as : 'from' },
-			{ model : db.User, as : 'to' },
-			{ model : db.Group, as : 'group' }
-		],
+		include : db.Chat.include,
 		order : [ ['id','DESC'] ], 
 		limit, 
 		offset
@@ -167,7 +153,7 @@ obj.makeGroup = (req,res) => {
 				userIds,
 				name : names.join(", ")
 			}
-			db.Group.create(current,{ include : [{ model : db.User, as : 'users'}] })
+			db.Group.create(current,{ include : db.Group.include })
 			.then( created => {
 				const group = created.get({ plain : true });
 				result.forEach( user => { user.addGroup(created, { through : { groupId : group.id } }) });

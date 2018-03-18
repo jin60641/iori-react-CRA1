@@ -16,9 +16,9 @@ class Switch extends Component {
 		const { page, fetchLogin, fetchJoin, fetchConnectSocket, pushState } = this.props;
 		switch(page){
 			case "login":
-				return(<Login fetchLogin={fetchLogin} cx={cx} pushState={ pushState } fetchConnectSocket={fetchConnectSocket} />);
+				return(<Login fetchLogin={fetchLogin} pushState={ pushState } fetchConnectSocket={fetchConnectSocket} />);
 			case "join":
-				return(<Join fetchJoin={fetchJoin} cx={cx}/>);
+				return(<Join fetchJoin={fetchJoin} />);
 		}
 	}
 }

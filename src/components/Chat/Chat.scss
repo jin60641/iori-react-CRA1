@@ -32,6 +32,8 @@ $chat-dialog-width : 230px;
 		background-color : rgba($color-normal,.9);
 		text-align : center;
 		.chat-title {
+			color : white;
+			text-decoration : none;
 			vertical-align : top;
 			width : calc( 100% - #{$chat-dialog-width} );
 			box-sizing : border-box;

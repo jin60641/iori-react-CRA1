@@ -25,9 +25,16 @@ class Newsfeed extends Component {
 		}
 	}
 	componentWillReceiveProps(nextProps){
+		const { options } = nextProps;
 		this.setState({ offset : nextProps.posts.length });
-		if( nextProps.isBottom && this.props.isBottom === false ){
+		if( ( !this.state.userId && options && options.userId ) || ( !options && this.state.userId ) || 
+			( options && options.userId && this.state.userId !== options.userId ) ){
+			this.setState( Object.assign(this.state,nextProps.options)  );
 			this.handleGetPosts();
+		} else {
+			if( nextProps.isBottom && this.props.isBottom === false ){
+				this.handleGetPosts();
+			}
 		}
 	}
 	handleGetPosts = (options = {}) => {
@@ -35,7 +42,6 @@ class Newsfeed extends Component {
 		const data = Object.assign( this.state, options );
 		fetchGetPosts(data)
 			.then( (action) => {
-				console.log(action);
 				if( action.error ){
 				}
 			});

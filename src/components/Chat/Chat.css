@@ -25,6 +25,8 @@
     background-color: rgba(255, 92, 62, 0.9);
     text-align: center; }
     .chat-wrap .chat-header .chat-title {
+      color: white;
+      text-decoration: none;
       vertical-align: top;
       width: calc( 100% - 230px);
       box-sizing: border-box;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import Dialog from './Dialog';
 import Panel from './Panel';
@@ -221,9 +222,14 @@ class Chat extends Component {
 								</div>
 							</div>
 						</div>
-						<div className={cx("chat-title","chat-header-div")}>
-							{ to?to.name:"" }<span className="chat-title-span"></span>
-						</div>
+						{ type === "user" ?
+							<Link to={`/@${to.handle}`}className={cx("chat-title","chat-header-div")}>
+								{ to.name }<span className="chat-title-span"></span>
+							</Link>
+							: <div className={cx("chat-title","chat-header-div")}>
+								{ to?to.name:"" }<span className="chat-title-span"></span>
+							</div>
+						}
 					</div>
 					<div className="chat-dialog">
 						<div className={cx("Dialog","chat-dialog-search")}>

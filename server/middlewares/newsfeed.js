@@ -33,7 +33,7 @@ obj.writePost = (req,res) => {
 				where : {
 					id : pid
 				},
-				include : { model : db.User, as : 'user' }
+				include : db.Post.include
 			}).then( post => {
 				const dir = path.join(__dirname,'..','..','public','files','post',pid.toString());
 				if (!fs.existsSync(dir)){
@@ -51,18 +51,48 @@ obj.writePost = (req,res) => {
 }
 
 obj.getPosts = ( req, res ) => {
+	if( req.body.userId ){
+		getPostsByUserId( req, res );
+	} else {
+		getPosts( req, res );
+	}
+}
+
+getPosts = ( req, res ) => {
+	let { limit, offset } = req.body;
+	db.Follow.findAll({ where : { fromId : req.user.id }})
+	.then( follows => {
+		const userIds = follows.map( follow => follow.get({ plain : true }).toId );
+		userIds.push(req.user.id);
+		db.Post.findAll({ 
+			where : {
+				userId : { $in : userIds }
+			},
+			include : db.Post.include,
+			order : [ ['id','DESC'] ], 
+			limit : limit, 
+			offset : offset
+		}).then( posts => {
+			res.send({ "data" : posts.map( post => post.get({ plain : true }) ) });
+		}).catch( e => {
+			res.send({ "msg" : "fail" });
+		});
+	}).catch( e => {
+		res.send({ "msg" : "fail" });
+	});
+};
+
+getPostsByUserId = ( req, res ) => {
 	let { limit, offset, userId } = req.body;
 	db.Post.findAll({ 
-		where : {
-			userId : userId?userId:req.user.id
-		},
-		include : { model : db.User, as : 'user' },
+		where : { userId },
+		include : db.Post.include,
 		order : [ ['id','DESC'] ], 
 		limit : limit, 
 		offset : offset
 	}).then( posts => {
-		res.send({ "data" : posts.map( function(post){ return post.get({ plain : true }); } ) });
-	}).catch( err => {
+		res.send({ "data" : posts.map( post => post.get({ plain : true }) ) });
+	}).catch( e => {
 		res.send({ "msg" : "fail" });
 	});
 };

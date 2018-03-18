@@ -12,9 +12,11 @@ module.exports = function(sequelize, DataTypes) {
 		timestamps : true,
 		paranoid : true,
 	});
-	Group.associate = function(models) {
+	Group.associate = models => {
 		models.User.belongsToMany(Group, { as : 'groups', through : models.UserGroup });
 		Group.belongsToMany(models.User, { as : 'users', through : models.UserGroup });
+
+		Group.include = { model : models.User, as : 'users'};
 	}
 	return Group;
 };

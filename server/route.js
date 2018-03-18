@@ -7,7 +7,7 @@ const controllers = path.join(__dirname,"controllers");
 
 fs
 	.readdirSync(controllers)
-	.forEach( (file) => {
+	.forEach( file => {
 		const name = file.split('.')[0];
 		router.use(`/api/${name}`,require(path.join(controllers,file)));
 	})
