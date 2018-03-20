@@ -23,8 +23,29 @@ $container-nav-height : 50px;
 		transition : height .3s;
 	}
 	.profile-nav { 
+		position : relative;
 		height : $container-nav-height;
-		text-align : right;
+		.profile-nav-user {
+			position : absolute;
+			transition : left .3s;
+			left : 100px;
+			top : calc( ( #{$container-nav-height} - 36px ) / 2 );
+			.profile-nav-handle {
+				color : rgba(0,0,0,.6);
+				font-size : 13px;
+				margin-bottom : 2px;
+			}
+			.profile-nav-name {
+				font-size : 18px;
+			}
+		}
+		.profile-nav-user-top {
+			left : 205px;
+		}
+		.profile-btns {
+			margin-top : 7px;
+			float : right;
+		}
 		.profile-btn {
 			text-decoration : none;
 			text-align : center;
@@ -38,11 +59,7 @@ $container-nav-height : 50px;
 			cursor : pointer;
 			font-size : 14px;
 			font-weight : bold;
-			margin-top : 7px;
 			margin-right : 7px;
-			&:first-of-type {
-				margin-right : 15px;
-			}
 			&:hover {
 				background-color : #f5f5f5;
 			}
@@ -94,9 +111,6 @@ $container-nav-height : 50px;
 			background-repeat : no-repeat;
 			left : calc( 50% - 32px );
 			top : calc( 50% - 32px );
-			.profile-helper-caret {
-				right : 42px;
-			}
 			.profile-helper-menu {
 				background-color : white;
 				display : none;
@@ -128,7 +142,7 @@ $container-nav-height : 50px;
 			display : block !important;
 		}
 		.profile-helper-clicked {
-			.profile-helper-menu, .profile-helper-caret {
+			.profile-helper-menu {
 				display : block !important;
 			}
 		}
@@ -183,3 +197,39 @@ $container-nav-height : 50px;
 		height : $profile-top-header-height;
 	}
 }
+
+
+.profile-caret {
+    position : absolute;
+    top : -10px;
+    width : 18px;
+    height : 10px;
+	left : calc( 50% - 9px );
+    overflow : hidden;
+    .profile-caret-outer, .profile-caret-inner {
+        position : absolute;
+        top : 0;
+        left : 0;
+        display : inline-block;
+        margin-left : -1px;
+    }
+
+    .profile-caret-outer {
+        border-bottom : 10px solid white;
+        border-left : 10px solid transparent;
+        border-right : 10px solid transparent;
+        height : auto;
+        left : 0;
+        top : 0;
+        width : auto;
+    }
+    .profile-caret .profile-caret-inner {
+        top : 1px;
+        left : 1px;
+        border-left : 9px solid transparent;
+        border-right : 9px solid transparent;
+        border-bottom : 9px solid #fff;
+        border-bottom-color : rgba(255,255,255,1);
+    }
+}
+

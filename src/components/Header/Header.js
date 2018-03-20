@@ -39,7 +39,7 @@ class Header extends Component {
 						return (<NavLink exact={"/"===tab.link} className="header-tab" to={tab.link} key={tab.key} activeClassName="header-tab-active" > {tab.name} </NavLink>);
 					})}
 				</div>
-				<Menu user={ user } />
+				<Menu user={ user } handleLogout={this.handleLogout} />
 			</div>
 		);
 	}

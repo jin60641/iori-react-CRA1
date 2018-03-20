@@ -14,19 +14,19 @@ obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'p
 	db.User.findOne({ 
 		where : { 
 			email
-		}
-	}).then( result => {
-		if(!result){
+		},
+		raw : true
+	}).then( user => {
+		if(!user){
 			return next(new Error("이메일 또는 비밀번호가 잘못되었습니다."));
 		} else {
-			const user = result.get({ plain : true });
 			let shasum = crypto.createHash('sha1');
 			shasum.update(password);
 			let sha_pw = shasum.digest('hex');
 			if( user.password == sha_pw ){
 				if( user && user.verify == false ){
 					return next(new Error('이메일 인증을 진행하셔야 정상적인 이용이 가능합니다.'));
-				} else if( user ){
+				} else {
 					return next(null,user);
 				}
 			} else {

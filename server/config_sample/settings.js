@@ -14,7 +14,6 @@ const settings = {
 			idle: 10000
 		},
 		password : "mysql address",
-		host : 'mysql host',
 		port : 3306,
 		database : "mysql database",
 		dialect : "mysql",
@@ -26,7 +25,6 @@ const settings = {
 			},
  		},
 		query : {
-			raw : true 
 		}
 	}
 }

@@ -23,6 +23,7 @@ class Login extends Component {
 					.then( action => {
 						console.log(action);
 					});
+					
 					pushState('/');
 				} else {
 					this.setState({

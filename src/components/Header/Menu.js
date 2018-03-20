@@ -1,32 +1,48 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import './Menu.css';
+import styles from './Menu.css';
+import classNames from 'classnames/bind';
+const withClickOutside = require('react-click-outside');
+const cx = classNames.bind(styles);
 
 const defaultProfileUri = '/images/profile.png';
 class Menu extends Component {
 	constructor(props){
 		super(props);
+		this.state = {
+			menu : false
+		}
+	}
+	handleClickOutside = () => {
+		this.setState({ menu : false });
+	}
+	toggleMenu = () => {
+		this.setState( state => ({
+			menu : !state.menu
+		}));
 	}
 	render(){
-		const { user } = this.props;
-		return( 
-			<div className="Menu">
-				{ 
-					( user && user.verify ) ?
-						<Link to={`/@${user.handle}`}>
-							{	user.profile ?
-								<img src={ `/files/profile/${user.id}.png` } className="menu-profile" />
-								: <img src={ defaultProfileUri } className="menu-profile" />
-							}
-						</Link>
-					: 
-						<Link to="/auth/login">
-							<img src={ defaultProfileUri } className="menu-profile" />
-						</Link>
-				}
-			</div>
-		);
+		const { user, handleLogout } = this.props;
+		const { menu } = this.state;
+		if( user && user.verify ) {
+			return(
+				<div className="Menu">
+					<img src={ user.profile?`/files/profile/${user.id}.png`:defaultProfileUri } className="menu-profile" onClick={this.toggleMenu}/>
+					<div className={cx("menu-list",{"menu-list-active":menu})} onClick={this.toggleMenu} >
+						<div className="menu-caret"> <div className="menu-caret-outer" /> <div className="menu-caret-inner" /> </div>
+						<Link to={`/@${user.handle}`} className="menu-list-item">프로필</Link>
+						<div className="menu-list-item" onClick={handleLogout}>로그아웃</div>
+					</div>
+				</div>
+			);
+		} else {
+			return( 
+				<Link to="/auth/login" className="Menu">
+					<img src={ defaultProfileUri } className="menu-profile" />
+				</Link>
+			);
+		}
 	}
 }
 
-export default Menu;
+export default withClickOutside(Menu);

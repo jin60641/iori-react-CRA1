@@ -12,3 +12,56 @@
   transition: all .4s ease-out; }
   .Menu .menu-profile:hover {
     transform: scale(1.1, 1.1); }
+
+.Menu .menu-list {
+  display: none;
+  position: absolute;
+  right: 30px;
+  top: 48px;
+  background-color: white;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1); }
+  .Menu .menu-list .menu-list-item {
+    cursor: pointer;
+    display: block;
+    box-sizing: border-box;
+    padding: 10px 0 10px 0;
+    margin: 0px 15px 0px 15px;
+    font-size: 15px;
+    text-decoration: none;
+    color: #ff5c3e;
+    border-top: 1px solid rgba(255, 92, 62, 0.5); }
+    .Menu .menu-list .menu-list-item:first-of-type {
+      border-top: 0px; }
+
+.Menu .menu-list-active {
+  display: block; }
+
+.menu-caret {
+  position: absolute;
+  top: -10px;
+  width: 18px;
+  height: 10px;
+  right: 16px;
+  overflow: hidden; }
+  .menu-caret .menu-caret-outer, .menu-caret .menu-caret-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    margin-left: -1px; }
+  .menu-caret .menu-caret-outer {
+    border-bottom: 10px solid #8899a6;
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    height: auto;
+    left: 0;
+    top: 0;
+    width: auto; }
+  .menu-caret .menu-caret-inner {
+    top: 1px;
+    left: 1px;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid #fff;
+    border-bottom-color: white; }

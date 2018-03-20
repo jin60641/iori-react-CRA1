@@ -109,7 +109,7 @@ class Profile extends Component {
 	sendSetting = type => {
 		const obj = this.state[type];
 		const { x, y, width, height, file, img } = obj;
-		if( !file && img.src ){
+		if( ( !file && img.src ) || ( img.src && img.src.length === 0 ) ){
 			return 0;
 		}
 		const { fetchSetProfile, user } = this.props;
@@ -161,8 +161,8 @@ class Profile extends Component {
 				const { width, height } = img;
 				const nextState = {};
 				nextState[type] = { ...initialState[type], img, width, height, file };
-				this.handleMouseWheel(null,type);
 				this.setState(nextState);
+				this.handleMouseWheel(null,type);
 			}
 		});
 		reader.readAsDataURL(file);
@@ -224,38 +224,26 @@ class Profile extends Component {
 	}
 	handleMouseWheel = (e,type) => {
 		const { img } = this.state[type];
-		if( !img.src ){
-			return 1;
-		}
 		if( e ){
 			e.preventDefault();
+		} else if( !img.src ){
+			return 1;
 		}
 		const label = this.refs[type];
 		const nextState = { ...this.state };
 		let scale = nextState[type].scale - 0.001 * (e?e.deltaY:0);
-		if( scale < 1 ){
-			scale = 1;
-		} else if( scale > 2 ){
-			scale = 2;
-		}
 		let direction;
-		let multi;
-		if( img.width < label.clientWidth || img.height < label.clientHeight ){
+		if( img.width * scale < label.clientWidth || img.height * scale < label.clientHeight ){
 			direction = (img.width/label.clientWidth < img.height/label.clientHeight)?"width":"height";
 		}
-		nextState[type].scale = scale;
 		if( direction === "width" ){
-			multi = label.clientWidth/img.width;
-			nextState[type].width = label.clientWidth * scale;
-			nextState[type].height = img.height * multi * scale;
+			scale = label.clientWidth/img.width;
 		} else if( direction === "height" ){
-			multi = label.clientHeight/img.height;
-			nextState[type].width = img.width * multi * scale;
-			nextState[type].height = label.clientHeight * scale;
-		} else {
-			nextState[type].width = img.width * scale;
-			nextState[type].height = img.height * scale;
+			scale = label.clientHeight/img.height;
 		}
+		nextState[type].width = img.width * scale;
+		nextState[type].height = img.height * scale;
+		nextState[type].scale = scale;
 		this.setState(nextState);
 		this.handleMouseMove(null,type,true);
 	}
@@ -294,6 +282,7 @@ class Profile extends Component {
 								<div className={cx("profile-label",{"profile-label-active":isSetting,"profile-label-uploaded":header.img.src})} style={ headerLabelStyle } ref="header" onMouseMove={e=>this.handleMouseMove(e,"header")} onMouseDown={()=>this.handleMouseDown("header")} onMouseUp={this.handleMouseUp} onWheel={e=>this.handleMouseWheel(e,"header")}>
 									<div className={cx("profile-helper",{"profile-helper-clicked":helper==="header","profile-helper-active":!moving})} onMouseDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();this.handleClickHelper("header")}}>
 										<div className="profile-helper-menu" onClick={e=>{e.stopPropagation();this.handleClickHelper(""); return 0;}}>
+											<div className="profile-caret"><div className="profile-caret-outer" /><div className="profile-caret-inner" /></div>
 										{ header.img.src ? 
 											<div>
 												<label className="profile-helper-menu-item" htmlFor="profile-header-file">
@@ -322,6 +311,7 @@ class Profile extends Component {
 								<div className={cx("profile-label",{"profile-label-active":isSetting,"profile-label-uploaded":profile.img.src})} style={ profileLabelStyle } ref="profile" onMouseMove={e=>this.handleMouseMove(e,"profile")} onMouseDown={()=>this.handleMouseDown("profile")} onMouseUp={this.handleMouseUp} onWheel={e=>this.handleMouseWheel(e,"profile")}>
 									<div className={cx("profile-helper",{"profile-helper-clicked":helper==="profile","profile-helper-active":!moving})} onMouseDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();this.handleClickHelper("profile")}}>
 										<div className="profile-helper-menu" onClick={e=>{e.stopPropagation();this.handleClickHelper(""); return 0;}}>
+											<div className="profile-caret"><div className="profile-caret-outer" /><div className="profile-caret-inner" /></div>
 										{ profile.img.src ? 
 											<div>
 												<label className="profile-helper-menu-item" htmlFor="profile-img-file">
@@ -346,8 +336,13 @@ class Profile extends Component {
 								}
 								<input className="profile-img-file" type="file" id="profile-img-file" onChange={e=>this.handleChangeFile(e,"profile")}/>
 							</form>
+							<div className="profile-nav">
+								<div className={cx("profile-nav-user",{"profile-nav-user-top":isTop})} >
+									<div className="profile-nav-handle">@{user.handle}</div>
+									<div className="profile-nav-name">{user.name}</div>
+								</div>
 							{ my ? 
-								<div className="profile-nav">
+								<div className="profile-btns">
 									<div className={cx("profile-btn",{"profile-btn-active":!isSetting})} onClick={()=>this.handleClickSetting(true)} >
 										프로필 설정
 									</div>
@@ -357,23 +352,24 @@ class Profile extends Component {
 									<div className={cx("profile-btn",{"profile-btn-active":isSetting})} onClick={this.handleClickSettingSave} >
 										설정 저장
 									</div>
-								</div> 
+								</div>
 							:
-								<div className="profile-nav">
-									{ isLoggedIn() ? 
-										<div className={cx("profile-btn","profile-btn-active")} onClick={this.handleClickFollow}>
-											{ user.following?"언팔로우":"팔로우" }
-										</div>
-									:
-										<Link to="/auth/login" className={cx("profile-btn","profile-btn-active")} >
-											팔로우
-										</Link>
-									}
+								<div className="profile-btns">
+								{ isLoggedIn() ? 
+									<div className={cx("profile-btn","profile-btn-active")} onClick={this.handleClickFollow}>
+										{ user.following?"언팔로우":"팔로우" }
+									</div>
+								:
+									<Link to="/auth/login" className={cx("profile-btn","profile-btn-active")} >
+										팔로우
+									</Link>
+								}
 									<Link to={`/chat/@${user.handle}`} className={cx("profile-btn","profile-btn-active")} >
 										쪽지
 									</Link>
 								</div>
 							}
+							</div>
 						</div>
 					</div>
 					<Newsfeed

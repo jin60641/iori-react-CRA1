@@ -13,8 +13,24 @@
     background-color: white;
     transition: height .3s; }
   .Profile .profile-nav {
-    height: 50px;
-    text-align: right; }
+    position: relative;
+    height: 50px; }
+    .Profile .profile-nav .profile-nav-user {
+      position: absolute;
+      transition: left .3s;
+      left: 100px;
+      top: calc( ( 50px - 36px ) / 2); }
+      .Profile .profile-nav .profile-nav-user .profile-nav-handle {
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 13px;
+        margin-bottom: 2px; }
+      .Profile .profile-nav .profile-nav-user .profile-nav-name {
+        font-size: 18px; }
+    .Profile .profile-nav .profile-nav-user-top {
+      left: 205px; }
+    .Profile .profile-nav .profile-btns {
+      margin-top: 7px;
+      float: right; }
     .Profile .profile-nav .profile-btn {
       text-decoration: none;
       text-align: center;
@@ -28,10 +44,7 @@
       cursor: pointer;
       font-size: 14px;
       font-weight: bold;
-      margin-top: 7px;
       margin-right: 7px; }
-      .Profile .profile-nav .profile-btn:first-of-type {
-        margin-right: 15px; }
       .Profile .profile-nav .profile-btn:hover {
         background-color: #f5f5f5; }
     .Profile .profile-nav .profile-btn-active {
@@ -73,8 +86,6 @@
       background-repeat: no-repeat;
       left: calc( 50% - 32px);
       top: calc( 50% - 32px); }
-      .Profile .profile-label .profile-helper .profile-helper-caret {
-        right: 42px; }
       .Profile .profile-label .profile-helper .profile-helper-menu {
         background-color: white;
         display: none;
@@ -100,7 +111,7 @@
             background-color: #ff5c3e; }
     .Profile .profile-label .profile-helper-active {
       display: block !important; }
-    .Profile .profile-label .profile-helper-clicked .profile-helper-menu, .Profile .profile-label .profile-helper-clicked .profile-helper-caret {
+    .Profile .profile-label .profile-helper-clicked .profile-helper-menu {
       display: block !important; }
   .Profile .profile-label-active {
     display: block !important; }
@@ -140,3 +151,32 @@
   height: 300px; }
   .Profile-top-header .profile-container {
     height: 300px; }
+
+.profile-caret {
+  position: absolute;
+  top: -10px;
+  width: 18px;
+  height: 10px;
+  left: calc( 50% - 9px);
+  overflow: hidden; }
+  .profile-caret .profile-caret-outer, .profile-caret .profile-caret-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    margin-left: -1px; }
+  .profile-caret .profile-caret-outer {
+    border-bottom: 10px solid white;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    height: auto;
+    left: 0;
+    top: 0;
+    width: auto; }
+  .profile-caret .profile-caret .profile-caret-inner {
+    top: 1px;
+    left: 1px;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid #fff;
+    border-bottom-color: white; }
