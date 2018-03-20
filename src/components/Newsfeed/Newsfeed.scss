@@ -1,14 +1,14 @@
 @import "../../styles/utils.scss";
 
 .Newsfeed {
-	margin : auto;
+	display : inline-block;
+	vertical-align : top;
 	padding-top : 10px;
     overflow-y : hidden;
     min-height : calc( 100vh - 42px );
-    width : 650px;
+    width : 600px;
 	max-width : 100%;
     box-sizing : border-box;
-    display : block;
 	@include media("<medium"){
 		padding-top : 0px;
 	}

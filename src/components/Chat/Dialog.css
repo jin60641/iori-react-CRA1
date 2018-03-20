@@ -1,4 +1,5 @@
 .Dialog {
+  text-align: left;
   cursor: pointer;
   padding: 6px 10px 8px 15px;
   position: relative; }

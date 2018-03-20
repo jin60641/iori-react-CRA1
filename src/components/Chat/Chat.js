@@ -272,7 +272,7 @@ class Chat extends Component {
 	}
 }
 
-const stateToProps = ({dialogs,searched,chats,user}) => ({dialogs,searched,chats,user});
+const stateToProps = ({dialogs,searched,chats}) => ({dialogs,searched,chats});
 const actionToProps = {
 	fetchSearchUser,
 	fetchSearchUsers,

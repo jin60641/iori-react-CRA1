@@ -18,7 +18,7 @@
   text-decoration: none;
   cursor: default;
   color: black; }
-  @media (max-width: 649px) {
+  @media (max-width: 609px) {
     .Post {
       border-top: 0px;
       border-left: 0px;
@@ -44,7 +44,7 @@
     padding-top: 3px; }
     .Post .post-inform .post-user {
       display: block;
-      color: #ff5c3e;
+      color: black;
       text-decoration: none;
       font-size: 18px;
       font-weight: bold;

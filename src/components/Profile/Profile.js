@@ -10,30 +10,23 @@ import styles from './Profile.css';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
+const initialImage = {
+	img : new Image(),
+	file : null,
+	x : 0,
+	y : 0,
+	width : 0,
+	height : 0,
+	scale : 1
+};
 
 const initialState = {
 	user : null,
 	isSetting : false,
 	helper : null,
 	moving : null,
-	header : {
-		img : new Image(),
-		file : null,
-		x : 0,
-		y : 0,
-		width : 0,
-		height : 0,
-		scale : 1
-	},
-	profile : {
-		img : new Image(),
-		file : null,
-		x : 0,
-		y : 0,
-		width : 0,
-		height : 0,
-		scale : 1
-	}
+	header : { ...initialImage },
+	profile : { ...initialImage }
 }
 
 class Profile extends Component {
@@ -80,7 +73,7 @@ class Profile extends Component {
 	getImage = (user,type) => {
 		const nextState = {};
 		if( this.state.user ){
-			nextState.user = {};
+			nextState.user = this.state.user;
 			nextState.user[type] = user[type];
 		}
 		if( user[type] ){
@@ -89,44 +82,54 @@ class Profile extends Component {
 			img.onload = (e) => {
 				const { width, height } = img;
 				nextState[type] = { ...initialState[type], img, width, height };
+				
+				initialState[type] = nextState[type];
 				this.setState(nextState);
 			}
 		} else {
-			nextState[type] = { ...initialState[type] };
+			nextState[type] = { ...initialImage };
 			this.setState(nextState);
 		}
 	}
 	handleClickSetting = bool => {
 		const { showScroll, scrollToTop } = this.props;
+		const nextState = {
+			isSetting : bool,
+			helper : null,
+		}
 		if( bool ){
 			scrollToTop();
+		} else {
+			nextState.header = { ...initialState["header"] }
+			nextState.profile = { ...initialState["profile"] }
 		}
 		showScroll(!bool);
-		this.setState({
-			isSetting : bool
-		});
+		this.setState(nextState);
 	}
 	sendSetting = type => {
 		const obj = this.state[type];
 		const { x, y, width, height, file, img } = obj;
-		if( ( !file && img.src ) || ( img.src && img.src.length === 0 ) ){
-			return 0;
-		}
 		const { fetchSetProfile, user } = this.props;
-		const label = this.refs[type];;
+		if( !file && img.src.length ){
+			return 1;
+		}
+		const label = this.refs[type];
 		let formData = new FormData();
 		formData.append("type",type);
+		formData.append("x",-x);
+		formData.append("y",-y);
+		formData.append("width",label.clientWidth/width*img.width);
+		formData.append("height",label.clientHeight/height*img.height);
 		if( file ){
-			formData.append("x",-x);
-			formData.append("y",-y);
-			formData.append("width",label.clientWidth/width*img.width);
-			formData.append("height",label.clientHeight/height*img.height);
 			formData.append("file",file);
 		}
 		fetchSetProfile(formData)
 		.then( action => {
 			if( !action.error ){
 				if( action.payload ){
+					const nextState = { user : this.state.user };
+					nextState.user[type] = action.payload[type];
+					this.setState(nextState);
 					this.getImage(user,type);
 					this.handleClickSetting(false);
 				}
@@ -141,7 +144,7 @@ class Profile extends Component {
 	}
 	handleClickRemove = (type) => {
 		const nextState = { ...this.state };
-		nextState[type] = { ...initialState[type] };
+		nextState[type] = { ...initialImage };
 		this.setState(nextState);
 	}
 	handleClickHelper = str => {
@@ -179,7 +182,7 @@ class Profile extends Component {
 		});
 	}
 	handleMouseMove = (e,type,force) => {
-		const label = this.refs[type];;
+		const label = this.refs[type];
 		const moving = this.state.moving;
 		const obj = this.state[type];
 		let { x,y,img, width, height, scale } = obj;
@@ -223,10 +226,10 @@ class Profile extends Component {
 		}
 	}
 	handleMouseWheel = (e,type) => {
-		const { img } = this.state[type];
+		const { img, file } = this.state[type];
 		if( e ){
 			e.preventDefault();
-		} else if( !img.src ){
+		} else if( !file ){
 			return 1;
 		}
 		const label = this.refs[type];
@@ -251,7 +254,6 @@ class Profile extends Component {
 		const { fetchFollow } = this.props;
 		fetchFollow({ to : this.state.user.id })
 		.then( action => {
-			console.log(action);
 			const nextState = { ...this.state };
 			nextState.user.following = action.payload;
 			this.setState(nextState);
@@ -265,12 +267,12 @@ class Profile extends Component {
 		} else {
 			const my = isLoggedIn() && user.id === this.props.user.id;
 			const headerLabelStyle = {
-				backgroundImage : `url("${header.img.src}")`,
+				backgroundImage : ( !isSetting || header.file ) ? `url("${header.img.src}")` : "none",
 				backgroundPosition : `${header.x}px ${header.y}px`,
 				backgroundSize : `${header.width}px ${header.height}px`
 			}
 			const profileLabelStyle = {
-				backgroundImage : `url("${profile.img.src}")`,
+				backgroundImage : ( !isSetting || profile.file ) ? `url("${profile.img.src}")` : "none",
 				backgroundPosition : `${profile.x}px ${profile.y}px`,
 				backgroundSize : `${profile.width}px ${profile.height}px`
 			}

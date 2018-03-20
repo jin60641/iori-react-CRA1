@@ -1,11 +1,11 @@
 .Profile {
-  width: 100vw;
   position: relative;
   background-color: white;
   height: 80px;
   transition: height .3s;
   z-index: 1; }
   .Profile .profile-container {
+    left: 0px;
     position: fixed;
     height: 80px;
     width: 100vw;
@@ -13,6 +13,7 @@
     background-color: white;
     transition: height .3s; }
   .Profile .profile-nav {
+    z-index: 0;
     position: relative;
     height: 50px; }
     .Profile .profile-nav .profile-nav-user {
@@ -21,15 +22,17 @@
       left: 100px;
       top: calc( ( 50px - 36px ) / 2); }
       .Profile .profile-nav .profile-nav-user .profile-nav-handle {
-        color: rgba(0, 0, 0, 0.6);
+        color: #657786;
         font-size: 13px;
         margin-bottom: 2px; }
       .Profile .profile-nav .profile-nav-user .profile-nav-name {
         font-size: 18px; }
-    .Profile .profile-nav .profile-nav-user-top {
-      left: 205px; }
+    @media (min-width: 933px) {
+      .Profile .profile-nav .profile-nav-user-top {
+        left: 205px; } }
     .Profile .profile-nav .profile-btns {
       margin-top: 7px;
+      margin-right: 10px;
       float: right; }
     .Profile .profile-nav .profile-btn {
       text-decoration: none;
@@ -49,8 +52,10 @@
         background-color: #f5f5f5; }
     .Profile .profile-nav .profile-btn-active {
       display: inline-block; }
-  .Profile .profile-img .profile-label {
-    border-radius: 50%; }
+  .Profile .profile-img {
+    z-index: 1; }
+    .Profile .profile-img .profile-label {
+      border-radius: 50%; }
   .Profile .profile-header {
     width: 100%;
     height: calc( 100% - 50px);
@@ -142,10 +147,11 @@
   height: 160px; }
   .Profile-top .profile-container {
     height: 160px; }
-  .Profile-top .profile-img {
-    bottom: -35px;
-    width: 150px;
-    height: 150px; }
+  @media (min-width: 933px) {
+    .Profile-top .profile-img {
+      bottom: -35px;
+      width: 150px;
+      height: 150px; } }
 
 .Profile-top-header {
   height: 300px; }

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchGetPosts, fetchWritePost } from '../../actions/newsfeed';
 import './Newsfeed.css';
-import Post from '../Post/Post';
-import Write from '../Post/Write';
+import Post from './Post';
+import Write from './Write';
 
 const initialState = {
 	offset : 0,
@@ -47,7 +47,7 @@ class Newsfeed extends Component {
 			});
 	}
 	render() {
-		const { posts, fetchWritePost, options } = this.props;
+		const { posts, fetchWritePost, options, user } = this.props;
 		return (
 			<div className="Newsfeed">
 				{ !options.userId ?
@@ -61,7 +61,7 @@ class Newsfeed extends Component {
 		);
 	}
 };
-const stateToProps = ({posts}) => ({posts});
+const stateToProps = ({posts,user}) => ({posts,user});
 const actionToProps = {
 	fetchGetPosts,
 	fetchWritePost

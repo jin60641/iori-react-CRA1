@@ -9,6 +9,7 @@ import Slider from '../Slider/Slider';
 import Mail from '../Mail/Mail';
 import Auth from '../Auth/Auth';
 import Chat from '../Chat/Chat';
+import Left from '../Left/Left';
 import Profile from '../Profile/Profile';
 
 import classNames from 'classnames/bind';
@@ -56,22 +57,26 @@ class Body extends Component {
 		})
 	}
 	render(){
+		const { user } = this.props;
 		const { isTop, isBottom, scrollBar } = this.state;
 		return(
 			<div className={cx('Body',{ 'body-scroll' : scrollBar })} ref="Body" >
 				<Switch>
 					<Route path="/@:handle" render={(props) => (
-						<Profile {...props }
-							isTop = { isTop }
-							isBottom = { isBottom }
-							showScroll = { this.showScroll }
-							scrollToTop = { this.scrollToTop }
-							isLoggedIn = { this.isLoggedIn }
-						/> 
+						<div className="body-wrap"> 
+							<Profile {...props }
+								isTop = { isTop }
+								isBottom = { isBottom }
+								showScroll = { this.showScroll }
+								scrollToTop = { this.scrollToTop }
+								isLoggedIn = { this.isLoggedIn }
+							/> 
+						</div>
 					)}/>
 					<Route path="/chat/:handle" render={(props) => (
 						this.isLoggedIn() ? 
 							<Chat {...props }
+								user = { user }
 								showScroll = { this.showScroll }
 							/>
 						: <Redirect to="/auth/login/chat" />
@@ -79,6 +84,7 @@ class Body extends Component {
 					<Route path="/chat" render={(props) => (
 						this.isLoggedIn() ? 
 							<Chat {...props }
+								user = { user }
 								showScroll = { this.showScroll }
 							/>
 						: <Redirect to="/auth/login/chat" />
@@ -90,20 +96,25 @@ class Body extends Component {
 					)}/>
 					<Route path="/auth/:page" render={(props) => (
 						<Auth {...props} 
+							user = { user }
 							showScroll = { this.showScroll }
 						/>
 					)}/>
 					<Route path="/auth" render={(props) => (
 						<Auth {...props} 
+							user = { user }
 							showScroll = { this.showScroll }
 						/>
 					)}/>
 					<Route exact path="/" render={(props) => (
 						this.isLoggedIn() ? 
-							<Newsfeed {...props}
-								isBottom = { isBottom }
-								options = { {} }
-							/> 
+							<div className="body-wrap"> 
+								<Left user={ user }/>
+								<Newsfeed {...props}
+									isBottom = { isBottom }
+									options = { {} }
+								/> 
+							</div>
 						:
 							<Slider {...props} 
 								showScroll = { this.showScroll }

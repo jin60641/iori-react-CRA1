@@ -1,12 +1,12 @@
 .Newsfeed {
-  margin: auto;
+  display: inline-block;
+  vertical-align: top;
   padding-top: 10px;
   overflow-y: hidden;
   min-height: calc( 100vh - 42px);
-  width: 650px;
+  width: 600px;
   max-width: 100%;
-  box-sizing: border-box;
-  display: block; }
-  @media (max-width: 649px) {
+  box-sizing: border-box; }
+  @media (max-width: 609px) {
     .Newsfeed {
       padding-top: 0px; } }

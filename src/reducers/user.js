@@ -33,8 +33,6 @@ export default handleActions({
 		if( action.error ) {
 			return state;
 		}
-		console.log(state);
-		console.log(action.payload);
 		return Object.assign(state,action.payload);
 	}
 }, initialState);

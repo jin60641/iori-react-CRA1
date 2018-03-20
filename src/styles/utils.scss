@@ -2,8 +2,9 @@
 @import "../../node_modules/include-media/dist/include-media";
 
 $breakpoints: (
-	medium: 650px,
-	large: 1132px
+	medium : 610px,
+	large : 932px,
+	full : 1500px
 );
 
 $header-height : 42px;

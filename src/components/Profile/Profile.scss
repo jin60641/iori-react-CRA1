@@ -7,7 +7,6 @@ $container-nav-height : 50px;
 
 
 .Profile {
-	width : 100vw;
 	position : relative;
 	background-color : white;
 	height : $profile-height;
@@ -15,6 +14,7 @@ $container-nav-height : 50px;
 	z-index : 1;
 
 	.profile-container {
+		left : 0px;
 		position : fixed;
 		height : $profile-height;
 		width : 100vw;
@@ -23,6 +23,7 @@ $container-nav-height : 50px;
 		transition : height .3s;
 	}
 	.profile-nav { 
+		z-index : 0;
 		position : relative;
 		height : $container-nav-height;
 		.profile-nav-user {
@@ -31,7 +32,7 @@ $container-nav-height : 50px;
 			left : 100px;
 			top : calc( ( #{$container-nav-height} - 36px ) / 2 );
 			.profile-nav-handle {
-				color : rgba(0,0,0,.6);
+				color : #657786;
 				font-size : 13px;
 				margin-bottom : 2px;
 			}
@@ -40,10 +41,13 @@ $container-nav-height : 50px;
 			}
 		}
 		.profile-nav-user-top {
-			left : 205px;
+			@include media(">large"){
+				left : 205px;
+			}
 		}
 		.profile-btns {
 			margin-top : 7px;
+			margin-right : 10px;
 			float : right;
 		}
 		.profile-btn {
@@ -69,6 +73,7 @@ $container-nav-height : 50px;
 		}
 	}
 	.profile-img {
+		z-index : 1;
 		.profile-label {
 			border-radius : 50%;
 		}
@@ -185,9 +190,11 @@ $container-nav-height : 50px;
 		height : $profile-top-height;
 	}
 	.profile-img {
-		bottom : -35px;
-		width : 150px;
-		height : 150px;
+		@include media(">large"){
+			bottom : -35px;
+			width : 150px;
+			height : 150px;
+		}
 	}
 }
 
