@@ -39,9 +39,9 @@ obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'p
 obj.passport.deserializeUser( (obj, done) => done(null, obj) );
 obj.passport.serializeUser( async (user, done) => {
 	if( user.verify ){
-		user.post = await db.Post.count({ where: { userId : user.id } });
-		user.following = await db.Follow.count({ where : { fromId : user.id } });
-		user.follower = await db.Follow.count({ where : { toId : user.id } });
+		user.posts = await db.Post.count({ where: { userId : user.id } });
+		user.followings = await db.Follow.count({ where : { fromId : user.id } });
+		user.followers = await db.Follow.count({ where : { toId : user.id } });
 	}
 	done(null, user) 
 });

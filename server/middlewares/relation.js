@@ -13,7 +13,6 @@ obj.follow = (req,res) => {
 		const current = { toId, fromId };
 		db.Follow.destroy({ where : current })
 		.then( deleted => {
-			console.log(deleted);
 			if( deleted ){
 				res.send({ "data" : false });
 			} else {

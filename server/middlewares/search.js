@@ -24,37 +24,20 @@ obj.searchUser = (req,res) => {
 	const { query } = req.body;
 	if( query.length ){
 		const where = {
-			handle : query
+			handle : query,
+			verify : true
 		}
 		db.User.find({ where, attributes : filter.User })
-		.then( result => {
+		.then( async result => {
 			const user = result.get({ plain : true });
+			user.posts = await db.Post.count({ where: { userId : user.id } });
+			user.followings = await db.Follow.count({ where : { fromId : user.id } });
+			user.followers = await db.Follow.count({ where : { toId : user.id } });
 			if( authMws.isLoggedIn(req) ){
-				db.Follow.findAll({ 
-					where : { 
-						$or : [{
-							fromId : req.user.id,
-							toId : user.id
-						},{
-							fromId : user.id,
-							toId : req.user.id
-						}]
-					}
-				}).then( follows => {
-					user.following = false; 
-					user.follower = false;
-					(follows?follows.map( follow => follow.get({ plain : true }) ):[]).forEach( follow => {
-						if( follow.fromId == req.user.id ){
-							user.following = true; 
-						} else {
-							user.follower = true;
-						}
-					});
-					res.send({ "data" : user });
-				});
-			} else {
-				res.send({ "data" : user });
+				user.following = await db.Follow.findOne({ where : { fromId : req.user.id, toId : user.id }, raw : true })?true:false;
+				user.follower = await db.Follow.findOne({ where : { fromId : user.id, toId : req.user.id }, raw : true })?true:false;
 			}
+			res.send({ "data" : user });
 		});
 	}
 }

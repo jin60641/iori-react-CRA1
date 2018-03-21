@@ -1,9 +1,12 @@
 import {handleActions} from 'redux-actions';
-import { getPost, getPosts, writePost } from '../actions/newsfeed';
+import { resetPosts, getPost, getPosts, writePost } from '../actions/newsfeed';
 
 let initialState = [];
 
 export default handleActions({
+	[resetPosts]: (state, action) => {
+		return [];
+	},
 	[getPosts]: (state, action) => {
 		if( action.error ) {
 			return state;

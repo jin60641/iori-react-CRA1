@@ -17,7 +17,6 @@ export const fetchFollow = (data) => {
 		});
 		const body = await resp.json();
 		if(body.data !== null){
-			console.log("no error");
 			return dispatch(follow(body.data));
 		} else {
 			return dispatch(follow(new Error(body.msg)));

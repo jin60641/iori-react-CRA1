@@ -8,24 +8,25 @@ class Left extends Component {
 	}
 	render(){
 		const { user } = this.props;
+		const profileLink = `/@${user.handle}`;
 		if( !user ){
 			return(null);
 		} else {
 			return(
 				<div className="Left">
-					<div className="left-header" style={ { "backgroundImage" : `url("/files/header/${user.id}.png")` } } />
-					<div className="left-profile" style={ { "backgroundImage" : `url("/files/profile/${user.id}.png")` } } />
-					<div className="left-user"> 
+					<Link to={ profileLink } className="left-header" style={ { "backgroundImage" : `url("/files/header/${user.id}.png")` } } />
+					<Link to={ profileLink } className="left-profile" style={ { "backgroundImage" : `url("/files/profile/${user.id}.png")` } } />
+					<Link to={ profileLink } className="left-user"> 
 						<div className="left-name"> {user.name} </div>
 						<div className="left-handle"> @{user.handle} </div>
-					</div>
+					</Link>
 					<div className="left-tabs">
-						<Link to={`/@${user.handle}`} className="left-tab">
+						<Link to={ profileLink } className="left-tab">
 							<div className="left-tab-name">
 								게시글
 							</div>
 							<div className="left-tab-number">
-								{ user.post }
+								{ user.posts }
 							</div>
 						</Link>
 						<div className="left-tab">
@@ -33,7 +34,7 @@ class Left extends Component {
 								팔로잉
 							</div>
 							<div className="left-tab-number">
-								{ user.following }
+								{ user.followings }
 							</div>
 						</div>
 						<div className="left-tab">
@@ -41,7 +42,7 @@ class Left extends Component {
 								팔로워
 							</div>
 							<div className="left-tab-number">
-								{ user.follower }
+								{ user.followers }
 							</div>
 						</div>
 					</div>

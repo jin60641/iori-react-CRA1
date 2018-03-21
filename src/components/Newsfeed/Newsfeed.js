@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchGetPosts, fetchWritePost } from '../../actions/newsfeed';
+import { fetchResetPosts, fetchGetPosts, fetchWritePost } from '../../actions/newsfeed';
 import './Newsfeed.css';
 import Post from './Post';
 import Write from './Write';
@@ -24,18 +24,19 @@ class Newsfeed extends Component {
 			this.handleGetPosts();
 		}
 	}
-	componentWillReceiveProps(nextProps){
-		const { options } = nextProps;
-		this.setState({ offset : nextProps.posts.length });
-		if( ( !this.state.userId && options && options.userId ) || ( !options && this.state.userId ) || 
-			( options && options.userId && this.state.userId !== options.userId ) ){
-			this.setState( Object.assign(this.state,nextProps.options)  );
-			this.handleGetPosts();
-		} else {
-			if( nextProps.isBottom && this.props.isBottom === false ){
-				this.handleGetPosts();
-			}
+	componentWillUnmount = () => {
+		this.props.fetchResetPosts();
+	}
+	componentWillReceiveProps = nextProps => {
+		if( this.props.posts.length !== nextProps.posts.length ){
+			this.setState({ offset : nextProps.posts.length });
 		}
+		if( ( nextProps.isBottom && this.props.isBottom === false ) || ( this.props.posts.length !== 0 && nextProps.posts.length === 0 ) ){
+			this.handleGetPosts();
+		}
+	}
+	componentWillUpdate(nextState,nextProps){
+			console.log(this.props.options,this.state.userId,nextProps.options,nextState.userId);
 	}
 	handleGetPosts = (options = {}) => {
 		const { fetchGetPosts } = this.props;
@@ -64,6 +65,7 @@ class Newsfeed extends Component {
 const stateToProps = ({posts,user}) => ({posts,user});
 const actionToProps = {
 	fetchGetPosts,
-	fetchWritePost
+	fetchWritePost,
+	fetchResetPosts
 }
 export default connect(stateToProps, actionToProps)(Newsfeed);
