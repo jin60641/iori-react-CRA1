@@ -53,7 +53,7 @@ class PostWrite extends Component {
 				<textarea className="write-text" value={this.state.text} onChange={this.handleChangeText} placeholder="글을 입력하세요" />
 				<div className="write-preview">
 					{ this.state.files.map((file) => {
-						return (<img key={ file.url }src={ file.url } className="write-img" alt="write-img" />);
+						return (<div key={ file.url } style={{ "backgroundImage" : `url('${file.url}')` }} className="write-img"  />);
 					})}
 				</div>
 				<div className="write-submit" onClick={ this.handleSubmit } > 게시 </div>
