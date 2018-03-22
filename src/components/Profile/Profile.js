@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import { Route, Switch, Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { fetchSearchUser } from '../../actions/search';
+import { fetchSearchUserByHandle } from '../../actions/search';
 import { fetchSetProfile } from '../../actions/setting';
 import { fetchFollow } from '../../actions/relation';
 
 import Newsfeed from '../Newsfeed/Newsfeed';
+import List from './List';
 import styles from './Profile.css';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
@@ -26,7 +27,8 @@ const initialState = {
 	helper : null,
 	moving : null,
 	header : { ...initialImage },
-	profile : { ...initialImage }
+	profile : { ...initialImage },
+	tab : null
 }
 
 class Profile extends Component {
@@ -39,9 +41,9 @@ class Profile extends Component {
 		showScroll(true);
 	}
 	componentWillMount = () => {
-		const { fetchSearchUser } = this.props;
-		const { handle } = this.props.match.params;
-		fetchSearchUser({ query : handle })
+		const { fetchSearchUserByHandle } = this.props;
+		const { handle, tab } = this.props.match.params;
+		fetchSearchUserByHandle({ query : handle })
 		.then( action => {
 			if( !action.error ){
 				const user = action.payload;
@@ -54,10 +56,10 @@ class Profile extends Component {
 		});
 	}
 	componentWillReceiveProps = nextProps => {
-		const { fetchSearchUser } = this.props;
+		const { fetchSearchUserByHandle } = this.props;
 		const handle = nextProps.match.params.handle;
 		if( this.props.match.params.handle !== handle ){
-			fetchSearchUser({ query : handle })
+			fetchSearchUserByHandle({ query : handle })
 			.then( action => {
 				if( !action.error ){
 					const user = action.payload;
@@ -374,10 +376,19 @@ class Profile extends Component {
 							</div>
 						</div>
 					</div>
-					<Newsfeed
-						isBottom = { isBottom }
-						options = { { userId : user.id } }
-					/>
+					<Switch>
+						<Route exact path="/@:handle" render={(props) => (
+							<Newsfeed {...props}
+								isBottom = { isBottom }
+								options = { { userId : user.id } }
+							/>
+						)} />
+						<Route path="/@:handle/follower" render={(props) => (
+							<List {...props} 
+								userId = { user.id }
+							/>
+						)} />
+					</Switch>
 				</div>
 			);
 		}
@@ -386,7 +397,7 @@ class Profile extends Component {
 const stateToProps = ({searched,user}) => ({searched,user});
 
 const actionToProps = {
-	fetchSearchUser,
+	fetchSearchUserByHandle,
 	fetchSetProfile,
 	fetchFollow
 }

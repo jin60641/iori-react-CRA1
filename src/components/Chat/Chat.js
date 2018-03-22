@@ -6,7 +6,7 @@ import Dialog from './Dialog';
 import Panel from './Panel';
 import Layer from './Layer';
 
-import { fetchSearchGroup, fetchSearchUser, fetchSearchUsers } from '../../actions/search';
+import { fetchSearchGroup, fetchSearchUserByHandle, fetchSearchUsers } from '../../actions/search';
 import { fetchSendChat, fetchGetChats, fetchGetDialogs, fetchMakeGroup } from '../../actions/chat';
 
 import styles from './Chat.css';
@@ -44,7 +44,7 @@ class Chat extends Component {
 	}
 	componentWillMount = (e) => {
 		const chatHandle = this.props.match.params.handle;
-		const { fetchSearchGroup, fetchSearchUser, fetchGetChats, fetchGetDialogs } = this.props;
+		const { fetchSearchGroup, fetchSearchUserByHandle, fetchGetChats, fetchGetDialogs } = this.props;
 		fetchGetDialogs()
 		.then( action => {
 		});
@@ -55,7 +55,7 @@ class Chat extends Component {
 				"query" : handle
 			}
 			if( type === "user" ){
-				fetchSearchUser(data)
+				fetchSearchUserByHandle(data)
 				.then( action => {
 					if( !action.error ){
 						this.openChat(action.payload,type);
@@ -274,7 +274,7 @@ class Chat extends Component {
 
 const stateToProps = ({dialogs,searched,chats}) => ({dialogs,searched,chats});
 const actionToProps = {
-	fetchSearchUser,
+	fetchSearchUserByHandle,
 	fetchSearchUsers,
 	fetchSearchGroup,
 	fetchSendChat,

@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
 		Follow.belongsTo(models.User, { as : 'to', foreignKey : 'toId', targetKey : 'id' });
 		Follow.belongsTo(models.User, { as : 'from', foreignKey : 'fromId', targetKey : 'id' });
 		Follow.include = [
-			{ model : models.User, as : 'to' },
-			{ model : models.User, as : 'from' }
+			{ model : models.User, as : 'to', attributes : models.User.attributes },
+			{ model : models.User, as : 'from', attributes : models.User.attributes }
 		]
 	}
 	return Follow;

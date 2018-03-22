@@ -28,6 +28,12 @@ class Newsfeed extends Component {
 		this.props.fetchResetPosts();
 	}
 	componentWillReceiveProps = nextProps => {
+		console.log(this.props.options,this.state.userId,nextProps.options);
+		if( this.props.options.userId !== nextProps.options.userId ) {
+			this.setState({
+				userId : nextProps.options.userId
+			});
+		}
 		if( this.props.posts.length !== nextProps.posts.length ){
 			this.setState({ offset : nextProps.posts.length });
 		}
@@ -36,7 +42,6 @@ class Newsfeed extends Component {
 		}
 	}
 	componentWillUpdate(nextState,nextProps){
-			console.log(this.props.options,this.state.userId,nextProps.options,nextState.userId);
 	}
 	handleGetPosts = (options = {}) => {
 		const { fetchGetPosts } = this.props;

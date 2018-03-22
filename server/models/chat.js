@@ -13,9 +13,9 @@ module.exports = function(sequelize, DataTypes) {
 		Chat.belongsTo(models.User, { as : 'from', foreignKey : 'fromId', targetKey : 'id' });
 		Chat.belongsTo(models.Group, { as : 'group', foreignKey : 'groupId', targetKey : 'id' });
 		Chat.include = [
-			{ model : models.User, as : 'from' },
-			{ model : models.User, as : 'to' },
-			{ model : models.Group, as : 'group', include : [{ model : models.User, as : 'users'}] }
+			{ model : models.User, as : 'from', attributes : models.User.attributes },
+			{ model : models.User, as : 'to', attributes : models.User.attributes },
+			{ model : models.Group, as : 'group', attributes : models.Group.attributes, include : [{ model : models.User, as : 'users', attributes : models.User.attributes}] }
 		]
 	}
 	return Chat;
