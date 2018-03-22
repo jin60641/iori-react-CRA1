@@ -36,8 +36,17 @@ obj.searchUserByHandle = (req,res) => {
 obj.searchFollows = (req,res) => {
 	const { query } = req.body;
 	db.Follow.findAll({ where : query, include : db.Follow.include })
-	.then( follows => {
-		res.send({ data : follows.map( follow => follow.get({ plain : true })[query.toId?"to":"from"] ) });
+	.then( async follows => {
+		Promise.all(follows.map( async follow => {
+			const user = follow.get({ plain : true })[query.toId?"from":"to"];
+			if( authMws.isLoggedIn(req) ){
+				user.following = await db.Follow.findOne({ where : { fromId : req.user.id, toId : user.id }, raw : true })?true:false;
+				user.follower = await db.Follow.findOne({ where : { fromId : user.id, toId : req.user.id }, raw : true })?true:false;
+			}
+			return user;
+		})).then( data => {
+			res.send({ data });
+		});
 	});
 }
 

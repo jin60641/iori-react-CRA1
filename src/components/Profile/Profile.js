@@ -47,11 +47,11 @@ class Profile extends Component {
 		.then( action => {
 			if( !action.error ){
 				const user = action.payload;
+				this.setState({
+					user
+				})
 				this.getImage(user,"profile");
 				this.getImage(user,"header");
-				this.setState({
-					user : action.payload
-				})
 			}
 		});
 	}
@@ -63,11 +63,11 @@ class Profile extends Component {
 			.then( action => {
 				if( !action.error ){
 					const user = action.payload;
+					this.setState({
+						user
+					})
 					this.getImage(user,"profile");
 					this.getImage(user,"header");
-					this.setState({
-						user : action.payload
-					})
 				}
 			});
 		}
@@ -267,6 +267,7 @@ class Profile extends Component {
 		if( !user ){
 			return( null );
 		} else {
+			//console.log(user.id);
 			const my = isLoggedIn() && user.id === this.props.user.id;
 			const headerLabelStyle = {
 				backgroundImage : ( !isSetting || header.file ) ? `url("${header.img.src}")` : "none",
@@ -383,7 +384,7 @@ class Profile extends Component {
 								options = { { userId : user.id } }
 							/>
 						)} />
-						<Route path="/@:handle/follower" render={(props) => (
+						<Route path="/@:handle/:tab" render={(props) => (
 							<List {...props} 
 								userId = { user.id }
 							/>
