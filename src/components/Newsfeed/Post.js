@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Menu from './Menu';
 import { Link } from 'react-router-dom';
 import './Post.css';
 
@@ -28,7 +29,7 @@ class Post extends Component {
 		}
 	}
 	render() {
-		let { data } = this.props;
+		let { data, user } = this.props;
 		data = JSON.parse(JSON.stringify(data));
 		const profileUri = data.user.profile?`/files/profile/${data.user.id}.png`:'/images/profile.png';
 		return (
@@ -36,6 +37,7 @@ class Post extends Component {
 				<Link to={`/@${data.user.handle}`} className="post-profile"> 
 					<img src={profileUri} className="post-profile-img" alt={"profile"} />
 				</Link>
+				<Menu my={data.user.id === user.id} />
 				<div className="post-inform">
 					<Link to={`/@${data.user.handle}`} className="post-user"> 
 						{data.user.name} 

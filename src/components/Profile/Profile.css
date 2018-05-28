@@ -15,12 +15,12 @@
   .Profile .profile-nav {
     z-index: 0;
     position: relative;
-    height: 50px; }
+    height: 60px; }
     .Profile .profile-nav .profile-nav-user {
       position: absolute;
       transition: left .3s;
-      left: 100px;
-      top: calc( ( 50px - 36px ) / 2); }
+      left: 110px;
+      top: calc( ( 60px - 36px ) / 2); }
       .Profile .profile-nav .profile-nav-user .profile-nav-handle {
         color: #657786;
         font-size: 13px;
@@ -31,9 +31,9 @@
       .Profile .profile-nav .profile-nav-user-top {
         left: 205px; } }
     .Profile .profile-nav .profile-btns {
-      margin-top: 7px;
-      margin-right: 10px;
-      float: right; }
+      top: calc( 50% - 18px);
+      right: 10px;
+      position: absolute; }
     .Profile .profile-nav .profile-btn {
       text-decoration: none;
       text-align: center;
@@ -58,7 +58,7 @@
       border-radius: 50%; }
   .Profile .profile-header {
     width: 100%;
-    height: calc( 100% - 50px);
+    height: calc( 100% - 60px);
     position: relative; }
     .Profile .profile-header .profile-header-back {
       display: block;
@@ -124,8 +124,8 @@
     cursor: move; }
   .Profile .profile-img {
     bottom: 0px;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background-color: white;
     border: 5px white solid;

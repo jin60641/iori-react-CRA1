@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Menu.css';
 import classNames from 'classnames/bind';
-const withClickOutside = require('react-click-outside');
+import withClickOutside from 'react-click-outside';
 const cx = classNames.bind(styles);
 
 const defaultProfileUri = '/images/profile.png';

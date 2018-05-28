@@ -3,7 +3,7 @@
 $profile-top-header-height : 300px;
 $profile-top-height : 160px;
 $profile-height : 80px;
-$container-nav-height : 50px;
+$container-nav-height : 60px;
 
 
 .Profile {
@@ -29,7 +29,7 @@ $container-nav-height : 50px;
 		.profile-nav-user {
 			position : absolute;
 			transition : left .3s;
-			left : 100px;
+			left : 110px;
 			top : calc( ( #{$container-nav-height} - 36px ) / 2 );
 			.profile-nav-handle {
 				color : #657786;
@@ -46,9 +46,9 @@ $container-nav-height : 50px;
 			}
 		}
 		.profile-btns {
-			margin-top : 7px;
-			margin-right : 10px;
-			float : right;
+			top : calc( 50% - 18px );
+			right : 10px;
+			position : absolute;
 		}
 		.profile-btn {
 			text-decoration : none;

@@ -31,22 +31,22 @@ class Left extends Component {
 								{ user.posts }
 							</div>
 						</Link>
-						<div className="left-tab">
+						<Link to={ `${profileLink}/following` } className="left-tab">
 							<div className="left-tab-name">
 								팔로잉
 							</div>
 							<div className="left-tab-number">
 								{ user.followings }
 							</div>
-						</div>
-						<div className="left-tab">
+						</Link>
+						<Link to={ `${profileLink}/follower` } className="left-tab">
 							<div className="left-tab-name">
 								팔로워
 							</div>
 							<div className="left-tab-number">
 								{ user.followers }
 							</div>
-						</div>
+						</Link>
 					</div>
 				</div>
 			);

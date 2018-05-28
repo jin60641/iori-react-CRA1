@@ -62,7 +62,7 @@ class Newsfeed extends Component {
 					: null
 				}
 				{ posts.map((post,i) => {
-					return (<Post data={post} key={post.id} />);
+					return (<Post data={post} key={post.id} user={user} />);
 				})}
 			</div>
 		);
