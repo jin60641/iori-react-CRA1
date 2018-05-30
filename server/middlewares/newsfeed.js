@@ -20,6 +20,27 @@ obj.filter = multer({
 	}
 });
 
+obj.removePost = (req,res) => {
+	const { id } = req.body;
+	const where = {
+		id,
+		userId : req.user.id 
+	}
+	db.Post.findOne({ where })
+	.then( post => {
+		if( post ){
+			db.Post.destroy({ where })
+			.then( () => {
+				const raw = post.get({ plain : true });
+				raw.deleted = true;
+				res.send({ "data" : raw });
+			});
+		} else {
+			res.send({ "msg" : "존재하지 않는 게시글입니다." });
+		}
+	});
+}
+
 obj.writePost = (req,res) => {
 	try {
 		const current = {

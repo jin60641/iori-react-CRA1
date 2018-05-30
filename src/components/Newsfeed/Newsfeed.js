@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchResetPosts, fetchGetPosts, fetchWritePost } from '../../actions/newsfeed';
+import { fetchRemovePost, fetchResetPosts, fetchGetPosts, fetchWritePost } from '../../actions/newsfeed';
 import './Newsfeed.css';
 import Post from './Post';
 import Write from './Write';
@@ -54,7 +54,7 @@ class Newsfeed extends Component {
 			});
 	}
 	render() {
-		const { posts, fetchWritePost, options, user } = this.props;
+		const { posts, fetchRemovePost, fetchWritePost, options, user } = this.props;
 		return (
 			<div className="Newsfeed">
 				{ !options.userId ?
@@ -62,7 +62,7 @@ class Newsfeed extends Component {
 					: null
 				}
 				{ posts.map((post,i) => {
-					return (<Post data={post} key={post.id} user={user} />);
+					return (<Post data={post} key={post.id} user={user} fetchRemovePost={fetchRemovePost} />);
 				})}
 			</div>
 		);
@@ -72,6 +72,7 @@ const stateToProps = ({posts,user}) => ({posts,user});
 const actionToProps = {
 	fetchGetPosts,
 	fetchWritePost,
-	fetchResetPosts
+	fetchResetPosts,
+	fetchRemovePost
 }
 export default connect(stateToProps, actionToProps)(Newsfeed);

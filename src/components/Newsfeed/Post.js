@@ -29,32 +29,42 @@ class Post extends Component {
 		}
 	}
 	render() {
-		let { data, user } = this.props;
+		let { data, user, fetchRemovePost } = this.props;
 		data = JSON.parse(JSON.stringify(data));
-		const profileUri = data.user.profile?`/files/profile/${data.user.id}.png`:'/images/profile.png';
-		return (
-			<div className="Post">
-				<Link to={`/@${data.user.handle}`} className="post-profile"> 
-					<img src={profileUri} className="post-profile-img" alt={"profile"} />
-				</Link>
-				<Menu my={data.user.id === user.id} />
-				<div className="post-inform">
-					<Link to={`/@${data.user.handle}`} className="post-user"> 
-						{data.user.name} 
-					</Link>
-					<div className="post-date"> {this.getDateString(data.createdAt)} </div>
-				</div>
+		if( data.deleted ){
+			return (
+				<div className="Post">
 					<div className="post-inside">
-					{ data.text }
-				</div>
-				{ data.file ?
-					<div className="post-img-outer">
-						<img className="post-img-inner" src={`/files/post/${data.id}/1.png`} alt="post img" />
+						삭제되었습니다.
 					</div>
-					: null
-				}
-			</div>
-		);
+				</div>
+			);
+		} else {
+			const profileUri = data.user.profile?`/files/profile/${data.user.id}.png`:'/images/profile.png';
+			return (
+				<div className="Post">
+					<Link to={`/@${data.user.handle}`} className="post-profile"> 
+						<img src={profileUri} className="post-profile-img" alt={"profile"} />
+					</Link>
+					<Menu my={data.user.id === user.id} pid={data.id} fetchRemovePost={fetchRemovePost}/>
+					<div className="post-inform">
+						<Link to={`/@${data.user.handle}`} className="post-user"> 
+							{data.user.name} 
+						</Link>
+						<div className="post-date"> {this.getDateString(data.createdAt)} </div>
+					</div>
+					<div className="post-inside">
+						{ data.text }
+					</div>
+					{ data.file ?
+						<div className="post-img-outer">
+							<img className="post-img-inner" src={`/files/post/${data.id}/1.png`} alt="post img" />
+						</div>
+						: null
+					}
+				</div>
+			);
+		}
 	}
 }
 

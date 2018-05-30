@@ -18,6 +18,16 @@ class Menu extends Component {
 			active : !state.active
 		}));
 	}
+	handleClickRemove = () => {
+		const { fetchRemovePost, pid } = this.props;
+		fetchRemovePost({ id : pid })
+		.then( action => {
+			if( !action.error ){
+			} else {
+				alert(action.error.message);
+			}
+		});
+	}
 	render(){
 		const { my } = this.props;
 		const { active } = this.state;
@@ -26,7 +36,7 @@ class Menu extends Component {
 				<div className="menu-caret-outer" /> <div className="menu-caret-inner" />
 				{ my ?
 					<div className="menu-box">
-						<div className="menu-row">
+						<div className="menu-row" onClick={this.handleClickRemove}>
 							삭제
 						</div>
 					</div> 

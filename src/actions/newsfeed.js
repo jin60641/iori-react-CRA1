@@ -4,9 +4,11 @@ export const writePost = createAction('WRITEPOST');
 export const getPosts = createAction('GETPOSTS');
 export const getPost = createAction('GETPOST');
 export const resetPosts = createAction('RESETPOSTS');
+export const removePost = createAction('REMOVEPOSTS');
 
 const writePostUri = '/api/newsfeed/writepost';
 const getPostsUri = '/api/newsfeed/getposts';
+const removePostUri = '/api/newsfeed/removepost';
 
 export const newsfeedSocket = (socket,dispatch) => {
 	socket.on( 'getpost', data => {
@@ -17,6 +19,26 @@ export const newsfeedSocket = (socket,dispatch) => {
 export const fetchResetPosts = (data) => {
 	return dispatch => dispatch(resetPosts());
 }
+
+export const fetchRemovePost = (data) => {
+	return async (dispatch) => {
+		const resp = await fetch(removePostUri, {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			method: 'POST',
+			body: JSON.stringify(data),
+			credentials: 'include'
+		});
+		const body = await resp.json();
+		if(body.data){
+			return dispatch(removePost(body.data));
+		} else {
+			return dispatch(removePost(new Error(body.msg)));
+		}
+	}
+};
 
 export const fetchWritePost = (data) => {
 	return async (dispatch) => {
