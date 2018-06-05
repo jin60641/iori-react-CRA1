@@ -5,6 +5,7 @@
   "dependencies": {
     "breakpoint-sass": "^2.7.1",
     "classnames": "^2.2.5",
+    "core-js": "^2.5.7",
     "include-media": "^1.4.9",
     "react": "^16.1.1",
     "react-click-outside": "^3.0.1",
