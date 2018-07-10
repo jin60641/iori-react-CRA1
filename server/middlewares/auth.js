@@ -1,5 +1,6 @@
 let db = require('../models/index.js');
 let smtpTransport = require("./../config/mailconfig.js");
+let cookie = require('cookie');
 
 let crypto = require('crypto');
 
@@ -7,7 +8,26 @@ let obj = {
 	passport : require('passport')
 }
 
-obj.isLoggedIn = (req) => ( req.user && req.user.verify );
+obj.isLoggedIn = async req => {
+	if( req.user && req.user.verify ){
+		return req.user;
+	} else if( req.headers.cookie ){
+		const sid = await req.headers.cookie && cookie.parse( req.headers.cookie )[ 'connect.sid' ];
+		if( sid ){
+			global.store.get( sid.split('.')[0].substring(2), ( err, session ) => {
+				if( session && session.passport && session.passport.user ){
+					return session.passport.user;
+				} else {
+					return null;
+				}
+			});
+		} else {
+			return null;
+		}
+	}
+}
+
+
 
 let LocalStrategy = require('passport-local').Strategy;
 obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'password' }, ( email, password, next ) => {
@@ -118,12 +138,14 @@ obj.findPwVerifyMail = ( req, res ) => {
 	});
 }
 
-obj.checkSession = ( req, res, next ) => {
-	 if( obj.isLoggedIn(req) ){
+obj.checkSession = async ( req, res, next ) => {
+	const session = await obj.isLoggedIn(req);
+	if( session ){
+		req.user = session;
 		return next();
-	 } else {
+	} else {
 		res.send({ msg : "로그인해주세요" });
-	 }
+	}
 }
 
 obj.checkAdmin = ( req, res, next ) => {
@@ -140,22 +162,35 @@ obj.checkAdmin = ( req, res, next ) => {
 	}
 }
 
-obj.logOut = ( req, res, msg ) => {
-	res.clearCookie("email");
-	res.clearCookie("password");
-	res.cookie("facebook","false",{ maxAge : 900000, expire : new Date(Date.now() + 900000), domain : "iori.kr", path : "/" });
-	res.cookie("google","false",{ maxAge : 900000, expire : new Date(Date.now() + 900000), domain : "iori.kr", path : "/" });
-	req.logout();
-	req.session.destroy( err => {
-		if( req.user ){
-			delete req.user;
-		}
-		if( req.method == "GET" ){
-			res.redirect('/');
-		} else {
-			res.send({ "msg" : msg });
-		}
-	});
+obj.logOut = ( req, res ) => {
+	if( res.clearCookie ){
+		res.clearCookie("email");
+		res.clearCookie("password");
+	}
+	if( res.cookie ){
+		res.cookie("facebook","false",{ maxAge : 900000, expire : new Date(Date.now() + 900000), domain : "iori.kr", path : "/" });
+		res.cookie("google","false",{ maxAge : 900000, expire : new Date(Date.now() + 900000), domain : "iori.kr", path : "/" });
+	}
+	if( req.logout ){
+		req.logout();
+	}
+	if( req.session ){
+		req.session.destroy( err => {
+			if( err ){
+				throw err;
+			}
+			if( req.user ){
+				delete req.user;
+			}
+			if( req.method == "GET" ){
+				res.redirect('/');
+			} else {
+				res.send({ "data" : "로그아웃되었습니다." });
+			}
+		});
+	} else {
+		res.send({ "data" : "로그아웃되었습니다." });
+	}
 }
 
 obj.loggedIn = ( req, res ) => {

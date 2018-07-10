@@ -8,6 +8,6 @@ router.post('/local', authMws.authLocal );
 router.post('/findpw/:email/:link', authMws.findPwVerifyMail );
 router.post('/verify', authMws.verifyMail );
 router.post('/loggedin', authMws.checkSession, authMws.loggedIn );
-router.post('/logout', authMws.logOut );
+router.post('/logout', authMws.checkSession, authMws.logOut );
 
 module.exports = router;
