@@ -201,6 +201,8 @@ obj.authLocal = ( req, res, next ) => {
 	obj.passport.authenticate('local', ( err, user, info ) => {
 		if( err ){
 			return res.send({ msg : err.message });
+		} else if( user == false ){
+			res.send({ "msg" : "이메일과 비밀번호를 모두 입력해주세요."});
 		} else {
 			req.logIn( user, error => {
 				if( error ){
