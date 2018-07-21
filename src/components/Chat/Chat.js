@@ -113,7 +113,6 @@ class Chat extends Component {
 	}
 	openChat = (to,type) => {
 		const { history, chats } = this.props;
-		console.log(to);
 		history.push(`/chat/${this.getFullHandle(type,to.handle)}`);
 		this.setState({
 			layerSelected : {},

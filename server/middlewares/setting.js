@@ -31,7 +31,7 @@ obj.profile = (req,res) => {
 		.then( user => {
 			if( req.file ){
 				im.convert([req.file.path,'-crop',width+'x'+height+'+'+x+'+'+y,req.file.path], () => {
-					const dir = path.join(__dirname,'..','..','public','files',type);
+					const dir = path.join(__dirname,'..','..','files',type);
 					fs.move(req.file.path,path.join(dir,req.user.id+".png"), { overwrite : true });
 				});
 			}

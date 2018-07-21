@@ -33,7 +33,11 @@ let LocalStrategy = require('passport-local').Strategy;
 obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'password' }, ( email, password, next ) => {
 	db.User.findOne({ 
 		where : { 
-			email
+			$or : [{
+				email
+			},{
+				handle : email
+			}]
 		},
 		raw : true
 	}).then( user => {

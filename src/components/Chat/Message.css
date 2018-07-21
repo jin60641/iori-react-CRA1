@@ -1,7 +1,6 @@
 .Message {
-  margin: 10px; }
+  margin: 8px; }
   .Message .message-body-caret {
-    left: -8px;
     display: inline-block;
     margin: 0px;
     position: absolute;
@@ -24,14 +23,13 @@
   .Message .message-body {
     width: 100%;
     display: inline-block;
-    margin: 4px;
-    margin-top: 0px;
+    margin-bottom: 4px;
     position: relative;
-    vertical-align: top; }
+    vertical-align: top;
+    text-align: left; }
     .Message .message-body .message-body-div {
       margin: 5px; }
     .Message .message-body .message-body-name {
-      margin-left: 9px;
       margin-bottom: 5px;
       display: block;
       text-decoration: none;
@@ -40,6 +38,7 @@
       font-weight: 600;
       margin-top: 2px; }
     .Message .message-body .message-body-text {
+      margin-left: 8px;
       display: inline-block;
       color: black;
       font-size: 15px;
@@ -69,7 +68,7 @@
     border-right: 9px solid white;
     border-bottom: 9px solid transparent; }
 
-.Message-my {
+.Message-my .message-body {
   text-align: right; }
   .Message-my .message-body .message-body-name {
     margin-left: 0px; }
@@ -77,16 +76,17 @@
     margin-right: 9px; }
   .Message-my .message-body .message-body-file {
     margin-left: auto; }
-  .Message-my .message-body-caret {
+
+.Message-my .message-body-caret {
+  left: auto;
+  right: 0px; }
+  .Message-my .message-body-caret .message-body-caret-outer {
+    border-right: 0;
+    border-left: 10px solid rgba(255, 92, 62, 0.8);
     left: auto;
     right: 0px; }
-    .Message-my .message-body-caret .message-body-caret-outer {
-      border-right: 0;
-      border-left: 10px solid rgba(255, 92, 62, 0.8);
-      left: auto;
-      right: 0px; }
-    .Message-my .message-body-caret .message-body-caret-inner {
-      border-right: 0;
-      border-left: 9px solid white;
-      left: auto;
-      right: 2px; }
+  .Message-my .message-body-caret .message-body-caret-inner {
+    border-right: 0;
+    border-left: 9px solid white;
+    left: auto;
+    right: 2px; }

@@ -50,21 +50,20 @@ obj.sendChat = (req,res) => {
 				const chat = result.get({ plain : true });
 				chat.to = chat.type==="user"?chat.to:chat.group;
 				if( req.file ){
-					const dir = path.join(__dirname,'..','..','public','files','chat');
+					const dir = path.join(__dirname,'..','..','files','chat');
 					fs.move(req.file.path,path.join(dir,cid+".png"));
 				}
-				chat.with = chat.to.id;
-				chat.handle = strToChar[chat.type] + chat.to.handle;
+				let handle = strToChar[chat.type] + (chat.group?chat.group:chat.from).handle;
 				(chat.group?chat.group.users:[chat.to]).forEach( user => {
 					const socketId = socketIds[user.id];
 					if( socketId && req.user.id != user.id ){
-						io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle : chat.handle, chat } );
+						io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle, chat } );
 					}
 				})
+				handle = strToChar[chat.type] + (chat.group?chat.group:chat.to).handle;
 				res.send({ 
 					"data" : {
-						with : chat.to.id,
-						handle : chat.handle,
+						handle,
 						chat
 					}
 				})
@@ -75,7 +74,8 @@ obj.sendChat = (req,res) => {
 	}
 }
 
-obj.getDialogs = ( req, res ) => {
+obj.getDialogs = async ( req, res ) => {
+	const groups = await db.UserGroup.findAll({ where: { UserId : req.user.id } }).map( item => item.GroupId );
 	db.Chat.findAll({
 		where : {
 			$or : [{
@@ -83,23 +83,23 @@ obj.getDialogs = ( req, res ) => {
 			},{
 				fromId : req.user.id
 			},{
-				groupId : { $in : [ req.user.groups ] }
+				groupId : { $in : [ groups ] }
 			}]
 		},
 		include : db.Chat.include,
 		order : [ ['id'] ]
 	}).then( chats => {
-		let obj = {};
-		chats
-		.map( chat => { return chat.get({ plain : true }); } )
-		.forEach( chat => { 
+		let dialogs = {};
+		chats.forEach( item => { 
+			const chat = item.get({ plain : true });
 			chat.to = chat.type==="user"?chat.to:chat.group;
 			chat.handle = strToChar[chat.type] + (chat.toId === req.user.id?chat.from.handle:chat.to.handle);
 			chat.with = chat.toId === req.user.id?chat.from.id:chat.to.id;
-			obj[ chat.handle ] = chat;
+			dialogs[ chat.handle ] = chat;
 		});
-		res.send({ "data" : obj });
+		res.send({ "data" : dialogs });
 	}).catch( e => {
+		console.log(e);
 	});
 }
 

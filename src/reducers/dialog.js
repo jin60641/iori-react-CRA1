@@ -10,7 +10,7 @@ export default handleActions({
 			return state;
 		}
 		let nextState = Object.keys(action.payload).map( handle => { return action.payload[handle] });
-		nextState.sort( (a,b) => { return a.id < b.id }).forEach( (dialog,key) => { handleToIndex[dialog.handle] = key; } );
+		nextState.sort( (a,b) => { return a.id < b.id }).forEach( (dialog,key) => { handleToIndex[dialog.handle] = key } );
 		return nextState;
 	},
 	[getDialog]: (state, action) => {
@@ -24,7 +24,7 @@ export default handleActions({
 			nextState.splice(index,1);
 		}
 		nextState = [chat].concat(nextState);
-		nextState.forEach( (dialog,key) => { handleToIndex[dialog.handle] = key; } );
+		nextState.forEach( (dialog,key) => { handleToIndex[dialog.handle] = key } );
 		return nextState;
 	}
 }, initialState );

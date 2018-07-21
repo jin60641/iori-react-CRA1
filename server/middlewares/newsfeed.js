@@ -14,11 +14,12 @@ const storage = multer.diskStorage({
 });
 
 obj.filter = multer({
+	limits: { fieldSize: 30 * 1024 * 1024 },
 	storage: storage,
 	fileFilter : (req, file, next) => {
 		next(null,true);
 	}
-});
+}).array('file',4);
 
 obj.removePost = (req,res) => {
 	const { id } = req.body;
@@ -56,7 +57,7 @@ obj.writePost = (req,res) => {
 				},
 				include : db.Post.include
 			}).then( post => {
-				const dir = path.join(__dirname,'..','..','public','files','post',pid.toString());
+				const dir = path.join(__dirname,'..','..','files','post',pid.toString());
 				if (!fs.existsSync(dir)){
 					fs.mkdirSync(dir);
 				}
@@ -67,6 +68,7 @@ obj.writePost = (req,res) => {
 			})
 		})
 	} catch(e){
+		console.log(e);
 		res.send({  msg : e.message });
 	}
 }
@@ -79,21 +81,35 @@ obj.getPosts = ( req, res ) => {
 	}
 }
 
+makeQuery = (req,options) => {
+	let { id, limit, offset, file } = req.body;
+	const where = { ...options };
+	if( file ){
+		where.file = { $gte : 1 } 
+	}
+	const query = {
+		where,
+		include : db.Post.include,
+		order : [ ['id','DESC'] ],
+		offset,
+	}
+	if( id ){
+		query.where.id = { $gt : id }
+	} else {
+		query.limit = limit?limit:20;
+	}
+	return query;
+}
 getPosts = ( req, res ) => {
-	let { limit, offset } = req.body;
 	db.Follow.findAll({ where : { fromId : req.user.id }})
 	.then( follows => {
 		const userIds = follows.map( follow => follow.get({ plain : true }).toId );
 		userIds.push(req.user.id);
-		db.Post.findAll({ 
-			where : {
-				userId : { $in : userIds }
-			},
-			include : db.Post.include,
-			order : [ ['id','DESC'] ], 
-			limit : limit, 
-			offset : offset
-		}).then( posts => {
+		const where = {
+			userId : { $in : userIds }
+		}
+		db.Post.findAll(makeQuery(req,where))
+		.then( posts => {
 			res.send({ "data" : posts.map( post => post.get({ plain : true }) ) });
 		}).catch( e => {
 			res.send({ "msg" : "fail" });
@@ -104,14 +120,12 @@ getPosts = ( req, res ) => {
 };
 
 getPostsByUserId = ( req, res ) => {
-	let { limit, offset, userId } = req.body;
-	db.Post.findAll({ 
-		where : { userId },
-		include : db.Post.include,
-		order : [ ['id','DESC'] ], 
-		limit : limit, 
-		offset : offset
-	}).then( posts => {
+	let { limit, offset, userId, file } = req.body;
+	const where = {
+		userId
+	}
+	db.Post.findAll(makeQuery(req,where))
+	.then( posts => {
 		res.send({ "data" : posts.map( post => post.get({ plain : true }) ) });
 	}).catch( e => {
 		res.send({ "msg" : "fail" });

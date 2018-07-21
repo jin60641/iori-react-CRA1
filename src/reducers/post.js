@@ -18,7 +18,6 @@ export default handleActions({
 		if( action.error ) {
 			return state;
 		}
-		console.log(action.payload);
 		return state.concat(action.payload);
 	},
 	[writePost]: (state, action) => {

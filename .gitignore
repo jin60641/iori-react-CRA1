@@ -23,5 +23,5 @@ yarn-error.log*
 
 server/config
 
-public/files
+files
 tmp

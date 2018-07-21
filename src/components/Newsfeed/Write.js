@@ -6,6 +6,7 @@ const initialState = {
 	text : "",
 	files : []
 }
+const maxFileCount = 4;
 
 class PostWrite extends Component {
 	constructor(props) {
@@ -37,6 +38,9 @@ class PostWrite extends Component {
 	handleChangeFile = (e) => {
 		e.preventDefault();
 		const files = e.target.files;
+		if( (files.length+this.state.files) > maxFileCount ){
+			return alert(`최대 ${maxFileCount}개의 이미지를 업로드하실 수 있습니다.`);
+		}
 		Array.from(files).forEach( file => {
 			const reader = new FileReader();
 			reader.onloadend = () => {

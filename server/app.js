@@ -3,6 +3,7 @@ const path = require('path')
 const app = express();
 const bodyParser = require('body-parser');
 
+app.use('/files',express.static(path.resolve(__dirname,'..','files')));
 app.use('/public',express.static(path.resolve(__dirname,'..','public')));
 
 let port = process.env.PORT||3000;

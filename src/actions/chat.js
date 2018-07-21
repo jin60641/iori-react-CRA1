@@ -52,7 +52,6 @@ export const fetchGetDialogs = (data) => {
 		});
 		const body = await resp.json();
 		if(body.data){
-			console.log(body.data);
 			return dispatch(getDialogs(body.data));
 		} else {
 			return dispatch(getDialogs(new Error(body.msg)));
