@@ -5,7 +5,9 @@ $send-panel-height : 48px;
 .Panel {
 	overflow : hidden;
 	padding-right : 2px;
-	height : calc( 100% - #{$send-panel-height} );
+	max-height : calc( 100% - #{$send-panel-height} );
+	min-height : 60%;
+	box-sizing : border-box;
 	&:hover {
 		padding-right : 0px;
 		overflow-y : scroll;

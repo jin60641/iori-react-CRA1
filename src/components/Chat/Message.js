@@ -39,7 +39,7 @@ class Message extends Component {
 									<div className="message-body-caret-inner" />
 								</div>
 								<div className="message-body-text">
-									{ chat.text }
+									{ chat.text.split('\n').map( (text,i) => <span key={`chat-${chat.id}-text-${i}`}>{text}<br /></span> ) }
 								</div>
 							</div>
 					}

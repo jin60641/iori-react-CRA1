@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Textarea from 'react-textarea-autosize';
 
 import Dialog from './Dialog';
 import Panel from './Panel';
@@ -29,7 +30,8 @@ const initialState = {
 	type : null,
 	to : null,
 	text : "",
-	loading : false
+	loading : false,
+	height : 17
 }
 
 const limit = 10;
@@ -37,7 +39,7 @@ const limit = 10;
 class Chat extends Component {
 	constructor(props){
 		super(props);
-		this.state = Object.assign({},initialState);
+		this.state = { ...initialState };
 	}
 	getFullHandle = (type,handle) => {
 		return strToChar[type] + handle;
@@ -200,10 +202,20 @@ class Chat extends Component {
 			this.handleClickSend();
 			e.preventDefault();
 		}
+		this.setPanelHeight();
+	}
+	setPanelHeight = () => {
+		this.textarea.style.height = "0px";
+		const height = Math.max(this.textarea.scrollHeight-12,initialState.height)
+		this.setState({
+			height
+		});
+		this.textarea.style.height = height+"px"
 	}
 	render(){
 		const { fetchSearchUsers, searched, chats, user, dialogs } = this.props;
-		const { to, menu, layer, type, text } = this.state;
+		const { to, menu, layer, type, text, height } = this.state;
+		console.log(dialogs);
 		return(
 			<div className="Chat">
 				<div className="chat-wrap" onClick={this.handleClickOutside} >
@@ -243,16 +255,19 @@ class Chat extends Component {
 					{ 
 						type ? 
 							<div className="chat-box">
-								<Panel chats={chats} to={to} cx={cx} user={user} handleScrollTop={this.handleScrollTop} handle={this.getFullHandle(type,to.handle)}/>
-								<div className="send-panel">
-									<textarea className="send-textarea" value={text} placeholder="메시지를 입력하세요" 
-										onChange={ this.handleChangeText } 
-										onKeyDown={ this.handleChatKeyDown } >
-									</textarea> 
-									<label className="send-file-label" htmlFor="chat-file" />
-									<input className="send-file-input" id="chat-file" type="file" onChange={this.handleChangeFile} multiple/>
-									<div className="send-btn" onClick={this.handleClickSend}>
-										전송
+								<Panel chats={chats} to={to} cx={cx} user={user} handleScrollTop={this.handleScrollTop} handle={this.getFullHandle(type,to.handle)} height={height+30}/>
+								<div className="send-panel" style={{ height : height+30+"px" }} >
+									<div className="send-panel-wrap">
+										<textarea ref={ dom => this.textarea = dom } className="send-textarea" value={text} placeholder="메시지를 입력하세요" 
+											onChange={ this.handleChangeText } 
+											onKeyUp={ this.setPanelHeight } 
+											onKeyDown={ this.handleChatKeyDown } 
+										/>
+										<label className="send-file-label" htmlFor="chat-file" />
+										<input className="send-file-input" id="chat-file" type="file" onChange={this.handleChangeFile} multiple/>
+										<div className="send-btn" onClick={this.handleClickSend}>
+											전송
+										</div>
 									</div>
 								</div>
 							</div>

@@ -1,7 +1,9 @@
 .Panel {
   overflow: hidden;
   padding-right: 2px;
-  height: calc( 100% - 48px); }
+  max-height: calc( 100% - 48px);
+  min-height: 60%;
+  box-sizing: border-box; }
   .Panel:hover {
     padding-right: 0px;
     overflow-y: scroll; }

@@ -88,9 +88,9 @@ class Panel extends Component {
 		}
 	}
 	render(){
-		const { chats, to, user, handle } = this.props;
+		const { chats, to, user, handle, height } = this.props;
 		return(
-			<div className="Panel" ref="Panel">
+			<div className="Panel" ref="Panel" style={{ height : `calc(100% - ${height}px)` }}>
 			{
 				chats[handle] ?
 					chats[handle].map( chat => {

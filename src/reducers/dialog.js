@@ -18,6 +18,7 @@ export default handleActions({
 			return state;
 		}
 		const { chat, handle } = action.payload;
+		chat.handle = handle;
 		let nextState = [].concat(state);
 		const index = handleToIndex[handle];
 		if( index >= 0 ) {

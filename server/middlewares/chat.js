@@ -30,7 +30,7 @@ obj.sendChat = (req,res) => {
 		const { to, text, type } = req.body;
 		let current = {
 			fromId : req.user.id,
-			text : text.trim().substr(0,120),
+			text : text?text.trim().substr(0,120):"",
 			file : req.file?true:false,
 			type
 		}
@@ -48,22 +48,21 @@ obj.sendChat = (req,res) => {
 				include : db.Chat.include
 			}).then( result => {
 				const chat = result.get({ plain : true });
+				const chr = strToChar[chat.type];
 				chat.to = chat.type==="user"?chat.to:chat.group;
 				if( req.file ){
 					const dir = path.join(__dirname,'..','..','files','chat');
 					fs.move(req.file.path,path.join(dir,cid+".png"));
 				}
-				let handle = strToChar[chat.type] + (chat.group?chat.group:chat.from).handle;
 				(chat.group?chat.group.users:[chat.to]).forEach( user => {
 					const socketId = socketIds[user.id];
 					if( socketId && req.user.id != user.id ){
-						io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle, chat } );
+						io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle : chr + chat.from.handle, chat } );
 					}
 				})
-				handle = strToChar[chat.type] + (chat.group?chat.group:chat.to).handle;
 				res.send({ 
 					"data" : {
-						handle,
+						handle : chr + chat.to.handle,
 						chat
 					}
 				})
@@ -94,7 +93,7 @@ obj.getDialogs = async ( req, res ) => {
 			const chat = item.get({ plain : true });
 			chat.to = chat.type==="user"?chat.to:chat.group;
 			chat.handle = strToChar[chat.type] + (chat.toId === req.user.id?chat.from.handle:chat.to.handle);
-			chat.with = chat.toId === req.user.id?chat.from.id:chat.to.id;
+			chat.text = chat.file?"사진":chat.text;
 			dialogs[ chat.handle ] = chat;
 		});
 		res.send({ "data" : dialogs });

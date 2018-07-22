@@ -143,6 +143,7 @@ $chat-dialog-width : 230px;
 		background-color : white !important;
 	}
 	.chat-box {
+		overflow : hidden;
 		vertical-align : top;
 		display : inline-block;
 		margin : 0px;
@@ -152,23 +153,29 @@ $chat-dialog-width : 230px;
 		.send-panel {
 			border-top : 1px solid #e1e8ed;
 			background-color : rgba($color-normal,0.15);
-			height : $send-panel-height;
+			min-height : $send-panel-height;
+			max-height : 40%;
 			width : 100%;
+			position : relative;
+			box-sizing : border-box;
 			.send-textarea {
 				box-shadow : $color-normal 0 1px 0 0 #e8e8e8;
 				overflow-y : hidden;
-				margin : 6px;
 				resize : none;
 				outline : none;
-				padding-top : 9px;
-				padding-left : 9px;
-				margin-bottom : 5px;
+				padding : 8px;
 				margin-right : 10px;
-				box-sizing : border-box;
-				width : calc( 100% - 130px );
-				height : calc( 100% - 13px );
+				width : calc( 100% - 150px );
 				border : 1px solid rgba($color-normal,0.3);
+				height : 17px;
 				vertical-align : top;
+			}
+			.send-panel-wrap {
+				box-sizing : border-box;
+				padding-top : 6px;
+				padding-bottom : 6px;
+				height : 100%;
+				position : relative;
 			}
 			.send-file-input {
 				display : none;
@@ -184,12 +191,10 @@ $chat-dialog-width : 230px;
 				border-radius : 4px;
 				background-image : url('/svg/imageupload.svg');
 				margin-right : 10px;
-				margin-top : 6px;
 			}
 			.send-btn {
 				display : inline-block;
 				vertical-align : top;
-				margin-top : 6px;
 				background-color : $color-normal;
 				color : white;
 				padding: 9px 16px;
