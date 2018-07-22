@@ -215,7 +215,6 @@ class Chat extends Component {
 	render(){
 		const { fetchSearchUsers, searched, chats, user, dialogs } = this.props;
 		const { to, menu, layer, type, text, height } = this.state;
-		console.log(dialogs);
 		return(
 			<div className="Chat">
 				<div className="chat-wrap" onClick={this.handleClickOutside} >

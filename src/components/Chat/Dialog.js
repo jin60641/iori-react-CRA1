@@ -24,12 +24,13 @@ class Dialog extends Component {
 		const my = user.id === dialog.from.id;
 		const to = dialog.type==="user"?dialog.to:dialog.group;
 		const from = dialog.type==="user"?dialog.from:dialog.group;
+		const profileUri = dialog.type==="user"?`/files/profile/${my?dialog.to.id:dialog.from.id}.png`:'/images/profile.png';
 		return(
 			<div className={cx("Dialog",{"Dialog-active":active})} onClick={ ()=>{openChat(my?to:from,dialog.type)} }>
 				<div className="dialog-time">
 					{ this.getDateString(dialog.createdAt) }
 				</div>
-				<img className="dialog-img" src="/images/profile.png" />
+				<img className="dialog-img" src={profileUri} />
 				<div className="dialog-message-wrap">
 					<div className="dialog-message-name">
 						{ my ? to.name : from.name }

@@ -57,7 +57,7 @@ obj.sendChat = (req,res) => {
 				(chat.group?chat.group.users:[chat.to]).forEach( user => {
 					const socketId = socketIds[user.id];
 					if( socketId && req.user.id != user.id ){
-						io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle : chr + chat.from.handle, chat } );
+						io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle : chr + (chat.type==="user"?chat.from.handle:chat.to.handle), chat } );
 					}
 				})
 				res.send({ 
@@ -92,7 +92,7 @@ obj.getDialogs = async ( req, res ) => {
 		chats.forEach( item => { 
 			const chat = item.get({ plain : true });
 			chat.to = chat.type==="user"?chat.to:chat.group;
-			chat.handle = strToChar[chat.type] + (chat.toId === req.user.id?chat.from.handle:chat.to.handle);
+			chat.handle = strToChar[chat.type] + ((chat.toId === req.user.id)?chat.from.handle:chat.to.handle);
 			chat.text = chat.file?"사진":chat.text;
 			dialogs[ chat.handle ] = chat;
 		});

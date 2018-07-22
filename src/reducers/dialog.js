@@ -9,8 +9,8 @@ export default handleActions({
 		if( action.error ) {
 			return state;
 		}
-		let nextState = Object.keys(action.payload).map( handle => { return action.payload[handle] });
-		nextState.sort( (a,b) => { return a.id < b.id }).forEach( (dialog,key) => { handleToIndex[dialog.handle] = key } );
+		let nextState = Object.keys(action.payload).map( handle => action.payload[handle] );
+		nextState.sort( (a,b) => a.id < b.id ).forEach( (dialog,key) => { handleToIndex[dialog.handle] = key } );
 		return nextState;
 	},
 	[getDialog]: (state, action) => {
