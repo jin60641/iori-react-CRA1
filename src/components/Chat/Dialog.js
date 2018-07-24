@@ -24,7 +24,7 @@ class Dialog extends Component {
 		const my = user.id === dialog.from.id;
 		const to = dialog.type==="user"?dialog.to:dialog.group;
 		const from = dialog.type==="user"?dialog.from:dialog.group;
-		const profileUri = dialog.type==="user"?`/files/profile/${my?dialog.to.id:dialog.from.id}.png`:'/images/profile.png';
+		const profileUri = dialog.type==="user"&&(my?dialog.to.profile:dialog.from.profile)?`/files/profile/${my?dialog.to.id:dialog.from.id}.png`:'/images/profile.png';
 		return(
 			<div className={cx("Dialog",{"Dialog-active":active})} onClick={ ()=>{openChat(my?to:from,dialog.type)} }>
 				<div className="dialog-time">

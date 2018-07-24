@@ -93,7 +93,6 @@ obj.getDialogs = async ( req, res ) => {
 			const chat = item.get({ plain : true });
 			chat.to = chat.type==="user"?chat.to:chat.group;
 			chat.handle = strToChar[chat.type] + ((chat.toId === req.user.id)?chat.from.handle:chat.to.handle);
-			chat.text = chat.file?"사진":chat.text;
 			dialogs[ chat.handle ] = chat;
 		});
 		res.send({ "data" : dialogs });

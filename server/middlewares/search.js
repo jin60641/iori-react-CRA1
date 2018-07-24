@@ -13,6 +13,12 @@ obj.searchGroup = (req,res) => {
 	})
 }
 
+const makeUserObj = async user => {
+	user.following = await db.Follow.findOne({ where : { fromId : req.user.id, toId : user.id }, raw : true })?true:false;
+	user.follower = await db.Follow.findOne({ where : { fromId : user.id, toId : req.user.id }, raw : true })?true:false;
+	return user;
+}
+
 obj.searchUserByHandle = (req,res) => {
 	const { query } = req.body;
 	const where = {
@@ -21,14 +27,13 @@ obj.searchUserByHandle = (req,res) => {
 	}
 	db.User.find({ where, attributes : db.User.attributes })
 	.then( async result => {
-		const user = result.get({ plain : true });
+		let user = result.get({ plain : true });
+		if( authMws.isLoggedIn(req) ){
+			user = await makeUserObj(user);
+		}
 		user.posts = await db.Post.count({ where: { userId : user.id } });
 		user.followings = await db.Follow.count({ where : { fromId : user.id } });
 		user.followers = await db.Follow.count({ where : { toId : user.id } });
-		if( authMws.isLoggedIn(req) ){
-			user.following = await db.Follow.findOne({ where : { fromId : req.user.id, toId : user.id }, raw : true })?true:false;
-			user.follower = await db.Follow.findOne({ where : { fromId : user.id, toId : req.user.id }, raw : true })?true:false;
-		}
 		res.send({ "data" : user });
 	});
 }
@@ -38,10 +43,9 @@ obj.searchFollows = (req,res) => {
 	db.Follow.findAll({ where : query, include : db.Follow.include })
 	.then( async follows => {
 		Promise.all(follows.map( async follow => {
-			const user = follow.get({ plain : true })[query.toId?"from":"to"];
+			let user = follow.get({ plain : true })[query.toId?"from":"to"];
 			if( authMws.isLoggedIn(req) ){
-				user.following = await db.Follow.findOne({ where : { fromId : req.user.id, toId : user.id }, raw : true })?true:false;
-				user.follower = await db.Follow.findOne({ where : { fromId : user.id, toId : req.user.id }, raw : true })?true:false;
+				user = await makeUserObj(user);
 			}
 			return user;
 		})).then( data => {
