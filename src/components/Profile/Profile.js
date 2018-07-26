@@ -110,11 +110,11 @@ class Profile extends Component {
 	}
 	sendSetting = () => {
 		const { fetchSetProfile, user } = this.props;
-		const label = this.refs[type];
 		let formData = new FormData();
 		['profile','header'].forEach( key => {
 			const obj = this.state[key];
-			const { file, img, x, y, height, width }
+			const { file, img, x, y, height, width } = this.state[key];
+			const label = this.refs[key];
 			if( file ){
 				formData.append("file",file);
 				formData.append("crop",true);
