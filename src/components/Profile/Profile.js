@@ -28,7 +28,7 @@ const initialState = {
 	moving : null,
 	header : { ...initialImage },
 	profile : { ...initialImage },
-	tab : null
+	tab : null,
 }
 
 class Profile extends Component {
@@ -72,7 +72,7 @@ class Profile extends Component {
 			});
 		}
 	}
-	getImage = (user,type) => {
+	getImage = (user,type,refresh) => {
 		const nextState = {};
 		if( this.state.user ){
 			nextState.user = this.state.user;
@@ -81,10 +81,12 @@ class Profile extends Component {
 		if( user[type] ){
 			const img = new Image();
 			img.src = `/files/${type}/${user.id}.png`;
+			if( refresh ){
+				img.src = img.src + '?' + new Date().getTime();
+			}
 			img.onload = (e) => {
 				const { width, height } = img;
 				nextState[type] = { ...initialState[type], img, width, height };
-				
 				initialState[type] = nextState[type];
 				this.setState(nextState);
 			}
@@ -112,25 +114,27 @@ class Profile extends Component {
 		const { fetchSetProfile, user } = this.props;
 		let formData = new FormData();
 		['profile','header'].forEach( key => {
-			const obj = this.state[key];
-			const { file, img, x, y, height, width } = this.state[key];
+			const { file, img, x, y, height, width, remove } = this.state[key];
 			const label = this.refs[key];
 			if( file ){
-				formData.append("file",file);
-				formData.append("crop",true);
-				formData.append("x",-x);
-				formData.append("y",-y);
-				formData.append("width",label.clientWidth/width*img.width);
-				formData.append("height",label.clientHeight/height*img.height);
+				formData.append(key,file);
+				formData.append(key+"[crop]",true);
+				formData.append(key+"[x]",-x);
+				formData.append(key+"[y]",-y);
+				formData.append(key+"[width]",label.clientWidth/width*img.width);
+				formData.append(key+"[height]",label.clientHeight/height*img.height);
+			} else if( remove ){
+				formData.append(key+"[remove]",true);
 			}
 		});
 		fetchSetProfile(formData)
 		.then( action => {
+			console.log(action.payload);
 			if( !action.error ){
 				if( action.payload ){
-                    this.setState( user => ({ user : { ...user, ...action.payload } }) );
-					this.getImage(user,'header');
-					this.getImage(user,'profile');
+                    this.setState( state => ({ user : { ...state.user, ...action.payload } }) );
+					this.getImage(user,'header',true);
+					this.getImage(user,'profile',true);
 					this.handleClickSetting(false);
 				}
 			}
@@ -142,9 +146,7 @@ class Profile extends Component {
 		this.sendSetting();
 	}
 	handleClickRemove = (type) => {
-		const nextState = { ...this.state };
-		nextState[type] = { ...initialImage };
-		this.setState(nextState);
+		this.setState({ [type] : { ...initialImage, remove : true } });
 	}
 	handleClickHelper = str => {
 		this.setState({
@@ -161,9 +163,7 @@ class Profile extends Component {
 			img.src = dataURL;
 			img.onload = (e) => {
 				const { width, height } = img;
-				const nextState = {};
-				nextState[type] = { ...initialState[type], img, width, height, file };
-				this.setState(nextState);
+				this.setState({ [type] : { ...initialState[type], img, width, height, file, remove : false } });
 				this.handleMouseWheel(null,type);
 			}
 		});
@@ -309,7 +309,7 @@ class Profile extends Component {
 								}
 								<input className="profile-header-file" id="profile-header-file" type="file" onChange={e=>this.handleChangeFile(e,"header")}/>
 							</form>
-							<form className="profile-img">
+							<form className={cx("profile-img",{"profile-img-setting":isSetting})}>
 								<div className={cx("profile-label",{"profile-label-active":isSetting,"profile-label-uploaded":profile.img.src})} style={ profileLabelStyle } ref="profile" onMouseMove={e=>this.handleMouseMove(e,"profile")} onMouseDown={()=>this.handleMouseDown("profile")} onMouseUp={this.handleMouseUp} onWheel={e=>this.handleMouseWheel(e,"profile")}>
 									<div className={cx("profile-helper",{"profile-helper-clicked":helper==="profile","profile-helper-active":!moving})} onMouseDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();this.handleClickHelper("profile")}}>
 										<div className="profile-helper-menu" onClick={e=>{e.stopPropagation();this.handleClickHelper(""); return 0;}}>

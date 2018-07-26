@@ -28,11 +28,14 @@ obj.profile = async (req,res) => {
 			req.user[key] = query[key] = ( !!file || (!req.body[key] || !req.body[key].remove ));
 			if( query[key] && file ){
 				const { width, height, x, y, crop } = req.body[key];
-				if( crop === 'true' && x>=0 && y >= 0 && width >=1 && height>=1 ){
-					await im.convert([file.path,'-crop',width+'x'+height+'+'+x+'+'+y,file.path]);
-				}
 				const dir = path.join(__dirname,'..','..','files',key);
-				fs.move(file.path,path.join(dir,req.user.id+".png"), { overwrite : true });
+				if( crop === 'true' && x>=0 && y >= 0 && width >=1 && height>=1 ){
+					im.convert([file.path,'-crop',width+'x'+height+'+'+x+'+'+y,file.path], () => {
+						fs.move(file.path,path.join(dir,req.user.id+".png"), { overwrite : true });
+					})
+				} else {
+					fs.move(file.path,path.join(dir,req.user.id+".png"), { overwrite : true });
+				}
 			}
 		});
 		await ['name','introduce'].forEach( async key => {
