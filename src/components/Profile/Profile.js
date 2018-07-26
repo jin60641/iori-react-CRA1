@@ -108,31 +108,29 @@ class Profile extends Component {
 		showScroll(!bool);
 		this.setState(nextState);
 	}
-	sendSetting = type => {
-		const obj = this.state[type];
-		const { x, y, width, height, file, img } = obj;
+	sendSetting = () => {
 		const { fetchSetProfile, user } = this.props;
-		if( !file && img.src.length ){
-			return 1;
-		}
 		const label = this.refs[type];
 		let formData = new FormData();
-		formData.append("type",type);
-		formData.append("x",-x);
-		formData.append("y",-y);
-		formData.append("width",label.clientWidth/width*img.width);
-		formData.append("height",label.clientHeight/height*img.height);
-		if( file ){
-			formData.append("file",file);
-		}
+		['profile','header'].forEach( key => {
+			const obj = this.state[key];
+			const { file, img, x, y, height, width }
+			if( file ){
+				formData.append("file",file);
+				formData.append("crop",true);
+				formData.append("x",-x);
+				formData.append("y",-y);
+				formData.append("width",label.clientWidth/width*img.width);
+				formData.append("height",label.clientHeight/height*img.height);
+			}
+		});
 		fetchSetProfile(formData)
 		.then( action => {
 			if( !action.error ){
 				if( action.payload ){
-					const nextState = { user : this.state.user };
-					nextState.user[type] = action.payload[type];
-					this.setState(nextState);
-					this.getImage(user,type);
+                    this.setState( user => ({ user : { ...user, ...action.payload } }) );
+					this.getImage(user,'header');
+					this.getImage(user,'profile');
 					this.handleClickSetting(false);
 				}
 			}
@@ -141,8 +139,7 @@ class Profile extends Component {
 	handleClickSettingSave = () => {
 		const { showScroll } = this.props;
 		showScroll(true);
-		this.sendSetting("header");
-		this.sendSetting("profile");
+		this.sendSetting();
 	}
 	handleClickRemove = (type) => {
 		const nextState = { ...this.state };

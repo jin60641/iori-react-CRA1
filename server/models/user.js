@@ -6,14 +6,15 @@ module.exports = function(sequelize, DataTypes){
 		name : { type : DataTypes.STRING(32), allowNull : false },
 		handle : { type : DataTypes.STRING(32), allowNull : false },
 		password : { type : DataTypes.STRING, allowNull : false },
+		introduce : { type : DataTypes.STRING, defaultValue : "" },
 		verify : { type : DataTypes.BOOLEAN, defaultValue : false },
 		profile : { type : DataTypes.BOOLEAN, defaultValue : false },
-		header : { type : DataTypes.BOOLEAN, defaultValue : false }
+		header : { type : DataTypes.BOOLEAN, defaultValue : false },
 	},{
 		timestamps : true,
 		paranoid : true,
 	});
-	User.attributes = ["id","handle","name","profile","header"];
+	User.attributeNames = ["id","email","name","handle","profile","header","introduce","verify"];
 	User.associate = models => {
 		User.include = { model : models.Group, as : 'groups', attributes : models.Group.attributes };
 	}

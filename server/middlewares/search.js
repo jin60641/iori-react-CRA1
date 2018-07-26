@@ -7,13 +7,13 @@ obj.searchGroup = (req,res) => {
 	const where = {
 		id : query
 	}
-	db.Group.find({ where, include : db.Group.include, attributes : db.Group.attributes })
+	db.Group.find({ where, include : db.Group.include, attributes : db.Group.attributeNames })
 	.then( result => {
 		res.send({ data : result.get({ plain : true }) });
 	})
 }
 
-const makeUserObj = async user => {
+const makeUserObj = async (req,user) => {
 	user.following = await db.Follow.findOne({ where : { fromId : req.user.id, toId : user.id }, raw : true })?true:false;
 	user.follower = await db.Follow.findOne({ where : { fromId : user.id, toId : req.user.id }, raw : true })?true:false;
 	return user;
@@ -25,11 +25,11 @@ obj.searchUserByHandle = (req,res) => {
 		handle : query,
 		verify : true
 	}
-	db.User.find({ where, attributes : db.User.attributes })
+	db.User.find({ where, attributes : db.User.attributeNames })
 	.then( async result => {
 		let user = result.get({ plain : true });
 		if( authMws.isLoggedIn(req) ){
-			user = await makeUserObj(user);
+			user = await makeUserObj(req,user);
 		}
 		user.posts = await db.Post.count({ where: { userId : user.id } });
 		user.followings = await db.Follow.count({ where : { fromId : user.id } });
@@ -45,7 +45,7 @@ obj.searchFollows = (req,res) => {
 		Promise.all(follows.map( async follow => {
 			let user = follow.get({ plain : true })[query.toId?"from":"to"];
 			if( authMws.isLoggedIn(req) ){
-				user = await makeUserObj(user);
+				user = await makeUserObj(req,user);
 			}
 			return user;
 		})).then( data => {
@@ -62,7 +62,7 @@ obj.searchUsers = (req,res) => {
 			handle : { $like : `%${query}%` }
 		}
 	}
-	db.User.findAll({ where, attributes : db.User.attributes })
+	db.User.findAll({ where, attributes : db.User.attributeNames })
 	.then( result => {
 		res.send({ data : result.map( obj => obj.get({ plain : true }) ) });
 	})

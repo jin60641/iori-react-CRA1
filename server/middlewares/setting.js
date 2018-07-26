@@ -15,26 +15,33 @@ const storage = multer.diskStorage({
 
 obj.filter = multer({
 	storage: storage,
-	fileFilter : (req, file, next) => {
-		const { type, x, y, width, height } = req.body;
-		next(null,(type==="profile"||type==="header")&&x>=0&&y>=0&&width>=1&&height>=1);
-	}
-});
+}).fields([
+	{ name: 'profile', maxCount: 1 },
+	{ name: 'header', maxCount: 1 }
+]);
 
-obj.profile = (req,res) => {
+obj.profile = async (req,res) => {
 	try {
-		const { type, x, y, width, height } = req.body;
 		const query = {};
-		query[type] = req.file?true:false;
-		req.user[type] = query[type];
-		db.User.update(query,{ where : { id : req.user.id }, raw : true })
-		.then( user => {
-			if( req.file ){
-				im.convert([req.file.path,'-crop',width+'x'+height+'+'+x+'+'+y,req.file.path], () => {
-					const dir = path.join(__dirname,'..','..','files',type);
-					fs.move(req.file.path,path.join(dir,req.user.id+".png"), { overwrite : true });
-				});
+		await ['profile','header'].forEach( async key => {
+			const file = (req.files&&req.files[key])?req.files[key][0]:null;
+			req.user[key] = query[key] = ( !!file || (!req.body[key] || !req.body[key].remove ));
+			if( query[key] && file ){
+				const { width, height, x, y, crop } = req.body[key];
+				if( crop === 'true' && x>=0 && y >= 0 && width >=1 && height>=1 ){
+					await im.convert([file.path,'-crop',width+'x'+height+'+'+x+'+'+y,file.path]);
+				}
+				const dir = path.join(__dirname,'..','..','files',key);
+				fs.move(file.path,path.join(dir,req.user.id+".png"), { overwrite : true });
 			}
+		});
+		await ['name','introduce'].forEach( async key => {
+			if( req.body[key] ){
+				req.user[key] = query[key] = req.body[key];
+			}
+		});
+		db.User.update(query,{ where : { id : req.user.id } })
+		.then( result => {
 			res.send({ data : query });
 		})
 	} catch( e ){

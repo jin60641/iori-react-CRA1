@@ -27,40 +27,35 @@ obj.isLoggedIn = async req => {
 	}
 }
 
-
-
 let LocalStrategy = require('passport-local').Strategy;
 obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'password' }, ( email, password, next ) => {
+	let shasum = crypto.createHash('sha1');
+	shasum.update(password);
+	let sha_pw = shasum.digest('hex');
 	db.User.findOne({ 
 		where : { 
 			$or : [{
 				email
 			},{
 				handle : email
-			}]
+			}],
+			password : sha_pw
 		},
-		raw : true
+		raw : true,
+		attributes : db.User.attributeNames
 	}).then( user => {
 		if(!user){
 			return next(new Error("이메일 또는 비밀번호가 잘못되었습니다."));
 		} else {
-			let shasum = crypto.createHash('sha1');
-			shasum.update(password);
-			let sha_pw = shasum.digest('hex');
-			if( user.password == sha_pw ){
-				if( user && user.verify == false ){
-					return next(new Error('이메일 인증을 진행하셔야 정상적인 이용이 가능합니다.'));
-				} else {
-					return next(null,user);
-				}
+			if( user && user.verify === false ){
+				return next(new Error('이메일 인증을 진행하셔야 정상적인 이용이 가능합니다.'));
 			} else {
-				return next(new Error('이메일 또는 비밀번호가 잘못되었습니다.'));
+				return next(null,user);
 			}
 		}
 	});
 }));
 
-obj.passport.deserializeUser( (obj, done) => done(null, obj) );
 obj.passport.serializeUser( async (user, done) => {
 	if( user.verify ){
 		user.posts = await db.Post.count({ where: { userId : user.id } });
@@ -69,6 +64,7 @@ obj.passport.serializeUser( async (user, done) => {
 	}
 	done(null, user) 
 });
+obj.passport.deserializeUser( (obj, done) => done(null, obj) );
 
 obj.verifyMail = ( req, res ) => {
 	const { email, link } = req.body;
