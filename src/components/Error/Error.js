@@ -4,7 +4,7 @@ class Error extends Component {
 	render() {
 		return (
 			<div>
-				Error!
+				작업 중 페이지입니다.
 			</div>
 		);
 	}
