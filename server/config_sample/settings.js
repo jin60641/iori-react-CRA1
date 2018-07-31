@@ -1,3 +1,11 @@
+const env = process.env.NODE_ENV || 'development';
+
+const database = {
+	development : "development database name",
+	test : "test database name",
+	production : "production database name",
+}
+
 const settings = {
 	sessionSecret : "session secret",
 	mailAccount : {
@@ -7,24 +15,27 @@ const settings = {
 		clientSecret : "gmail client secret",
 	},
 	db : {
-		pool : { 
-			max : 100,
-			min : 0,
-			acquire : 30000,
-			idle: 10000
-		},
-		password : "mysql address",
-		port : 3306,
-		database : "mysql database",
-		dialect : "mysql",
+		database : database[env],
+		password : "mysql password",
 		username : "mysql username",
-		define: {
-			charset: 'utf8',
-			dialectOptions: {
-				collate: 'utf8_general_ci'
+		options : {
+			pool : {
+				max : 100,
+				min : 0,
+				acquire : 30000,
+				idle: 10000
 			},
- 		},
-		query : {
+			//host : 'root',
+			port : 3306,
+			dialect : "mysql",
+			define: {
+				charset: 'utf8',
+				dialectOptions: {
+					collate: 'utf8_general_ci'
+				},
+			},
+			query : {
+			}
 		}
 	}
 }

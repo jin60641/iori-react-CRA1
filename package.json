@@ -24,17 +24,31 @@
   "scripts": {
     "development": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "start": "node ./server/app.js",
-    "api": "NODE_ENV=api node ./server/app.js",
-    "sass": "node-sass-chokidar -w src -o src"
+    "api": "NODE_ENV=development PORT=3333 node ./server/app.js",
+    "sass": "node-sass-chokidar -w src -o src",
+    "test": "react-scripts test --env=jsdom",
+    "test:server": "npm run eslint && npm run eslint:test && cross-env NODE_ENV=test PORT=3333 mocha -r ./test/test_helper.js --recursive ./test",
+    "test:chrome": "cross-env NODE_ENV=test mocha --inspect-brk test",
+    "test:unit": "mocha ./test/middleware ./test/models ./test/routes",
+    "eslint": "eslint ./server/app.js",
+    "eslint:test": "eslint ./test"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
+    "chai": "^4.1.2",
+    "chai-arrays": "^2.0.0",
+    "chai-deep-match": "^1.2.1",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.2.0",
+    "eslint-plugin-mocha": "^5.1.0",
+    "eslint-plugin-node": "^7.0.1",
+    "mocha": "^5.2.0",
     "node-sass-chokidar": "0.0.3",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.12.1",
+    "supertest": "^3.1.0"
   },
   "proxy": {
     "/socket.io": {
@@ -50,5 +64,8 @@
     "/files": {
       "target": "http://localhost:3333"
     }
+  },
+  "engines": {
+    "node": ">= 10.1.0"
   }
 }

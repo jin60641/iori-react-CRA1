@@ -25,7 +25,7 @@ export const fetchSearchFollows = (data) => {
 		if(body.data){
 			return dispatch(searchFollows(body.data));
 		} else {
-			return dispatch(searchFollows(new Error(body.msg)));
+			return dispatch(searchFollows(new Error(body.message)));
 		}
 	}
 };
@@ -45,7 +45,7 @@ export const fetchSearchGroup = (data) => {
 		if(body.data){
 			return dispatch(searchGroup(body.data));
 		} else {
-			return dispatch(searchGroup(new Error(body.msg)));
+			return dispatch(searchGroup(new Error(body.message)));
 		}
 	}
 };
@@ -65,7 +65,7 @@ export const fetchSearchUserByHandle = (data) => {
 		if(body.data){
 			return dispatch(searchUserByHandle(body.data));
 		} else {
-			return dispatch(searchUserByHandle(new Error(body.msg)));
+			return dispatch(searchUserByHandle(new Error(body.message)));
 		}
 	}
 };
@@ -85,7 +85,7 @@ export const fetchSearchUsers = (data) => {
 		if(body.data){
 			return dispatch(searchUsers(body.data));
 		} else {
-			return dispatch(searchUsers(new Error(body.msg)));
+			return dispatch(searchUsers(new Error(body.message)));
 		}
 	}
 };

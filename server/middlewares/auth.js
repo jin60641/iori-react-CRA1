@@ -1,5 +1,5 @@
 let db = require('../models/index.js');
-let smtpTransport = require("./../config/mailconfig.js");
+let smtpTransport = require('./../config/mailconfig.js');
 let cookie = require('cookie');
 
 let crypto = require('crypto');
@@ -28,7 +28,7 @@ obj.isLoggedIn = async req => {
 }
 
 let LocalStrategy = require('passport-local').Strategy;
-obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'password' }, ( email, password, next ) => {
+obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'password' }, async ( email, password, next ) => {
 	let shasum = crypto.createHash('sha1');
 	shasum.update(password);
 	let sha_pw = shasum.digest('hex');
@@ -44,13 +44,13 @@ obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'p
 		raw : true,
 		attributes : db.User.attributeNames
 	}).then( user => {
-		if(!user){
-			return next(new Error("이메일 또는 비밀번호가 잘못되었습니다."));
+		if( !user ){
+			return next(new Error('이메일 또는 비밀번호가 잘못되었습니다.'));
 		} else {
-			if( user && user.verify === false ){
-				return next(new Error('이메일 인증을 진행하셔야 정상적인 이용이 가능합니다.'));
-			} else {
+			if( user && user.verify ){
 				return next(null,user);
+			} else {
+				return next(new Error('이메일 인증을 진행하셔야 정상적인 이용이 가능합니다.'));
 			}
 		}
 	});
@@ -71,23 +71,23 @@ obj.verifyMail = ( req, res ) => {
 	if( email != null, link != null ){
 		db.User.findOne({ where : { email }, raw : true }).then( user => {
 			if( user ){
-				 let shasum = crypto.createHash('sha1');
-				 shasum.update(user.email);
-				 let sha_email = shasum.digest('hex');
-				 if( sha_email == link ){
+				let shasum = crypto.createHash('sha1');
+				shasum.update(user.email);
+				let sha_email = shasum.digest('hex');
+				if( sha_email == link ){
 					if( !user.verify ){
 						db.User.update({ 'verify' : true }, { where : { email } })
 						.then( () => {
-							res.send({ data : "회원가입이 완료되었습니다." });
+							res.send({ data : '회원가입이 완료되었습니다.' });
 						});
 					} else {
-						res.send({ data : "회원가입이 완료되었습니다." });
+						res.send({ data : '회원가입이 완료되었습니다.' });
 					}
-				 } else {
-					res.send({ msg : "잘못된 접근입니다." });
-				 }
+				} else {
+					res.status(401).send({ message : '잘못된 접근입니다.' });
+				}
 			} else {
-				res.send({ msg : "잘못된 접근입니다." });
+				res.status(401).send({ message : '잘못된 접근입니다.' });
 			}
 	 	});
 	}
@@ -100,7 +100,7 @@ obj.findPw = ( req, res ) => {
 			let shasum = crypto.createHash('sha1');
 			shasum.update(email);
 			let sha_email = shasum.digest('hex');
-			let string = "https://iori.kr/api/auth/findpw/" + email + "/" + sha_email;
+			let string = 'https://iori.kr/api/auth/findpw/' + email + '/' + sha_email;
 			smtpTransport.sendMail({
 				from: 'iori <iori.kr>',
 				to: email,
@@ -110,11 +110,11 @@ obj.findPw = ( req, res ) => {
 				if( err ){
 					throw err;
 				} else {
-					res.send({ data : "이메일로 비밀번호를 다시 설정하는 방법을 보내드렸습니다." });
+					res.send({ data : '이메일로 비밀번호 재설정 방법을 보내드렸습니다.' });
 				}
 			});
 		} else {
-			res.send({ msg : "입력하신 메일을 찾을 수 없습니다." });
+			res.status(401).send({ message : '입력하신 메일을 찾을 수 없습니다.' });
 		}
 	});
 };
@@ -144,32 +144,32 @@ obj.checkSession = async ( req, res, next ) => {
 		req.user = session;
 		return next();
 	} else {
-		res.send({ msg : "로그인해주세요" });
+		res.status(403).send({ message : '로그인이 필요합니다.' });
 	}
 }
 
 obj.checkAdmin = ( req, res, next ) => {
 	if( obj.isLoggedIn(req) ){
-		db.User.findOne({ where : { id : req.user.id }, raw : true }).then( user => {
-			if( user.admin == true ){
+		db.User.findOne({ where : { id : req.user.id, adin : true }, raw : true }).then( user => {
+			if( user ){
 				return next();
 			} else {
-				res.status(404).send("Not Found");
+				res.status(403).send('로그인이 필요합니다');
 			}
 		});
 	} else {
-		res.status(404).send("Not Found");
+		res.status(403).send('로그인이 필요합니다');
 	}
 }
 
 obj.logOut = ( req, res ) => {
 	if( res.clearCookie ){
-		res.clearCookie("email");
-		res.clearCookie("password");
+		res.clearCookie('email');
+		res.clearCookie('password');
 	}
 	if( res.cookie ){
-		res.cookie("facebook","false",{ maxAge : 900000, expire : new Date(Date.now() + 900000), domain : "iori.kr", path : "/" });
-		res.cookie("google","false",{ maxAge : 900000, expire : new Date(Date.now() + 900000), domain : "iori.kr", path : "/" });
+		res.cookie('facebook','false',{ maxAge : 900000, expire : new Date(Date.now() + 900000), domain : 'iori.kr', path : '/' });
+		res.cookie('google','false',{ maxAge : 900000, expire : new Date(Date.now() + 900000), domain : 'iori.kr', path : '/' });
 	}
 	if( req.logout ){
 		req.logout();
@@ -182,33 +182,27 @@ obj.logOut = ( req, res ) => {
 			if( req.user ){
 				delete req.user;
 			}
-			if( req.method == "GET" ){
-				res.redirect('/');
-			} else {
-				res.send({ "data" : "로그아웃되었습니다." });
-			}
+			res.status(200).send();
 		});
 	} else {
-		res.send({ "data" : "로그아웃되었습니다." });
+		res.status(200).send();
 	}
 }
 
 obj.loggedIn = ( req, res ) => {
-	res.send({ "data" : req.user });
+	res.send({ 'data' : req.user });
 };
 
 obj.authLocal = ( req, res, next ) => {
 	obj.passport.authenticate('local', ( err, user, info ) => {
 		if( err ){
-			return res.send({ msg : err.message });
-		} else if( user == false ){
-			res.send({ "msg" : "이메일과 비밀번호를 모두 입력해주세요."});
+			return res.status(401).send({ message : err.message});
 		} else {
 			req.logIn( user, error => {
 				if( error ){
 					return next( error );
 				} else {
-					return res.send({ "data" : user });
+					return res.send({ 'data' : user });
 				}
 			});
 		}
@@ -223,7 +217,7 @@ obj.join = ( req, res ) => {
 		handle = handle.trim();
 		name = name.trim();
 	} catch( e ){
-		res.send({ "msg" : e.message });
+		res.status(403).send({ message : e.message });
 	}
 	db.User.findOne({ 
 		where : { 
@@ -237,14 +231,14 @@ obj.join = ( req, res ) => {
 	.then( user => {
 		if( user ){
 			if( user.email == email ){
-				throw new Error("이미 사용중인 메일입니다.");
+				throw new Error('이미 사용중인 메일입니다.');
 			} else if( user.handle == handle ){
-				throw new Error("이미 사용중인 핸들입니다.");
+				throw new Error('이미 사용중인 핸들입니다.');
 			}
 		} else {
 			const regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
 			if( regex.test(email) === false ){
-				throw new Error("유효하지 않은 이메일입니다.");
+				throw new Error('유효하지 않은 이메일입니다.');
 			} else {
 				return null;
 			}
@@ -264,7 +258,7 @@ obj.join = ( req, res ) => {
 		};
 		db.User.create(current).then( created => {
 			//let string = "https://iori.kr/mail/" + email + "/" + link;
-			let string = "localhost:3000/mail/" + email + "/" + link;
+			let string = 'localhost:3000/mail/' + email + '/' + link;
 			smtpTransport.sendMail({
 				from: 'iori <jinsang@ajou.ac.kr>',
 				to: email,
@@ -274,10 +268,10 @@ obj.join = ( req, res ) => {
 				if( err ){
 				}
 			});
-			res.send({ "data" : "입력하신 이메일로 인증메일을 전송하였습니다." });
+			res.send({ 'data' : '입력하신 이메일로 인증메일을 전송하였습니다.' });
 		})
 	}).catch( e => {
-		res.send({ "msg" : e.message });
+		res.status(403).send({ message : e.message });
 	});
 }
 

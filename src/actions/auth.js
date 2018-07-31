@@ -6,7 +6,7 @@ export const loggedIn = createAction('LOGGEDIN');
 export const join = createAction('JOIN');
 export const verifyMail = createAction('VERIFYMAIL');
 
-const loginUri = '/api/auth/local';
+const loginUri = '/api/auth/login/local';
 const logoutUri = '/api/auth/logout';
 const loggedInUri = '/api/auth/loggedin';
 const joinUri = '/api/auth/join';
@@ -24,11 +24,10 @@ export const fetchLogin = (data) => {
 			credentials: 'include'
 		});
 		const body = await resp.json();
-		console.log(body);
 		if(body.data){
 			return dispatch(login(body.data));
 		} else {
-			return dispatch(login(new Error(body.msg)));
+			return dispatch(login(new Error(body.message)));
 		}
 	}
 };
@@ -59,7 +58,7 @@ export const fetchLoggedIn = () => {
 		if(body.data){
 			return dispatch(login(body.data));
 		} else {
-			return dispatch(login(new Error(body.msg)));
+			return dispatch(login(new Error(body.message)));
 		}
 	}
 };
@@ -79,7 +78,7 @@ export const fetchJoin = (data) => {
 		if(body.data){
 			return dispatch(join(body.data));
 		} else {
-			return dispatch(join(new Error(body.msg)));
+			return dispatch(join(new Error(body.message)));
 		}
 	}
 };
@@ -99,7 +98,7 @@ export const fetchCertifyMail = (data) => {
 		if(body.data){
 			return dispatch(verifyMail(body.data));
 		} else {
-			return dispatch(verifyMail(new Error(body.msg)));
+			return dispatch(verifyMail(new Error(body.message)));
 		}
 	}
 };

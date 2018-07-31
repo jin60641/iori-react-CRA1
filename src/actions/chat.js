@@ -34,7 +34,7 @@ export const fetchMakeGroup = data => {
 		if(body.data){
 			return dispatch(makeGroup(body.data));
 		} else {
-			return dispatch(makeGroup(new Error(body.msg)));
+			return dispatch(makeGroup(new Error(body.message)));
 		}
 	}
 }
@@ -54,7 +54,7 @@ export const fetchGetDialogs = (data) => {
 		if(body.data){
 			return dispatch(getDialogs(body.data));
 		} else {
-			return dispatch(getDialogs(new Error(body.msg)));
+			return dispatch(getDialogs(new Error(body.message)));
 		}
 	}
 };
@@ -74,7 +74,7 @@ export const fetchGetChats = (data) => {
 		if(body.data){
 			return dispatch(getChats(body.data));
 		} else {
-			return dispatch(getChats(new Error(body.msg)));
+			return dispatch(getChats(new Error(body.message)));
 		}
 	}
 };
@@ -90,7 +90,7 @@ export const fetchSendChat = (data) => {
 		if(body.data){
 			return dispatch(sendChat(body.data)) && dispatch(getDialog(body.data));
 		} else {
-			return dispatch(sendChat(new Error(body.msg)));
+			return dispatch(sendChat(new Error(body.message)));
 		}
 	}
 };

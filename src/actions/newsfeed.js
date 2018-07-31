@@ -35,7 +35,7 @@ export const fetchRemovePost = (data) => {
 		if(body.data){
 			return dispatch(removePost(body.data));
 		} else {
-			return dispatch(removePost(new Error(body.msg)));
+			return dispatch(removePost(new Error(body.message)));
 		}
 	}
 };
@@ -51,7 +51,7 @@ export const fetchWritePost = (data) => {
 		if(body.data){
 			return dispatch(writePost(body.data));
 		} else {
-			return dispatch(writePost(new Error(body.msg)));
+			return dispatch(writePost(new Error(body.message)));
 		}
 	}
 };
@@ -71,7 +71,7 @@ export const fetchGetPosts = (data) => {
 		if(body.data){
 			return dispatch(getPosts(body.data));
 		} else {
-			return dispatch(getPosts(new Error(body.msg)));
+			return dispatch(getPosts(new Error(body.message)));
 		}
 	}
 };

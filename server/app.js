@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path')
 const app = express();
+const sessionstore = require('sessionstore');
+const session = require('express-session');
 const bodyParser = require('body-parser');
 
 app.use('/files',express.static(path.resolve(__dirname,'..','files')));
@@ -8,24 +10,17 @@ app.use('/public',express.static(path.resolve(__dirname,'..','public')));
 
 let port = process.env.PORT||3000;
 
-if( process.env.NODE_ENV == 'api' ){
-	port = 3333;
-} else {
-	app.use(express.static(path.resolve(__dirname,'..','build')));
-	app.get('*',(req,res)=>{
-		res.sendFile(path.resolve(__dirname,'..','build','index.html'));
-	});
-}
-
+app.use(express.static(path.resolve(__dirname,'..','build')));
+app.get('*',(req,res)=>{
+	res.sendFile(path.resolve(__dirname,'..','build','index.html'));
+});
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-let sessionstore = require('sessionstore');
 global.store = sessionstore.createSessionStore();
-let session = require('express-session')
-let sessionMiddleware = {
+const sessionMiddleware = {
 	store : global.store,
     secret: require('./config/settings.js').sessionSecret,
 	resave: false,
@@ -41,5 +36,6 @@ app.use(route);
 const server = require('http').createServer(app);
 require('./socket.js')(server);
 server.listen(port, () => {
-	console.log('listen on ' + port);
 });
+
+module.exports = server;

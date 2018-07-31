@@ -2,7 +2,8 @@ const path = require("path");
 const Sequelize = require("sequelize");
 const settings = require(__dirname + '/../config/settings.js');
 const fs = require('fs-extra');
-const sequelize = new Sequelize(settings.db.database, settings.db.username, settings.db.password, settings.db);
+const database = settings.db.database;
+const sequelize = new Sequelize(database, settings.db.username, settings.db.password, { ...settings.db.options, logging: false });
 const db = {};
 
 fs
@@ -22,7 +23,7 @@ Object.keys(db).forEach( (modelName) => {
 });
 
 sequelize.sync(
-//	{ force : true }
+	{ force : settings.env==='test' }
 );
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

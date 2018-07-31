@@ -14,7 +14,7 @@ export const fetchSetProfile = (data) => {
         if(body.data){
             return dispatch(setProfile(body.data));
         } else {
-            return dispatch(setProfile(new Error(body.msg)));
+            return dispatch(setProfile(new Error(body.message)));
         }
     }
 };
