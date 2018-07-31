@@ -4,13 +4,57 @@ export const login = createAction('LOGIN');
 export const logout = createAction('LOGOUT');
 export const loggedIn = createAction('LOGGEDIN');
 export const join = createAction('JOIN');
-export const verifyMail = createAction('VERIFYMAIL');
+export const verifyMail = createAction('VERIFY_MAIL');
+export const findPw = createAction('FIND_PW');
+export const changePw = createAction('CHANGE_PW');
 
 const loginUri = '/api/auth/login/local';
 const logoutUri = '/api/auth/logout';
 const loggedInUri = '/api/auth/loggedin';
 const joinUri = '/api/auth/join';
 const verifyMailUri = '/api/auth/verify';
+const findPwUri = '/api/auth/findpw';
+const changePwUri = '/api/auth/changepw';
+
+export const fetchFindPw = (data) => {
+	return async (dispatch) => {
+		const resp = await fetch(findPwUri, {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			method: 'POST',
+			body: JSON.stringify(data),
+			credentials: 'include'
+		});
+		const body = await resp.json();
+		if(body.data){
+			return dispatch(findPw(body.data));
+		} else {
+			return dispatch(findPw(new Error(body.message)));
+		}
+	}
+};
+
+export const fetchChangePw = (data) => {
+	return async (dispatch) => {
+		const resp = await fetch(changePwUri, {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			method: 'POST',
+			body: JSON.stringify(data),
+			credentials: 'include'
+		});
+		const body = await resp.json();
+		if(body.data){
+			return dispatch(changePw(body.data));
+		} else {
+			return dispatch(changePw(new Error(body.message)));
+		}
+	}
+};
 
 export const fetchLogin = (data) => {
 	return async (dispatch) => {

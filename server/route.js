@@ -8,8 +8,10 @@ const controllers = path.join(__dirname,"controllers");
 fs
 	.readdirSync(controllers)
 	.forEach( file => {
-		const name = file.split('.')[0];
-		router.use(`/api/${name}`,require(path.join(controllers,file)));
+		const [name,format,swp] = file.split('.');
+		if( !swp ) {
+			router.use(`/api/${name}`,require(path.join(controllers,file)));
+		}
 	})
 	
 module.exports = router;

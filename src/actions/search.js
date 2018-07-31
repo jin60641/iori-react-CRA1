@@ -1,9 +1,9 @@
 import {createAction} from 'redux-actions';
 
-export const searchUserByHandle = createAction('SEARCHUSERBYHANDLE');
-export const searchUsers = createAction('SEARCHUSERS');
-export const searchGroup = createAction('SEARCHGROUP');
-export const searchFollows = createAction('SEARCHFOLLOWS');
+export const searchUserByHandle = createAction('SEARCH_USER_BY_HANDLE');
+export const searchUsers = createAction('SEARCH_USERS');
+export const searchGroup = createAction('SEARCH_GROUP');
+export const searchFollows = createAction('SEARCH_FOLLOWS');
 
 const searchUserByHandleUri = '/api/search/user/handle';
 const searchUsersUri = '/api/search/users';

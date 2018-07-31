@@ -71,7 +71,7 @@ class Login extends Component {
 				<div className={ cx('auth-btn','login-twitter') }>
 					<img className={ cx('auth-btn-img', 'auth-twitter-img') } src="/images/ic_twitter.png" />트위터로 로그인
 				</div>
-				<div className="auth-text">비밀번호를 잊으셨나요? <Link className="auth-text-link" to="/findpw">비밀번호 찾기</Link></div>
+				<div className="auth-text">비밀번호를 잊으셨나요? <Link className="auth-text-link" to="/auth/find">비밀번호 찾기</Link></div>
 				<div className="auth-text">아직 회원이 아니신가요? <Link className="auth-text-link" to="/auth/join">회원가입</Link></div>
 				<input type="submit" hidden />
 			</form>

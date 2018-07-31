@@ -8,23 +8,22 @@ class Join extends Component {
 			message : ' '
 		}
 	}
-	handleJoin = (data) => {
+	handleJoin = data => {
 		const { fetchJoin } = this.props;
-		console.log(fetchJoin);
 		fetchJoin(data)
-			.then( (action) => {
-				if( action.error ){
-					this.setState({
-						message : action.payload.message
-					});
-				} else {
-					this.setState({
-						message : action.payload
-					});
-				}
-			});
+		.then( action => {
+			if( action.error ){
+				this.setState({
+					message : action.payload.message
+				});
+			} else {
+				this.setState({
+					message : action.payload
+				});
+			}
+		});
 	}
-	handleSubmit = (e) => {
+	handleSubmit = e => {
 		e.preventDefault();
 		const email = this.refs.email.value;
 		const password = this.refs.password.value;

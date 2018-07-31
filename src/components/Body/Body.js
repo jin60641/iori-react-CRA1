@@ -94,12 +94,6 @@ class Body extends Component {
 							showScroll = { this.showScroll }
 						/>
 					)}/>
-					<Route path="/auth/:page" render={(props) => (
-						<Auth {...props} 
-							user = { user }
-							showScroll = { this.showScroll }
-						/>
-					)}/>
 					<Route path="/auth" render={(props) => (
 						<Auth {...props} 
 							user = { user }

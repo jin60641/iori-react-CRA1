@@ -1,11 +1,11 @@
 import {createAction} from 'redux-actions';
 
-export const getChats = createAction('GETCHATS');
-export const getChat = createAction('GETCHAT');
-export const getDialogs = createAction('GETDIALOGS');
-export const getDialog = createAction('GETDIALOG');
-export const sendChat = createAction('SENDCHAT');
-export const makeGroup = createAction('MAKEGROUP');
+export const getChats = createAction('GET_CHATS');
+export const getChat = createAction('GET_CHAT');
+export const getDialogs = createAction('GET_DIALOGS');
+export const getDialog = createAction('GET_DIALOG');
+export const sendChat = createAction('SEND_CHAT');
+export const makeGroup = createAction('MAKE_GROUP');
 
 const getChatsUri = '/api/chat/getchats';
 const getDialogsUri = '/api/chat/getdialogs';

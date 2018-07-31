@@ -30,6 +30,7 @@ obj.removePost = (req,res) => {
 	db.Post.findOne({ where })
 	.then( post => {
 		if( post ){
+			req.user.posts -= 1;
 			db.Post.destroy({ where })
 			.then( () => {
 				const raw = post.get({ plain : true });
@@ -57,6 +58,7 @@ obj.writePost = (req,res) => {
 				},
 				include : db.Post.include
 			}).then( post => {
+				req.user.posts += 1;
 				const dir = path.join(__dirname,'..','..','files','post',pid.toString());
 				if (!fs.existsSync(dir)){
 					fs.mkdirSync(dir);

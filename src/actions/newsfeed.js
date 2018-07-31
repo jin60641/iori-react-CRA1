@@ -1,10 +1,10 @@
 import {createAction} from 'redux-actions';
 
-export const writePost = createAction('WRITEPOST');
-export const getPosts = createAction('GETPOSTS');
-export const getPost = createAction('GETPOST');
-export const resetPosts = createAction('RESETPOSTS');
-export const removePost = createAction('REMOVEPOSTS');
+export const writePost = createAction('WRITE_POST');
+export const getPosts = createAction('GET_POSTS');
+export const getPost = createAction('GET_POST');
+export const resetPosts = createAction('RESET_POSTS');
+export const removePost = createAction('REMOVE_POSTS');
 
 const writePostUri = '/api/newsfeed/writepost';
 const getPostsUri = '/api/newsfeed/getposts';

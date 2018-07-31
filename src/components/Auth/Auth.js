@@ -1,27 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchLogin, fetchJoin } from '../../actions/auth';
+import { fetchLogin, fetchJoin, fetchFindPw, fetchChangePw } from '../../actions/auth';
+import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 import { fetchConnectSocket } from '../../actions/socket';
 import Login from './Login';
 import Join from './Join';
+import Find from './Find';
+import Change from './Change';
 import styles from './Auth.css';
 import classNames from 'classnames/bind'
 const cx = classNames.bind(styles);
 
-class Switch extends Component {
-	constructor(props){
-		super(props);
-	}
-	render(){
-		const { page, fetchLogin, fetchJoin, fetchConnectSocket, pushState } = this.props;
-		switch(page){
-			case "login":
-				return(<Login fetchLogin={fetchLogin} pushState={ pushState } fetchConnectSocket={fetchConnectSocket} />);
-			case "join":
-				return(<Join fetchJoin={fetchJoin} />);
-		}
-	}
-}
 
 class Auth extends Component {
 	constructor(props){
@@ -35,18 +24,39 @@ class Auth extends Component {
 		const { showScroll } = this.props;
 		showScroll(true);
 	}
-	pushState = (url) => {
+	pushState = url => {
 		const { history, showScroll } = this.props;
 		showScroll(true);
 		history.push(url);
 	}
 	render(){
-		const page = this.props.match.params.page;
-		const { fetchLogin, fetchJoin, fetchConnectSocket } = this.props;
+		const { fetchLogin, fetchJoin, fetchConnectSocket, pushState } = this.props;
+		const { path } = this.props.match;
 		return(
 			<div className="Auth">
 				<div className="auth-helper"></div>
-				<Switch page={ page } fetchLogin={ fetchLogin } fetchJoin={ fetchJoin } fetchConnectSocket={ fetchConnectSocket } pushState={ this.pushState } />
+				<Route path={`${path}/login`} render={(props) => (
+					<Login {...props}
+						fetchLogin={fetchLogin}
+						pushState={ this.pushState }
+						fetchConnectSocket={fetchConnectSocket}
+					/>
+				)}/>
+				<Route path={`${path}/join`} render={(props) => (
+					<Join {...props}
+						fetchJoin={fetchJoin}
+					/>
+				)}/>
+				<Route path={`${path}/find`} render={(props) => (
+					<Find {...props}
+						fetchFindPw={fetchFindPw}
+					/>
+				)}/>
+				<Route path={`${path}/change/:email?/:link?`} render={(props) => (
+					<Change {...props}
+						fetchChangePw={fetchChangePw}
+					/>
+				)}/>
 			</div>
 		);
 	}
@@ -55,7 +65,8 @@ class Auth extends Component {
 const actionToProps = {
 	fetchLogin,
 	fetchJoin,
-	fetchConnectSocket
+	fetchFindPw,
+	fetchConnectSocket,
 };
 
-export default connect(undefined, actionToProps)(Auth);
+export default connect(undefined, actionToProps)(withRouter(Auth));

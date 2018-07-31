@@ -1,6 +1,6 @@
 import {createAction} from 'redux-actions';
 
-export const setProfile = createAction('SETPROFILE');
+export const setProfile = createAction('SET_PROFILE');
 const setProfileUri = '/api/setting/profile';
 
 export const fetchSetProfile = (data) => {
