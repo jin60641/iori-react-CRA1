@@ -2,7 +2,8 @@ const db = require('../server/models/index.js');
 const chai = require('chai');
 const chaiDeepMatch = require('chai-deep-match');
 const chaiArrays = require('chai-arrays');
-const crypto = require('crypto');
+const settings = require('../server/config/settings.js');
+const { domain } = settings;
 
 chai.use(chaiDeepMatch);
 chai.use(chaiArrays);
@@ -20,26 +21,32 @@ global.teardown = async function () {
 };
 
 global.defaultUserInfos = Array.from(Array(100)).map( (x,i) => ({
-	email : `test${i}@iori.kr`,
+	email : `test${i}@${domain}`,
 	handle : `test${i}`,
 	password : "1234",
 	name : `테스트${i}`,
 	verify : true
 }) );
 
-global.prepareUsers = () => {
+global.prepareUsers = async function () {
+	// Promise Waterfall
+	const promises = global.defaultUserInfos.map( userInfo => ( () => db.User.create({ ...userInfo }) ) );
+	let result = [];
+	await promises.reduce((now,next) => now.then(next).then( created => result.push(created.get({plain:true})) ),Promise.resolve([]));
+	return result;
+	/*
+	// Promise Parallel
 	const promises = global.defaultUserInfos.map( userInfo => 
 		new Promise( resolve => {
-			let shasum = crypto.createHash('sha1');
-			shasum.update(userInfo.password);
-			const sha_pw = shasum.digest('hex');
-			db.User.create({ ...userInfo, password : sha_pw })
+			db.User.create({ ...userInfo })
 			.then( created => {
-				resolve(created.get({ plain : true }));
-			})
+				console.log(created.dataValues.id);
+				return resolve(created.get({ plain : true }));
+			});
 		})
 	);
 	return Promise.all(promises);
+	*/
 }
 
 global.defaultUserChatInfos = Array.from(Array(100)).map( (x,i) => ({
@@ -58,6 +65,9 @@ global.defaultGroupChatInfos = Array.from(Array(100)).map( (x,i) => ({
 	groupId : 1
 }) );
 
+global.defaultPostInfos = Array.from(Array(100)).map( (x,i) => ({
+	text : `test post ${i}.`,
+}) );
 /*
 global.prepareChats = async () => {
 	await global.defaultChatInfos.forEach( async chatInfo => {

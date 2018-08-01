@@ -245,7 +245,7 @@ describe('auth controller', function () {
 		});
 
 		context('when user tries to change password with no session,', function () {
-			it('should return success message and login well with new password.', async function () {
+			it('should return success message and could login with new password.', async function () {
 				const { email, password } = userInfo;
 				let shasum = crypto.createHash('sha1');
 				shasum.update(email);
@@ -268,12 +268,13 @@ describe('auth controller', function () {
 		});
 
 		context('when user tries to change password with session,', function () {
-			it('should return success message, and login well with new password.', async function () {
+			it('should return success message, and could login with new password.', async function () {
 				const { email, password } = userInfo;
 				await agent
 					.post('/api/auth/login/local')
 					.send({email, password})
 					.expect(200);
+
 
 				const newPassword = password+'6';
 				const resp = await agent
@@ -284,11 +285,13 @@ describe('auth controller', function () {
 				const { body : { data } } = resp;
 				expect(data).to.equal('비밀번호가 성공적으로 재설정되었습니다.');
 
+
 				userInfo.password = newPassword;
 				await agent
 					.post('/api/auth/login/local')
 					.send({email, password : newPassword})
 					.expect(200);
+
 			});
 		});
 	});

@@ -38,7 +38,7 @@ obj.removePost = (req,res) => {
 				res.send({ "data" : raw });
 			});
 		} else {
-			res.send({ "msg" : "존재하지 않는 게시글입니다." });
+			res.status(401).send({ message : '존재하지 않는 게시글입니다.' });
 		}
 	});
 }
@@ -71,7 +71,7 @@ obj.writePost = (req,res) => {
 		})
 	} catch(e){
 		console.log(e);
-		res.send({  msg : e.message });
+		res.status(401).send({  message : e.message });
 	}
 }
 
@@ -102,6 +102,7 @@ makeQuery = (req,options) => {
 	}
 	return query;
 }
+
 getPosts = ( req, res ) => {
 	db.Follow.findAll({ where : { fromId : req.user.id }})
 	.then( follows => {
@@ -113,24 +114,18 @@ getPosts = ( req, res ) => {
 		db.Post.findAll(makeQuery(req,where))
 		.then( posts => {
 			res.send({ "data" : posts.map( post => post.get({ plain : true }) ) });
-		}).catch( e => {
-			res.send({ "msg" : "fail" });
 		});
-	}).catch( e => {
-		res.send({ "msg" : "fail" });
 	});
 };
 
 getPostsByUserId = ( req, res ) => {
-	let { limit, offset, userId, file } = req.body;
+	let { userId } = req.body;
 	const where = {
 		userId
 	}
 	db.Post.findAll(makeQuery(req,where))
 	.then( posts => {
 		res.send({ "data" : posts.map( post => post.get({ plain : true }) ) });
-	}).catch( e => {
-		res.send({ "msg" : "fail" });
 	});
 };
 

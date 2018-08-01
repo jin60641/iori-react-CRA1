@@ -30,29 +30,26 @@ obj.isLoggedIn = async req => {
 
 let LocalStrategy = require('passport-local').Strategy;
 obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'password' }, async ( email, password, next ) => {
-	let shasum = crypto.createHash('sha1');
-	shasum.update(password);
-	let sha_pw = shasum.digest('hex');
+	const where = { 
+		$or : [{
+			email
+		},{
+			handle : email
+		}],
+	}
 	db.User.findOne({ 
-		where : { 
-			$or : [{
-				email
-			},{
-				handle : email
-			}],
-			password : sha_pw
-		},
-		raw : true,
+		where, 
 		attributes : db.User.attributeNames
-	}).then( user => {
-		if( !user ){
-			return next(new Error('이메일 또는 비밀번호가 잘못되었습니다.'));
-		} else {
-			if( user && user.verify ){
+	}).then( async user => {
+		const passwordInstance = await db.User.findOne({ where });
+		if( user && passwordInstance && passwordInstance.validatePassword(password) ){
+			if( user.verify ){
 				return next(null,user);
 			} else {
 				return next(new Error('이메일 인증을 진행하셔야 정상적인 이용이 가능합니다.'));
 			}
+		} else {
+			return next(new Error('이메일 또는 비밀번호가 잘못되었습니다.'));
 		}
 	});
 }));
@@ -67,29 +64,17 @@ obj.passport.serializeUser( async (user, done) => {
 });
 obj.passport.deserializeUser( (obj, done) => done(null, obj) );
 
-obj.verifyMail = ( req, res ) => {
+obj.verifyMail = async ( req, res ) => {
 	let { email = "", link = "" } = req.body;
-	db.User.findOne({ where : { email }, raw : true }).then( user => {
-		if( user ){
-			let shasum = crypto.createHash('sha1');
-			shasum.update(user.email);
-			let sha_email = shasum.digest('hex');
-			if( sha_email == link ){
-				if( !user.verify ){
-					db.User.update({ 'verify' : true }, { where : { email } })
-					.then( () => {
-						res.send({ data : '회원가입이 완료되었습니다.' });
-					});
-				} else {
-					res.send({ data : '회원가입이 완료되었습니다.' });
-				}
-			} else {
-				res.status(401).send({ message : '잘못된 접근입니다.' });
-			}
-		} else {
-			res.status(401).send({ message : '잘못된 접근입니다.' });
-		}
-	});
+	const user = await db.User.findOne({ where : { email }});
+	if( user && user.validateLink(link) ){
+		db.User.update({ 'verify' : true }, { where : { email } })
+		.then( () => {
+			res.send({ data : '회원가입이 완료되었습니다.' });
+		});
+	} else {
+		res.status(401).send({ message : '잘못된 접근입니다.' });
+	}
 }
 
 obj.findPw = ( req, res ) => {
@@ -117,23 +102,13 @@ obj.findPw = ( req, res ) => {
 	});
 };
 
-obj.changePw = ( req, res ) => {
+obj.changePw = async ( req, res ) => {
 	const { password = "", email = "", link = "" } = req.body;
-	let shasum = crypto.createHash('sha1');
-	shasum.update(email);
-	let sha_email = shasum.digest('hex');
-	if( ( req.user && req.user.email ) || sha_email === link ){
-		let shasum2 = crypto.createHash('sha1');
-		shasum2.update(password);
-		let sha_pw = shasum2.digest('hex');
-		db.User.update({ password : sha_pw }, { where : { email : email.length?email:req.user.email }})
-		.then( ([updated]) => {
-			if( updated ) {
-				res.send({ data : '비밀번호가 성공적으로 재설정되었습니다.' });
-			} else {
-				res.status(401).send({ message : '잘못된 접근입니다.' });
-			}
-		});
+	const where = { email : req.user?req.user.email:email } 
+	const user = await db.User.findOne({ where });
+	if( user && ( obj.isLoggedIn(req) || user.validateLink(link) )){
+		db.User.update({ password },{ where });
+		res.send({ data : '비밀번호가 성공적으로 재설정되었습니다.' });
 	} else {
 		res.status(401).send({ message : '잘못된 접근입니다.' });
 	}
@@ -245,14 +220,11 @@ obj.join = ( req, res ) => {
 			}
 		} 
 	}).then( () => {
-		let shasum = crypto.createHash('sha1');
-		shasum.update(password);
-		let pw = shasum.digest('hex');
 		let shasum2 = crypto.createHash('sha1');
 		shasum2.update(email);
 		let link = shasum2.digest('hex');
 		let current = {
-			password : pw,
+			password,
 			email,
 			name,
 			handle
