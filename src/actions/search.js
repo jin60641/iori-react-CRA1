@@ -2,12 +2,12 @@ import {createAction} from 'redux-actions';
 
 export const searchUserByHandle = createAction('SEARCH_USER_BY_HANDLE');
 export const searchUsers = createAction('SEARCH_USERS');
-export const searchGroup = createAction('SEARCH_GROUP');
+export const searchGroupById = createAction('SEARCH_GROUP_BY_ID');
 export const searchFollows = createAction('SEARCH_FOLLOWS');
 
 const searchUserByHandleUri = '/api/search/user/handle';
 const searchUsersUri = '/api/search/users';
-const searchGroupUri = '/api/search/group';
+const searchGroupByIdUri = '/api/search/group/id';
 const searchFollowsUri = '/api/search/follows';
 
 export const fetchSearchFollows = (data) => {
@@ -30,9 +30,9 @@ export const fetchSearchFollows = (data) => {
 	}
 };
 
-export const fetchSearchGroup = (data) => {
+export const fetchSearchGroupById = (data) => {
 	return async (dispatch) => {
-		const resp = await fetch(searchGroupUri, {
+		const resp = await fetch(searchGroupByIdUri, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -43,9 +43,9 @@ export const fetchSearchGroup = (data) => {
 		});
 		const body = await resp.json();
 		if(body.data){
-			return dispatch(searchGroup(body.data));
+			return dispatch(searchGroupById(body.data));
 		} else {
-			return dispatch(searchGroup(new Error(body.message)));
+			return dispatch(searchGroupById(new Error(body.message)));
 		}
 	}
 };

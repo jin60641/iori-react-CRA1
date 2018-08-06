@@ -45,7 +45,7 @@ obj.sendChat = async (req,res) => {
 	chat.to = chat.type==="user"?chat.to:chat.group;
 	if( req.file ){
 		const dir = path.join(__dirname,'..','..','files','chat');
-		fs.move(req.file.path,path.join(dir,cid+".png"));
+		fs.move(req.file.path,path.join(dir,chat.id+".png"));
 	}
 	(chat.group?chat.group.users:[chat.to]).forEach( user => {
 		const socketId = socketIds[user.id];

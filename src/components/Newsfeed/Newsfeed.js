@@ -1,68 +1,66 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchRemovePost, fetchResetPosts, fetchGetPosts, fetchWritePost } from '../../actions/newsfeed';
+import { fetchGetPosts } from '../../actions/newsfeed';
 import './Newsfeed.css';
 import Post from './Post';
 import Write from './Write';
 
 const initialState = {
+	posts : [],
 	offset : 0,
-	limit : 10
+	limit : 10,
 }
 class Newsfeed extends Component {
 	constructor(props) {
 		super(props);
-		this.state = Object.assign(
-			this.props.options,
-			initialState
-		);
-	}
-	componentWillMount(){
+		this.state = initialState;
 	}
 	componentDidMount(){
-		if( this.props.posts.length === 0 ){
+		const { posts } = this.state;
+		if( posts.length === 0 ){
 			this.handleGetPosts();
 		}
 	}
-	componentWillUnmount = () => {
-		this.props.fetchResetPosts();
-	}
-	componentWillReceiveProps = nextProps => {
-		if( this.props.options.userId !== nextProps.options.userId ) {
-			this.setState({
-				userId : nextProps.options.userId,
-				offset : initialState.offset
-			});
-			this.props.fetchResetPosts();
-		}
-		if( this.props.posts.length !== nextProps.posts.length ){
-			this.setState({ offset : nextProps.posts.length });
-		}
-		if( ( nextProps.isBottom && this.props.isBottom === false ) || ( this.props.posts.length !== 0 && nextProps.posts.length === 0 ) ){
+	componentDidUpdate = (prevProps,prevState) => {
+		if( !prevProps.isBottom && this.props.isBottom ){
 			this.handleGetPosts();
 		}
-	}
-	componentWillUpdate(nextState,nextProps){
 	}
 	handleGetPosts = (options = {}) => {
 		const { fetchGetPosts } = this.props;
-		const data = Object.assign( this.state, options );
+		const { offset, limit } = this.state;
+		const data = Object.assign( { offset, limit }, this.props.options, options );
 		fetchGetPosts(data)
-			.then( (action) => {
-				if( action.error ){
-				}
-			});
+		.then( action => {
+			if( !action.error ){
+				this.setState( state => ({ 
+					posts : state.posts.concat(action.payload),
+					offset : offset + action.payload.length
+				}));
+			}
+		});
+	}
+	handleRemovePost = deleted => {
+		const { posts } = this.state;
+        const index = posts.findIndex( post => post.id === deleted.id );
+		this.setState({
+        	posts : posts.slice(0,index).concat(deleted).concat(posts.slice(index+1))
+		})
+	}
+	handleWritePost = post => {
+		this.setState( state => ({
+			posts : [post].concat(state.posts),
+			offset : state.offset + 1
+		}));
 	}
 	render() {
-		const { posts, fetchRemovePost, fetchWritePost, options, user } = this.props;
+		const { posts } = this.state;
+		const { user, write } = this.props;
 		return (
 			<div className="Newsfeed">
-				{ !options.userId ?
-					<Write fetchWritePost={fetchWritePost} />
-					: null
-				}
+				{ write ? <Write handleWritePost={this.handleWritePost}/> : null }
 				{ posts.map((post,i) => {
-					return (<Post data={post} key={post.id} user={user} fetchRemovePost={fetchRemovePost} />);
+					return (<Post post={post} key={post.id} handleRemovePost={this.handleRemovePost}/>);
 				})}
 			</div>
 		);
@@ -71,8 +69,5 @@ class Newsfeed extends Component {
 const stateToProps = ({posts,user}) => ({posts,user});
 const actionToProps = {
 	fetchGetPosts,
-	fetchWritePost,
-	fetchResetPosts,
-	fetchRemovePost
 }
 export default connect(stateToProps, actionToProps)(Newsfeed);

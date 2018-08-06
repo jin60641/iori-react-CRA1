@@ -18,25 +18,15 @@ class Menu extends Component {
 			active : !state.active
 		}));
 	}
-	handleClickRemove = () => {
-		const { fetchRemovePost, pid } = this.props;
-		fetchRemovePost({ id : pid })
-		.then( action => {
-			if( !action.error ){
-			} else {
-				alert(action.error.message);
-			}
-		});
-	}
 	render(){
-		const { my } = this.props;
+		const { my, handleClickRemove } = this.props;
 		const { active } = this.state;
 		return (
 			<div className={cx("Menu",{"menu-active":active})} onClick={this.handleToggle}>
 				<div className="menu-caret-outer" /> <div className="menu-caret-inner" />
 				{ my ?
 					<div className="menu-box">
-						<div className="menu-row" onClick={this.handleClickRemove}>
+						<div className="menu-row" onClick={handleClickRemove}>
 							삭제
 						</div>
 					</div> 

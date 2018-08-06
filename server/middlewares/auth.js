@@ -36,22 +36,22 @@ obj.passport.use(new LocalStrategy({ usernameField : 'email', passwordField : 'p
 		},{
 			handle : email
 		}],
+		password : db.User.createHashedPassword(password)
 	}
-	db.User.findOne({ 
+	const user = await db.User.findOne({ 
 		where, 
-		attributes : db.User.attributeNames
-	}).then( async user => {
-		const passwordInstance = await db.User.findOne({ where });
-		if( user && passwordInstance && passwordInstance.validatePassword(password) ){
-			if( user.verify ){
-				return next(null,user);
-			} else {
-				return next(new Error('이메일 인증을 진행하셔야 정상적인 이용이 가능합니다.'));
-			}
-		} else {
-			return next(new Error('이메일 또는 비밀번호가 잘못되었습니다.'));
-		}
+		attributes : db.User.attributeNames,
+		raw : true
 	});
+	if( user ){
+		if( user.verify ){
+			return next(null,user);
+		} else {
+			return next(new Error('이메일 인증을 진행하셔야 정상적인 이용이 가능합니다.'));
+		}
+	} else {
+		return next(new Error('이메일 또는 비밀번호가 잘못되었습니다.'));
+	}
 }));
 
 obj.passport.serializeUser( async (user, done) => {
@@ -67,7 +67,7 @@ obj.passport.deserializeUser( (obj, done) => done(null, obj) );
 obj.verifyMail = async ( req, res ) => {
 	let { email = "", link = "" } = req.body;
 	const user = await db.User.findOne({ where : { email }});
-	if( user && user.validateLink(link) ){
+	if( user && db.User.createHashedEmail(email) === link ){
 		db.User.update({ 'verify' : true }, { where : { email } })
 		.then( () => {
 			res.send({ data : '회원가입이 완료되었습니다.' });
@@ -106,7 +106,7 @@ obj.changePw = async ( req, res ) => {
 	const { password = "", email = "", link = "" } = req.body;
 	const where = { email : req.user?req.user.email:email } 
 	const user = await db.User.findOne({ where });
-	if( user && ( obj.isLoggedIn(req) || user.validateLink(link) )){
+	if( user && ( obj.isLoggedIn(req) || (db.User.createHashedEmail(email) === link) ) ){
 		db.User.update({ password },{ where });
 		res.send({ data : '비밀번호가 성공적으로 재설정되었습니다.' });
 	} else {
@@ -120,7 +120,7 @@ obj.checkSession = async ( req, res, next ) => {
 		req.user = session;
 		return next();
 	} else {
-		res.status(403).send({ message : '로그인이 필요합니다.' });
+		res.status(400).send({ message : '로그인이 필요합니다.' });
 	}
 }
 
@@ -130,11 +130,11 @@ obj.checkAdmin = ( req, res, next ) => {
 			if( user ){
 				return next();
 			} else {
-				res.status(403).send('로그인이 필요합니다');
+				res.status(400).send('로그인이 필요합니다');
 			}
 		});
 	} else {
-		res.status(403).send('로그인이 필요합니다');
+		res.status(400).send('로그인이 필요합니다');
 	}
 }
 
@@ -193,7 +193,7 @@ obj.join = ( req, res ) => {
 		handle = handle.trim();
 		name = name.trim();
 	} catch( e ){
-		res.status(403).send({ message : e.message });
+		res.status(400).send({ message : e.message });
 	}
 	db.User.findOne({ 
 		where : { 
@@ -243,7 +243,7 @@ obj.join = ( req, res ) => {
 			res.send({ 'data' : '입력하신 이메일로 인증메일을 전송하였습니다.' });
 		})
 	}).catch( e => {
-		res.status(403).send({ message : e.message });
+		res.status(400).send({ message : e.message });
 	});
 }
 

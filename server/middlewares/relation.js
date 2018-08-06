@@ -3,12 +3,10 @@ let db = require('../models/index.js');
 const obj = {};
 
 obj.follow = async (req,res) => {
-	const { to } = req.body;
-	const toId = req.body.to;
+	const { to : toId } = req.body;
 	const fromId = req.user.id;
-	
 	if( toId === fromId ){
-		res.send({ "msg" : "자신을 팔로우 할 수 없습니다." });
+		res.status(400).send({ "message" : "자신을 팔로우 할 수 없습니다." });
 	} else {
 		const current = { toId, fromId };
 		const deleted = await db.Follow.destroy({ where : current });

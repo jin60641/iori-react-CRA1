@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import styles from './Write.css';
+import { connect } from 'react-redux';
+import { fetchWritePost } from '../../actions/newsfeed';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 const initialState = {
@@ -8,13 +10,13 @@ const initialState = {
 }
 const maxFileCount = 4;
 
-class PostWrite extends Component {
+class Write extends Component {
 	constructor(props) {
 		super(props);
 		this.state = initialState;
 	}
 	handleSubmit = () => {
-		const { fetchWritePost } = this.props;
+		const { fetchWritePost, handleWritePost } = this.props;
 		const { text, files } = this.state;
 		let formData = new FormData();
 		if( !( text.length || files.length ) ){
@@ -26,11 +28,15 @@ class PostWrite extends Component {
 		})
 		this.setState(initialState);
 		fetchWritePost(formData)
-			.then( (action) => {
-				if( action.error ){
-				} else {
+		.then( action => {
+			if( !action.error ){
+				if( handleWritePost ){
+					handleWritePost(action.payload);
 				}
-			});
+			} else {
+				
+			}
+		});
 	}
 	handleChangeText = (e) => {
 		this.setState({ text : e.target.value })
@@ -68,5 +74,8 @@ class PostWrite extends Component {
 	}
 }
 
-export default PostWrite;
+const actionToProps = {
+	fetchWritePost,
+}
+export default connect(undefined,actionToProps)(Write);
 

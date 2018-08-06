@@ -2,7 +2,7 @@ let obj = {}
 let db = require('../models/index.js');
 const authMws = require('./auth.js');
 
-obj.searchGroup = (req,res) => {
+obj.searchGroupById = (req,res) => {
 	const { query } = req.body;
 	const where = {
 		id : query
@@ -25,33 +25,49 @@ obj.searchUserByHandle = (req,res) => {
 		handle : query,
 		verify : true
 	}
-	db.User.find({ where, attributes : db.User.attributeNames })
+	db.User.findOne({ where, attributes : db.User.attributeNames })
 	.then( async result => {
-		let user = result.get({ plain : true });
-		if( authMws.isLoggedIn(req) ){
-			user = await makeUserObj(req,user);
-		}
-		user.posts = await db.Post.count({ where: { userId : user.id } });
-		user.followings = await db.Follow.count({ where : { fromId : user.id } });
-		user.followers = await db.Follow.count({ where : { toId : user.id } });
-		res.send({ "data" : user });
-	});
-}
-
-obj.searchFollows = (req,res) => {
-	const { query } = req.body;
-	db.Follow.findAll({ where : query, include : db.Follow.include })
-	.then( async follows => {
-		Promise.all(follows.map( async follow => {
-			let user = follow.get({ plain : true })[query.toId?"from":"to"];
+		if( result ){
+			const user = result.get({ plain : true });
 			if( authMws.isLoggedIn(req) ){
 				user = await makeUserObj(req,user);
 			}
-			return user;
-		})).then( data => {
-			res.send({ data });
-		});
+			user.posts = await db.Post.count({ where: { userId : user.id } });
+			user.followings = await db.Follow.count({ where : { fromId : user.id } });
+			user.followers = await db.Follow.count({ where : { toId : user.id } });
+			res.send({ "data" : user });
+		} else {
+			res.status(400).send({ "message" : "잘못된 접근입니다." });
+		}
 	});
+}
+
+obj.searchFollows = async (req,res) => {
+	const { type, userId } = req.body;
+	if( type === 'to' || type === 'from' ){
+		const user = await db.User.findOne({ where : { id : userId } });
+		if( user ){
+			const query = {
+				[type==='to'?'toId':'fromId'] : userId
+			};
+			db.Follow.findAll({ where : query, include : db.Follow.include })
+			.then( async follows => {
+				Promise.all(follows.map( async follow => {
+					let friend = follow.get({ plain : true })[query.toId?"from":"to"];
+					if( authMws.isLoggedIn(req) ){
+						friend = await makeUserObj(req,friend);
+					}
+					return friend;
+				})).then( data => {
+					res.send({ data });
+				});
+			});
+		} else {
+			res.status(400).send({ "message" : "잘못된 접근입니다." });
+		}
+	} else {
+		res.status(400).send({ "message" : "잘못된 접근입니다." });
+	}
 }
 
 obj.searchUsers = (req,res) => {

@@ -31,7 +31,7 @@ describe('newsfeed controller', function () {
 					.expect(200)
 				
 				const { body : { data } } = resp;
-				expect(data.length).to.equal(0);
+				expect(data).to.be.empty;
 			});
 		});
 	});
@@ -117,7 +117,7 @@ describe('newsfeed controller', function () {
 					.expect(200)
 				
 				const { body : { data } } = resp;
-				expect(data.length).to.equal(0);
+				expect(data).to.be.empty;
 			});
 		});
 	});

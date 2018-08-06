@@ -17,19 +17,18 @@ module.exports = function(sequelize, DataTypes){
 		hooks: {
 			afterValidate: function(user) {
 				if (user.password) {
-					const shasum = crypto.createHash('sha1');
-					user.password = shasum.update(user.password).digest('hex');
+					user.password = User.createHashedPassword(user.password);
 				}
 			}
 		}
 	});
-	User.prototype.validateLink = function (source) {
+	User.createHashedEmail = function (source) {
 		const shasum = crypto.createHash('sha1');
-		return shasum.update(this.email).digest('hex') === source;
+		return shasum.update(source).digest('hex');
 	};
-	User.prototype.validatePassword = function (source) {
+	User.createHashedPassword = function (source) {
 		const shasum = crypto.createHash('sha1');
-		return shasum.update(source).digest('hex') === this.password;
+		return shasum.update(source).digest('hex');
 	};
 	User.attributeNames = ["id","email","name","handle","profile","header","introduce","verify"];
 	User.associate = models => {

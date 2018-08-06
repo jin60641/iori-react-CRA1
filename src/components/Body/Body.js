@@ -105,8 +105,10 @@ class Body extends Component {
 							<div className="body-wrap"> 
 								<Left user={ user }/>
 								<Newsfeed {...props}
-									isBottom = { isBottom }
-									options = { {} }
+									key="Home"
+									write={true}
+									isBottom={ isBottom }
+									options={ {} }
 								/> 
 							</div>
 						:

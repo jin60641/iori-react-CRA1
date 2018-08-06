@@ -98,7 +98,8 @@
     .layer-box .layer-list .layer-list-item {
       cursor: pointer;
       padding: 6px 10px 8px 15px;
-      position: relative; }
+      position: relative;
+      text-align: left; }
       .layer-box .layer-list .layer-list-item:hover {
         background-color: rgba(255, 92, 62, 0.3); }
       .layer-box .layer-list .layer-list-item .layer-list-img {

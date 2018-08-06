@@ -57,7 +57,7 @@ describe('auth controller', function () {
 				const resp = await agent
 					.post('/api/auth/join')
 					.send({ email : 'not email format', password, handle, name })
-					.expect(403)
+					.expect(400)
 
 				expect(resp.body.message).to.equal('유효하지 않은 이메일입니다.');
 			});
@@ -81,7 +81,7 @@ describe('auth controller', function () {
 				const resp = await agent
 					.post('/api/auth/join')
 					.send({ email, password, handle : handle+'a', name })
-					.expect(403)
+					.expect(400)
 
 				expect(resp.body.message).to.equal('이미 사용중인 메일입니다.');
 			});
@@ -93,7 +93,7 @@ describe('auth controller', function () {
 				const resp = await agent
 					.post('/api/auth/join')
 					.send({ email : 'a'+email, password, handle, name })
-					.expect(403)
+					.expect(400)
 
 				expect(resp.body.message).to.equal('이미 사용중인 핸들입니다.');
 			});
@@ -222,7 +222,7 @@ describe('auth controller', function () {
 
 				const resp = await agent
 					.post('/api/auth/loggedin')
-					.expect(403);
+					.expect(400);
 
 				expect(resp.body.message).to.equal('로그인이 필요합니다.');
 			});

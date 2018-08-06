@@ -377,13 +377,14 @@ class Profile extends Component {
 					<Switch>
 						<Route exact path="/@:handle" render={(props) => (
 							<Newsfeed {...props}
-								isBottom = { isBottom }
-								options = { { userId : user.id } }
+								key={`Profile-${user.id}`}
+								isBottom={ isBottom }
+								options={ { userId : user.id } }
 							/>
 						)} />
 						<Route path="/@:handle/:tab" render={(props) => (
 							<List {...props} 
-								userId = { user.id }
+								userId={ user.id }
 							/>
 						)} />
 					</Switch>

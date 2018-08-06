@@ -40,7 +40,7 @@ describe('chat controller', function () {
 					.expect(200)
 				
 				const { body : { data } } = resp;
-				expect(Object.keys(data).length).to.equal(0);
+				expect(Object.keys(data)).to.have.lengthOf(0);
 			});
 		});
 
@@ -54,7 +54,7 @@ describe('chat controller', function () {
 				
 				const { body : { data : { handle, chats }  } } = resp;
 				expect(handle).to.equal(strToChar[type]+userInfos[1].handle);
-				expect(chats.length).to.equal(0);
+				expect(chats).to.have.lengthOf(0);
 			});
 		});
 	});
@@ -121,7 +121,7 @@ describe('chat controller', function () {
 				.expect(200)
 			
 			const { body : { data : newGroup } } = resp;
-			expect(newGroup.users.length).to.equal(userIds.length);
+			expect(newGroup.users).to.have.lengthOf(userIds.length);
 			groupInfo = newGroup;
 		});
 	});

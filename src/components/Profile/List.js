@@ -24,9 +24,11 @@ class List extends Component {
 		const { follows } = this.props.searched;
 		const { userId, fetchSearchFollows } = this.props;
 		const tab = this.props.match.params.tab;
-		const query = {};
-		query[tab === "follower"?"toId":"fromId"] = userId;
-		fetchSearchFollows({ query })
+		const query = {
+			type : tab === "follower" ? 'to' : 'from',
+			userId
+		}
+		fetchSearchFollows(query)
 		.then( action => {
 			if( !action.error ) {
 				console.log(action.payload);

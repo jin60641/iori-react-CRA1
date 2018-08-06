@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Menu from './Menu';
+import { connect } from 'react-redux';
+import { fetchRemovePost } from '../../actions/newsfeed';
 import { Link } from 'react-router-dom';
 import './Post.css';
 
@@ -28,10 +30,22 @@ class Post extends Component {
 			}
 		}
 	}
+    handleClickRemove = () => {
+        const { fetchRemovePost, handleRemovePost, post } = this.props;
+        fetchRemovePost({ id : post.id })
+        .then( action => {
+            if( !action.error ){
+				if( handleRemovePost ){
+	                handleRemovePost(action.payload)
+				}
+            } else {
+                alert(action.error.message);
+            }
+        });
+    }
 	render() {
-		let { data, user, fetchRemovePost } = this.props;
-		data = JSON.parse(JSON.stringify(data));
-		if( data.deleted ){
+		const { post, user } = this.props;
+		if( post.deleted ){
 			return (
 				<div className="Post">
 					<div className="post-inside">
@@ -40,25 +54,25 @@ class Post extends Component {
 				</div>
 			);
 		} else {
-			const profileUri = data.user.profile?`/files/profile/${data.user.id}.png`:'/images/profile.png';
+			const profileUri = post.user.profile?`/files/profile/${post.user.id}.png`:'/images/profile.png';
 			return (
 				<div className="Post">
-					<Link to={`/@${data.user.handle}`} className="post-profile"> 
+					<Link to={`/@${post.user.handle}`} className="post-profile"> 
 						<img src={profileUri} className="post-profile-img" alt={"profile"} />
 					</Link>
-					<Menu my={data.user.id === user.id} pid={data.id} fetchRemovePost={fetchRemovePost}/>
+					<Menu my={post.user.id === user.id} handleClickRemove={this.handleClickRemove}/>
 					<div className="post-inform">
-						<Link to={`/@${data.user.handle}`} className="post-user"> 
-							{data.user.name} 
+						<Link to={`/@${post.user.handle}`} className="post-user"> 
+							{post.user.name} 
 						</Link>
-						<div className="post-date"> {this.getDateString(data.createdAt)} </div>
+						<div className="post-date"> {this.getDateString(post.createdAt)} </div>
 					</div>
 					<div className="post-inside">
-						{ data.text }
+						{ post.text }
 					</div>
-					{ data.file ?
+					{ post.file ?
 						<div className="post-img-outer">
-							<img className="post-img-inner" src={`/files/post/${data.id}/1.png`} alt="post img" />
+							<img className="post-img-inner" src={`/files/post/${post.id}/1.png`} alt="post img" />
 						</div>
 						: null
 					}
@@ -68,5 +82,10 @@ class Post extends Component {
 	}
 }
 
-export default Post;
+
+const stateToProps = ({user}) => ({user});
+const actionToProps = {
+	fetchRemovePost,
+}
+export default connect(stateToProps, actionToProps)(Post);
 

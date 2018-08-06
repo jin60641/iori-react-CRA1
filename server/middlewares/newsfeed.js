@@ -75,17 +75,16 @@ obj.writePost = (req,res) => {
 	}
 }
 
-obj.getPosts = ( req, res ) => {
-	if( req.body.userId ){
-		getPostsByUserId( req, res );
+obj.getPosts = async ( req, res ) => {
+	const { userId, id, limit, offset, file } = req.body;
+	const where = {};
+	if( userId ){
+		where.userId = userId;
 	} else {
-		getPosts( req, res );
+		const follows = await db.Follow.findAll({ where : { fromId : req.user.id }});
+		const userIds = follows.map( follow => follow.dataValues.toId ).concat([req.user.id]);
+		where.userId = { $in : userIds };
 	}
-}
-
-makeQuery = (req,options) => {
-	let { id, limit, offset, file } = req.body;
-	const where = { ...options };
 	if( file ){
 		where.file = { $gte : 1 } 
 	}
@@ -96,37 +95,12 @@ makeQuery = (req,options) => {
 		offset,
 	}
 	if( id ){
-		query.where.id = { $gt : id }
+		query.where.id = { id }
 	} else {
 		query.limit = limit?limit:20;
 	}
-	return query;
-}
-
-getPosts = ( req, res ) => {
-	db.Follow.findAll({ where : { fromId : req.user.id }})
-	.then( follows => {
-		const userIds = follows.map( follow => follow.get({ plain : true }).toId );
-		userIds.push(req.user.id);
-		const where = {
-			userId : { $in : userIds }
-		}
-		db.Post.findAll(makeQuery(req,where))
-		.then( posts => {
-			res.send({ "data" : posts.map( post => post.get({ plain : true }) ) });
-		});
-	});
-};
-
-getPostsByUserId = ( req, res ) => {
-	let { userId } = req.body;
-	const where = {
-		userId
-	}
-	db.Post.findAll(makeQuery(req,where))
-	.then( posts => {
-		res.send({ "data" : posts.map( post => post.get({ plain : true }) ) });
-	});
+	const posts = await db.Post.findAll(query);
+	res.send({ "data" : posts.map( post => post.get({ plain : true }) ) });
 };
 
 module.exports = obj;
