@@ -2,7 +2,7 @@ let obj = {}
 let db = require('../models/index.js');
 const authMws = require('./auth.js');
 
-obj.searchGroupById = (req,res) => {
+obj.groupById = (req,res) => {
 	const { query } = req.body;
 	const where = {
 		id : query
@@ -19,7 +19,7 @@ const makeUserObj = async (req,user) => {
 	return user;
 }
 
-obj.searchUserByHandle = (req,res) => {
+obj.userByHandle = (req,res) => {
 	const { query } = req.body;
 	const where = {
 		handle : query,
@@ -42,7 +42,7 @@ obj.searchUserByHandle = (req,res) => {
 	});
 }
 
-obj.searchFollows = async (req,res) => {
+obj.follows = async (req,res) => {
 	const { type, userId } = req.body;
 	if( type === 'to' || type === 'from' ){
 		const user = await db.User.findOne({ where : { id : userId } });
@@ -70,7 +70,7 @@ obj.searchFollows = async (req,res) => {
 	}
 }
 
-obj.searchUsers = (req,res) => {
+obj.users = (req,res) => {
 	const { query } = req.body;
 	const where = {
 		$or : {
