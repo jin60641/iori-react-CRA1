@@ -73,7 +73,7 @@ obj.getDialogs = async ( req, res ) => {
 				groupId : { $in : groups }
 			}]
 		},
-		order : [ ['id','DESC'] ],
+		order : [ ['id','ASC'] ],
 		include : db.Chat.include,
 	}).then( chats => {
 		let dialogs = {};
