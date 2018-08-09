@@ -28,7 +28,7 @@ obj.userByHandle = (req,res) => {
 	db.User.findOne({ where, attributes : db.User.attributeNames })
 	.then( async result => {
 		if( result ){
-			const user = result.get({ plain : true });
+			let user = result.get({ plain : true });
 			if( authMws.isLoggedIn(req) ){
 				user = await makeUserObj(req,user);
 			}
