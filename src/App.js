@@ -15,7 +15,7 @@ class App extends Component {
 			init : false
 		}
 	}
-	componentWillMount(){
+	componentDidMount(){
 		const { fetchLoggedIn, fetchConnectSocket } = this.props;
 		fetchLoggedIn()
 		.then( (action) => {
