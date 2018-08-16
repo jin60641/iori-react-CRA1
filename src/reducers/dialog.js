@@ -13,10 +13,7 @@ export default handleActions({
 		nextState.sort( (a,b) => a.id < b.id ).forEach( (dialog,key) => { handleToIndex[dialog.handle] = key } );
 		return nextState;
 	},
-	[getDialog]: (state, action) => {
-		if( action.error ) {
-			return state;
-		}
+	[getDialog.SUCCESS]: (state, action) => {
 		const { chat, handle } = action.payload;
 		chat.handle = handle;
 		let nextState = [].concat(state);
@@ -27,5 +24,8 @@ export default handleActions({
 		nextState = [chat].concat(nextState);
 		nextState.forEach( (dialog,key) => { handleToIndex[dialog.handle] = key } );
 		return nextState;
-	}
+	},
+	[getDialog.FAILURE]: (state, action) => {
+		return state;
+  }
 }, initialState );

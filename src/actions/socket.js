@@ -1,6 +1,11 @@
-import {createAction} from 'redux-actions';
-import {chatSocket} from './chat.js';
-import {newsfeedSocket} from './newsfeed.js';
+import createAction from './createAsyncAction';
+
+import { from, fromEvent, of } from 'rxjs'
+import { map, mergeMap } from 'rxjs/operators';
+import { ofType } from 'redux-observable';
+
+import { chatSocket } from './chat.js';
+import { newsfeedSocket } from './newsfeed.js';
 import io from 'socket.io-client';
 
 export const connectSocket = createAction('CONNECT_SOCKET');
@@ -16,32 +21,26 @@ function init(socket, dispatch) {
 	});
 }
 
-export const fetchConnectSocket = () => {
-	return async (dispatch) => {
-		const socket = io();
+const socketEpic = action$ => action$.pipe(
+  ofType(connectSocket.REQUEST),
+  mergeMap(action => from(
+    new Promise( resolve => {
+      const socket = io();
+      resolve(socket);
+    })
+  )),
+  map( test => {
+    return connectSocket.SUCCESS();
+  })
+  /*
+    chatSocket(socket);
+    return from(socket);
+  })
+  .map( () => {
+    return connectSocket.SUCCESS();
+  })
+  */
+);
 
-		try {
-			await new Promise((resolve, reject) => {
-				const timer = setTimeout( () => {
-					reject(new Error('Socket Timeout'));
-				}, 3000);
 
-				socket.on('connect', () => {
-					console.log('connected!!!');
-					clearTimeout(timer);
-					resolve();
-				});
-			});
-
-			init(socket, dispatch);
-			chatSocket(socket, dispatch);
-			newsfeedSocket(socket, dispatch);
-
-			return dispatch(connectSocket(socket));
-		}
-		catch(e) {
-			console.log(e);
-			return dispatch(connectSocket(e));
-		}
-	};
-};
+export default socketEpic;

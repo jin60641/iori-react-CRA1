@@ -12,10 +12,10 @@ const getDialogsUri = '/api/chat/getdialogs';
 const sendChatUri = '/api/chat/sendchat';
 const makeGroupUri = '/api/chat/makegroup';
 
-export const chatSocket = (socket,dispatch) => {
+export const chatSocket = (socket) => {
 	socket.on( 'getchat', data => {
-		dispatch(getDialog(data));
-		dispatch(getChat(data));
+		getDialog.SUCCESS(data);
+		getChat.SUCCESS(data);
 	});
 };
 

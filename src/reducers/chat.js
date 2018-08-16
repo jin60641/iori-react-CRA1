@@ -24,13 +24,13 @@ export default handleActions({
 		return Object.assign({...state},nextState);
 //		return [action.payload].concat(state);
 	},
-	[getChat]: function(state, action) {
-		if( action.error ){
-			return state;
-		}
+	[getChat.SUCCESS]: function(state, action) {
 		const { chat, handle } = action.payload;
 		const nextState = {}
 		nextState[handle] = (state[handle]?state[handle]:[]).concat([chat]);
 		return Object.assign({...state},nextState);
-	}
+	},
+  [getChat.FAILURE]: function(state, action) {
+	  return state;
+  }
 }, initialState );

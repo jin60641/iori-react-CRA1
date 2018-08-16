@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { login, fetchJoin, fetchFindPw, fetchChangePw } from '../../actions/auth';
 import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
-import { fetchConnectSocket } from '../../actions/socket';
+import { connectSocket } from '../../actions/socket';
 import Login from './Login';
 import Join from './Join';
 import Find from './Find';
@@ -30,7 +30,7 @@ class Auth extends Component {
 		history.push(url);
 	}
 	render(){
-		const { login, fetchJoin, fetchConnectSocket, pushState } = this.props;
+		const { login, fetchJoin, connectSocket, pushState } = this.props;
 		const { path } = this.props.match;
 		return(
 			<div className="Auth">
@@ -39,7 +39,7 @@ class Auth extends Component {
 					<Login {...props}
 						login={login}
 						pushState={ this.pushState }
-						fetchConnectSocket={fetchConnectSocket}
+						connectSocket={connectSocket}
 					/>
 				)}/>
 				<Route path={`${path}/join`} render={(props) => (
@@ -66,7 +66,7 @@ const actionToProps = {
 	login : login.REQUEST,
 	fetchJoin,
 	fetchFindPw,
-	fetchConnectSocket,
+	connectSocket : connectSocket.REQUEST,
 };
 
 export default connect(undefined, actionToProps)(withRouter(Auth));

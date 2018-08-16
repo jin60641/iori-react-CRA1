@@ -1,5 +1,5 @@
 import createAction from './createAsyncAction';
-import { Observable, from } from 'rxjs'
+import { from } from 'rxjs'
 import { map, mergeMap } from 'rxjs/operators';
 import { combineEpics, ofType } from 'redux-observable';
 
@@ -107,13 +107,12 @@ const fetchLoggedIn = (action$) => action$.pipe(
     })
     .then( response => response.json() )
   )),
-   map( body => {
-      if( body.data ){
-        return loggedIn.SUCCESS(body.data);
-      } else {
-        return loggedIn.FAILURE(new Error(body.message));
-      }
-    })
+  map( body => {
+    if( body.data ){
+      return loggedIn.SUCCESS(body.data);
+    } else {
+      return loggedIn.FAILURE(new Error(body.message));
+    }
   })
 );
 

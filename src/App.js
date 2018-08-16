@@ -6,7 +6,7 @@ import Header from './components/Header/Header';
 import Body from './components/Body/Body';
 //import Footer from './components/Footer/Footer';
 import { loggedIn, fetchLogout } from './actions/auth';
-import { fetchConnectSocket } from './actions/socket';
+import { connectSocket } from './actions/socket';
 
 
 class App extends Component {
@@ -17,16 +17,19 @@ class App extends Component {
 		}
 	}
 	componentDidMount(){
-		const { loggedIn, fetchConnectSocket } = this.props;
+		const { loggedIn, connectSocket } = this.props;
 		loggedIn({ test : "test" },
 	  (action) => {
 			if( !action.error ){
-				//fetchConnectSocket();
 			}
 			this.setState({
 				init : true
 			})
 		});
+		this.setState({
+			init : true
+		})
+		connectSocket();
 	}
 	componentWillReceiveProps(nextProps){
 		//console.log(socket,nextProps);
@@ -59,7 +62,7 @@ const stateToProps = ({user,socket}) => ({user,socket});
 const actionToProps = {
 	fetchLogout,
 	loggedIn : loggedIn.REQUEST,
-	fetchConnectSocket
+	connectSocket : connectSocket.REQUEST
 }
 export default connect(stateToProps,actionToProps)(App);
 
