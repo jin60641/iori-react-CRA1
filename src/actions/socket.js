@@ -26,6 +26,7 @@ const socketEpic = action$ => action$.pipe(
   mergeMap(action => from(
     new Promise( resolve => {
       const socket = io();
+      chatSocket(socket);
       resolve(socket);
     })
   )),

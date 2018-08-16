@@ -5,7 +5,7 @@ const handleToIndex= {};
 const initialState = [];
 
 export default handleActions({
-	[getDialogs]: (state, action) => {
+	[getDialogs.SUCCESS]: (state, action) => {
 		if( action.error ) {
 			return state;
 		}

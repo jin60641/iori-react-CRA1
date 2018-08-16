@@ -1,4 +1,8 @@
-import {createAction} from 'redux-actions';
+import createAction from './createAsyncAction';
+
+import { fromEvent, of, concat } from 'rxjs'
+import { map, mapTo } from 'rxjs/operators';
+import { ofType } from 'redux-observable';
 
 export const getChats = createAction('GET_CHATS');
 export const getChat = createAction('GET_CHAT');
@@ -12,12 +16,13 @@ const getDialogsUri = '/api/chat/getdialogs';
 const sendChatUri = '/api/chat/sendchat';
 const makeGroupUri = '/api/chat/makegroup';
 
-export const chatSocket = (socket) => {
-	socket.on( 'getchat', data => {
-		getDialog.SUCCESS(data);
-		getChat.SUCCESS(data);
-	});
-};
+export const chatSocket = socket => {
+  fromEvent(socket,'getchat')
+  .subscribe( (data) => {
+	    mapTo(getChat.SUCCESS(data))
+      //mapTo(getDialog.SUCCESS(data)),
+  })
+}
 
 export const fetchMakeGroup = data => {
 	return async (dispatch) => {
@@ -32,9 +37,9 @@ export const fetchMakeGroup = data => {
 		});
 		const body = await resp.json();
 		if(body.data){
-			return dispatch(makeGroup(body.data));
+			return dispatch(makeGroup.SUCCESS(body.data));
 		} else {
-			return dispatch(makeGroup(new Error(body.message)));
+			return dispatch(makeGroup.FAILURE(new Error(body.message)));
 		}
 	}
 }
@@ -52,9 +57,9 @@ export const fetchGetDialogs = (data) => {
 		});
 		const body = await resp.json();
 		if(body.data){
-			return dispatch(getDialogs(body.data));
+			return dispatch(getDialogs.SUCCESS(body.data));
 		} else {
-			return dispatch(getDialogs(new Error(body.message)));
+			return dispatch(getDialogs.FAILURE(new Error(body.message)));
 		}
 	}
 };
@@ -72,9 +77,9 @@ export const fetchGetChats = (data) => {
 		});
 		const body = await resp.json();
 		if(body.data){
-			return dispatch(getChats(body.data));
+			return dispatch(getChats.SUCCESS(body.data));
 		} else {
-			return dispatch(getChats(new Error(body.message)));
+			return dispatch(getChats.FAILURE(new Error(body.message)));
 		}
 	}
 };
@@ -88,9 +93,9 @@ export const fetchSendChat = (data) => {
 		});
 		const body = await resp.json();
 		if(body.data){
-			return dispatch(sendChat(body.data)) && dispatch(getDialog(body.data));
+			return dispatch(sendChat.SUCCESS(body.data)) && dispatch(getDialog.SUCCESS(body.data));
 		} else {
-			return dispatch(sendChat(new Error(body.message)));
+			return dispatch(sendChat.FAILURE(new Error(body.message)));
 		}
 	}
 };

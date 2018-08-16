@@ -4,7 +4,7 @@ import { getChats, sendChat, getChat } from '../actions/chat';
 let initialState = {};
 
 export default handleActions({
-	[getChats]: function(state, action) {
+	[getChats.SUCCESS]: function(state, action) {
 		if( action.error ) {
 			return state;
 		}
@@ -14,7 +14,7 @@ export default handleActions({
 		return Object.assign({...state},nextState);
 //		return state.concat(action.payload);
 	},
-	[sendChat]: function(state, action) {
+	[sendChat.SUCCESS]: function(state, action) {
 		if( action.error ) {
 			return state;
 		}
