@@ -7,30 +7,30 @@ import {setProfile} from '../actions/setting';
 const initialState = null;
 
 export default handleActions({
-	[login]: (state, action) => {
-		if( action.error ) {
-			return state;
-		}
+	[login.SUCCESS]: (state, action) => {
 		return Object.assign({}, action.payload );
 	},
+  [login.FAILURE]: (state, action) => {
+		return state;
+  },
 	[logout]: (state, action) => {
 		if( action.error ) {
 			return state;
 		}
 		return {};
 	},
-	[loggedIn]: (state, action) => {
-		if( action.error ) {
-			return state;
-		}
+	[loggedIn.SUCCESS]: (state, action) => {
 		return Object.assign({}, action.payload );
 	},
-    [join]: (state, action) => {
-        if( action.error ) {
-            return state;
-        }
-        return null;
-    },
+  [loggedIn.FAILURE]: (state) => {
+	  return state;
+  },
+  [join]: (state, action) => {
+    if( action.error ) {
+      return state;
+    }
+    return null;
+  },
 	[setProfile]: (state, action) => {
 		if( action.error ) {
 			return state;

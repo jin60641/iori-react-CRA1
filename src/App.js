@@ -5,8 +5,9 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import Header from './components/Header/Header';
 import Body from './components/Body/Body';
 //import Footer from './components/Footer/Footer';
-import { fetchLoggedIn, fetchLogout } from './actions/auth';
+import { loggedIn, fetchLogout } from './actions/auth';
 import { fetchConnectSocket } from './actions/socket';
+
 
 class App extends Component {
 	constructor(props){
@@ -16,16 +17,16 @@ class App extends Component {
 		}
 	}
 	componentDidMount(){
-		const { fetchLoggedIn, fetchConnectSocket } = this.props;
-		fetchLoggedIn()
-		.then( (action) => {
+		const { loggedIn, fetchConnectSocket } = this.props;
+		loggedIn({ test : "test" },
+	  (action) => {
 			if( !action.error ){
-				fetchConnectSocket();
+				//fetchConnectSocket();
 			}
 			this.setState({
 				init : true
 			})
-		})
+		});
 	}
 	componentWillReceiveProps(nextProps){
 		//console.log(socket,nextProps);
@@ -45,7 +46,7 @@ class App extends Component {
 					<Header fetchLogout={ fetchLogout } user={ user } />
 					{ init ?
 						<Body user={ user } />
-						: <div></div>
+						: null
 					}
 				</div>
 			</Router>
@@ -57,7 +58,7 @@ const stateToProps = ({user,socket}) => ({user,socket});
 
 const actionToProps = {
 	fetchLogout,
-	fetchLoggedIn,
+	loggedIn : loggedIn.REQUEST,
 	fetchConnectSocket
 }
 export default connect(stateToProps,actionToProps)(App);

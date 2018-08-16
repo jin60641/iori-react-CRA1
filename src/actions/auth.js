@@ -1,4 +1,7 @@
-import {createAction} from 'redux-actions';
+import createAction from './createAsyncAction';
+import { Observable, from } from 'rxjs'
+import { map, mergeMap } from 'rxjs/operators';
+import { combineEpics, ofType } from 'redux-observable';
 
 export const login = createAction('LOGIN');
 export const logout = createAction('LOGOUT');
@@ -56,56 +59,63 @@ export const fetchChangePw = (data) => {
 	}
 };
 
-export const fetchLogin = (data) => {
-	return async (dispatch) => {
-		const resp = await fetch(loginUri, {
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			method: 'POST',
-			body: JSON.stringify(data),
-			credentials: 'include'
-		});
-		const body = await resp.json();
-		if(body.data){
-			return dispatch(login(body.data));
-		} else {
-			return dispatch(login(new Error(body.message)));
-		}
-	}
-};
-
 export const fetchLogout = () => {
 	return async (dispatch) => {
 		const resp = await fetch(logoutUri, {method: 'POST', credentials: 'include'});
-		if(!resp.ok) {
-			const body = await resp.json();
-
-			return dispatch(logout(new Error(body.message)));
-		}
-		return dispatch(logout({}));
-	}
-};
-
-export const fetchLoggedIn = () => {
-	return async (dispatch) => {
-		const resp = await fetch(loggedInUri, {
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			method: 'POST',
-			credentials: 'include'
-		});
 		const body = await resp.json();
-		if(body.data){
-			return dispatch(login(body.data));
+		if(body.message) {
+			return dispatch(logout(new Error(body.message)));
 		} else {
-			return dispatch(login(new Error(body.message)));
-		}
+  		return dispatch(logout({}));
+    }
 	}
 };
+
+const fetchLogin = (action$) => action$.pipe(
+  ofType(login.REQUEST),
+  mergeMap(action => from( 
+    fetch(loginUri, {
+  	  headers: {
+  		  'Accept': 'application/json',
+  			'Content-Type': 'application/json'
+  		},
+  		method: 'POST',
+			body: JSON.stringify(action.payload),
+  		credentials: 'include'
+    })
+    .then( response => response.json() )
+  )),
+  map( body => {
+    if( body.data ){
+      return login.SUCCESS(body.data);
+    } else {
+      return login.FAILURE(new Error(body.message));
+    }
+  })
+);
+
+const fetchLoggedIn = (action$) => action$.pipe(
+  ofType(loggedIn.REQUEST),
+  mergeMap(action => from ( 
+    fetch(loggedInUri, {
+  	  headers: {
+  		  'Accept': 'application/json',
+  			'Content-Type': 'application/json'
+  		},
+  		method: 'POST',
+  		credentials: 'include'
+    })
+    .then( response => response.json() )
+  )),
+   map( body => {
+      if( body.data ){
+        return loggedIn.SUCCESS(body.data);
+      } else {
+        return loggedIn.FAILURE(new Error(body.message));
+      }
+    })
+  })
+);
 
 export const fetchJoin = (data) => {
 	return async (dispatch) => {
@@ -146,3 +156,9 @@ export const fetchCertifyMail = (data) => {
 		}
 	}
 };
+
+export const authEpic = combineEpics(
+  fetchLogin,
+  fetchLoggedIn
+);
+

@@ -5,11 +5,9 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import App from './App'
 import './index.css';
-import configureStore from './store/configureStore';
+import store from './store/configureStore';
 import registerServiceWorker from './registerServiceWorker';
 import { CookiesProvider } from 'react-cookie';
-
-let store = configureStore();
 
 ReactDOM.render(
 	(

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchLogin, fetchJoin, fetchFindPw, fetchChangePw } from '../../actions/auth';
+import { login, fetchJoin, fetchFindPw, fetchChangePw } from '../../actions/auth';
 import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 import { fetchConnectSocket } from '../../actions/socket';
 import Login from './Login';
@@ -30,14 +30,14 @@ class Auth extends Component {
 		history.push(url);
 	}
 	render(){
-		const { fetchLogin, fetchJoin, fetchConnectSocket, pushState } = this.props;
+		const { login, fetchJoin, fetchConnectSocket, pushState } = this.props;
 		const { path } = this.props.match;
 		return(
 			<div className="Auth">
 				<div className="auth-helper"></div>
 				<Route path={`${path}/login`} render={(props) => (
 					<Login {...props}
-						fetchLogin={fetchLogin}
+						login={login}
 						pushState={ this.pushState }
 						fetchConnectSocket={fetchConnectSocket}
 					/>
@@ -63,7 +63,7 @@ class Auth extends Component {
 }
 
 const actionToProps = {
-	fetchLogin,
+	login : login.REQUEST,
 	fetchJoin,
 	fetchFindPw,
 	fetchConnectSocket,

@@ -15,22 +15,22 @@ class Login extends Component {
 	componentWillMount() {
 	}
 	handleLogin = (email, password) => {
-		const { fetchLogin, fetchConnectSocket, pushState } = this.props;
-		fetchLogin({email,password})
-			.then( (action) => {
-				if(!action.error) {
-					fetchConnectSocket()
-					.then( action => {
-						console.log(action);
-					});
-					
-					pushState('/');
-				} else {
-					this.setState({
-						message : action.payload.message
-					});
-				}
-			});
+		const { login, fetchConnectSocket, pushState } = this.props;
+		login({email,password},
+    (action) => {
+      console.log(action);
+			if(!action.error) {
+				fetchConnectSocket()
+				.then( action => {
+					console.log(action);
+				});
+				pushState('/');
+			} else {
+				this.setState({
+					message : action.payload.message
+				});
+			}
+    })
 	}
 	handleSubmit = (e) => {
 		e.preventDefault();
