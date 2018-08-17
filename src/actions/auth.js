@@ -3,6 +3,8 @@ import { from } from 'rxjs'
 import { map, mergeMap } from 'rxjs/operators';
 import { combineEpics, ofType } from 'redux-observable';
 
+//import { addEpic } from './index.js';
+
 export const login = createAction('LOGIN');
 export const logout = createAction('LOGOUT');
 export const loggedIn = createAction('LOGGEDIN');
@@ -156,8 +158,8 @@ export const fetchCertifyMail = (data) => {
 	}
 };
 
-export const authEpic = combineEpics(
+export default combineEpics(
   fetchLogin,
   fetchLoggedIn
-);
+)
 

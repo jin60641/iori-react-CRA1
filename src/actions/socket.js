@@ -2,11 +2,13 @@ import createAction from './createAsyncAction';
 
 import { from, fromEvent, of } from 'rxjs'
 import { map, mergeMap } from 'rxjs/operators';
-import { ofType } from 'redux-observable';
+import { ofType, combineEpics } from 'redux-observable';
 
 import { chatSocket } from './chat.js';
 import { newsfeedSocket } from './newsfeed.js';
 import io from 'socket.io-client';
+
+//import { addEpic } from './index.js';
 
 export const connectSocket = createAction('CONNECT_SOCKET');
 export const closeSocket = createAction('CLOSE_SOCKET');
@@ -26,22 +28,15 @@ const socketEpic = action$ => action$.pipe(
   mergeMap(action => from(
     new Promise( resolve => {
       const socket = io();
-      chatSocket(socket);
+      //addEpic(chatSocket(socket));
       resolve(socket);
     })
   )),
   map( test => {
     return connectSocket.SUCCESS();
   })
-  /*
-    chatSocket(socket);
-    return from(socket);
-  })
-  .map( () => {
-    return connectSocket.SUCCESS();
-  })
-  */
 );
 
-
-export default socketEpic;
+export default combineEpics(
+  socketEpic
+)
