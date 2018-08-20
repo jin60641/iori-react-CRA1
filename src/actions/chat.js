@@ -1,8 +1,9 @@
 import createAction from './createAsyncAction';
 
-import { fromEvent, of, concat } from 'rxjs'
-import { map, mapTo } from 'rxjs/operators';
+import { fromEvent, of } from 'rxjs'
+import { map, mergeMap, concat } from 'rxjs/operators';
 import { combineEpics, ofType } from 'redux-observable';
+
 
 export const getChats = createAction('GET_CHATS');
 export const getChat = createAction('GET_CHAT');
@@ -16,13 +17,13 @@ const getDialogsUri = '/api/chat/getdialogs';
 const sendChatUri = '/api/chat/sendchat';
 const makeGroupUri = '/api/chat/makegroup';
 
-export const chatSocket = socket => combineEpics(
-  fromEvent(socket,'getchat')
-  .subscribe( (data) => concat(
-	    getChat.SUCCESS(data),
-      getDialog.SUCCESS(data)
-  ))
-)
+const fetchGetChat = action$ => action$.pipe(
+  ofType('getchat'),
+  mergeMap( action => [
+    getChat.SUCCESS(action.payload),
+    getDialog.SUCCESS(action.payload)
+  ])
+);
 
 export const fetchMakeGroup = data => {
 	return async (dispatch) => {
@@ -100,3 +101,6 @@ export const fetchSendChat = (data) => {
 	}
 };
 
+export default combineEpics(
+  fetchGetChat
+);

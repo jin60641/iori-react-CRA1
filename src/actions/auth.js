@@ -3,7 +3,7 @@ import { from } from 'rxjs'
 import { map, mergeMap } from 'rxjs/operators';
 import { combineEpics, ofType } from 'redux-observable';
 
-//import { addEpic } from './index.js';
+import { connectSocket } from './socket'
 
 export const login = createAction('LOGIN');
 export const logout = createAction('LOGOUT');
@@ -75,7 +75,7 @@ export const fetchLogout = () => {
 
 const fetchLogin = (action$) => action$.pipe(
   ofType(login.REQUEST),
-  mergeMap(action => from( 
+  mergeMap(action => from(
     fetch(loginUri, {
   	  headers: {
   		  'Accept': 'application/json',
@@ -87,18 +87,18 @@ const fetchLogin = (action$) => action$.pipe(
     })
     .then( response => response.json() )
   )),
-  map( body => {
+  mergeMap( body => {
     if( body.data ){
-      return login.SUCCESS(body.data);
+      return [login.SUCCESS(body.data),connectSocket.REQUEST()];
     } else {
-      return login.FAILURE(new Error(body.message));
+      return [login.FAILURE(new Error(body.message))];
     }
   })
 );
 
 const fetchLoggedIn = (action$) => action$.pipe(
   ofType(loggedIn.REQUEST),
-  mergeMap(action => from ( 
+  mergeMap(action => from (
     fetch(loggedInUri, {
   	  headers: {
   		  'Accept': 'application/json',
@@ -109,11 +109,11 @@ const fetchLoggedIn = (action$) => action$.pipe(
     })
     .then( response => response.json() )
   )),
-  map( body => {
+  mergeMap( body => {
     if( body.data ){
-      return loggedIn.SUCCESS(body.data);
+      return [loggedIn.SUCCESS(body.data),connectSocket.REQUEST()];
     } else {
-      return loggedIn.FAILURE(new Error(body.message));
+      return [loggedIn.FAILURE(new Error(body.message))];
     }
   })
 );
@@ -161,5 +161,4 @@ export const fetchCertifyMail = (data) => {
 export default combineEpics(
   fetchLogin,
   fetchLoggedIn
-)
-
+);

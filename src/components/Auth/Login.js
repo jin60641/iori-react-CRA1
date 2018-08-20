@@ -15,15 +15,12 @@ class Login extends Component {
 	componentWillMount() {
 	}
 	handleLogin = (email, password) => {
-		const { login, fetchConnectSocket, pushState } = this.props;
-		login({email,password},
+		const { login, pushState } = this.props;
+		login({email,password});
+    /*
     (action) => {
       console.log(action);
 			if(!action.error) {
-				fetchConnectSocket()
-				.then( action => {
-					console.log(action);
-				});
 				pushState('/');
 			} else {
 				this.setState({
@@ -31,6 +28,7 @@ class Login extends Component {
 				});
 			}
     })
+    */
 	}
 	handleSubmit = (e) => {
 		e.preventDefault();

@@ -293,6 +293,6 @@ const actionToProps = {
 	fetchSendChat,
 	fetchGetChats,
 	fetchGetDialogs,
-	fetchMakeGroup
+	fetchMakeGroup,
 };
 export default connect(stateToProps, actionToProps)(Chat);

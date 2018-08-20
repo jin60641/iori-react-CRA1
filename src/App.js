@@ -6,30 +6,15 @@ import Header from './components/Header/Header';
 import Body from './components/Body/Body';
 //import Footer from './components/Footer/Footer';
 import { loggedIn, fetchLogout } from './actions/auth';
-import { connectSocket } from './actions/socket';
 
 
 class App extends Component {
 	constructor(props){
 		super(props);
-		this.state = {
-			init : false
-		}
 	}
 	componentDidMount(){
-		const { loggedIn, connectSocket } = this.props;
-		loggedIn({ test : "test" },
-	  (action) => {
-			if( !action.error ){
-			}
-			this.setState({
-				init : true
-			})
-		});
-		this.setState({
-			init : true
-		})
-		connectSocket();
+		const { loggedIn } = this.props;
+		loggedIn({ test : "test" })
 	}
 	componentWillReceiveProps(nextProps){
 		//console.log(socket,nextProps);
@@ -42,15 +27,11 @@ class App extends Component {
 	}
 	render() {
 		const { fetchLogout, user } = this.props;
-		const { init } = this.state;
 		return (
 			<Router>
 				<div>
 					<Header fetchLogout={ fetchLogout } user={ user } />
-					{ init ?
-						<Body user={ user } />
-						: null
-					}
+					<Body user={ user } />
 				</div>
 			</Router>
 		);
@@ -62,7 +43,6 @@ const stateToProps = ({user,socket}) => ({user,socket});
 const actionToProps = {
 	fetchLogout,
 	loggedIn : loggedIn.REQUEST,
-	connectSocket : connectSocket.REQUEST
 }
 export default connect(stateToProps,actionToProps)(App);
 

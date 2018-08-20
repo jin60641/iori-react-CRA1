@@ -17,5 +17,7 @@ const store = createStore(
 );
 epicMiddleware.run(rootEpic)
 
+store.getState().socket.on('*', (event,data) => store.dispatch({ type : event, payload : data }) );
+
 export default store;
 

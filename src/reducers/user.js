@@ -4,7 +4,7 @@ import {follow} from '../actions/relation';
 import {writePost,removePost} from '../actions/newsfeed';
 import {setProfile} from '../actions/setting';
 
-const initialState = null;
+const initialState = {};
 
 export default handleActions({
 	[login.SUCCESS]: (state, action) => {
@@ -17,7 +17,7 @@ export default handleActions({
 		if( action.error ) {
 			return state;
 		}
-		return {};
+		return { ...initialState };
 	},
 	[loggedIn.SUCCESS]: (state, action) => {
 		return Object.assign({}, action.payload );
@@ -29,7 +29,7 @@ export default handleActions({
     if( action.error ) {
       return state;
     }
-    return null;
+    return { ...initialState };
   },
 	[setProfile]: (state, action) => {
 		if( action.error ) {
