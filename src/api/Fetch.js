@@ -9,9 +9,9 @@ const Fetch = (method,uri,data) => {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       }
-      options.data = JSON.stringify(data);
+      options.body = JSON.stringify(data);
     } else {
-      options.data = data;
+      options.body = data;
     }
   }
   return fetch(uri,options).then( resp => resp.json() );

@@ -14,7 +14,7 @@ class App extends Component {
 	}
 	componentDidMount(){
 		const { loggedIn } = this.props;
-		loggedIn({ test : "test" })
+		loggedIn();
 	}
 	componentWillReceiveProps(nextProps){
 		//console.log(socket,nextProps);

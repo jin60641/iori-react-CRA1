@@ -8,7 +8,7 @@ import Panel from './Panel';
 import Layer from './Layer';
 
 import { fetchSearchGroupById, fetchSearchUserByHandle, fetchSearchUsers } from '../../actions/search';
-import { fetchSendChat, fetchGetChats, fetchGetDialogs, fetchMakeGroup } from '../../actions/chat';
+import { sendChat, getChats, getDialogs, makeGroup } from '../../actions/chat';
 
 import styles from './Chat.css';
 import classNames from 'classnames/bind';
@@ -46,10 +46,8 @@ class Chat extends Component {
 	}
 	componentWillMount = (e) => {
 		const chatHandle = this.props.match.params.handle;
-		const { fetchSearchGroupById, fetchSearchUserByHandle, fetchGetChats, fetchGetDialogs } = this.props;
-		fetchGetDialogs()
-		.then( action => {
-		});
+		const { fetchSearchGroupById, fetchSearchUserByHandle, getChats, getDialogs } = this.props;
+		getDialogs();
 		if( chatHandle ){
 			const type = charToStr[chatHandle[0]];
 			const handle = chatHandle.substr(1);
@@ -77,11 +75,11 @@ class Chat extends Component {
 		const { loading } = this.state;
 		if( loading === false ){
 			this.setState({loading : true });
-			const { fetchGetChats } = this.props;
-			fetchGetChats({ from, type, limit, offset })
-			.then( action => {
+			const { getChats } = this.props;
+			getChats({ from, type, limit, offset })
+			//.then( action => {
 				this.setState({loading : false });
-			});
+		  //});
 		}
 	}
 	handleScrollTop = async (callback) => {
@@ -131,8 +129,8 @@ class Chat extends Component {
 		if( layer === "user" ){
 			this.openChat(users[0],layer);
 		} else if( layer === "group" ){
-			const { fetchMakeGroup, history } = this.props;
-			fetchMakeGroup({ userIds : users.map( user => user.id )  })
+			const { makeGroup, history } = this.props;
+			makeGroup({ userIds : users.map( user => user.id )  })
 			.then( action => {
 				if( !action.error ){
 					this.openChat(action.payload,layer);
@@ -156,7 +154,7 @@ class Chat extends Component {
 		this.showChatLayer(null);
 	}
 	sendChat = (file) => {
-		const { fetchSendChat } = this.props;
+		const { sendChat } = this.props;
 		const { text, to, type } = this.state;
 		let formData = new FormData();
 		formData.append("to",to.id);
@@ -170,12 +168,7 @@ class Chat extends Component {
 			formData.append("text","");
 			formData.append("file",file);
 		}
-		fetchSendChat(formData)
-		.then( (action) => {
-			if( !action.error ){
-			} else {
-			}
-		})
+		sendChat(formData)
 	}
 	handleClickSend = () => {
 		const { text } = this.state;
@@ -290,9 +283,9 @@ const actionToProps = {
 	fetchSearchUserByHandle,
 	fetchSearchUsers,
 	fetchSearchGroupById,
-	fetchSendChat,
-	fetchGetChats,
-	fetchGetDialogs,
-	fetchMakeGroup,
+	sendChat : sendChat.REQUEST,
+	getChats : getChats.REQUEST,
+	getDialogs : getDialogs.REQUEST,
+	makeGroup : makeGroup.REQUEST,
 };
 export default connect(stateToProps, actionToProps)(Chat);

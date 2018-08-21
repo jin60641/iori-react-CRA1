@@ -4,7 +4,7 @@ import {follow} from '../actions/relation';
 import {writePost,removePost} from '../actions/newsfeed';
 import {setProfile} from '../actions/setting';
 
-const initialState = {};
+const initialState = null;
 
 export default handleActions({
 	[login.SUCCESS]: (state, action) => {
@@ -13,23 +13,23 @@ export default handleActions({
   [login.FAILURE]: (state, action) => {
 		return state;
   },
-	[logout]: (state, action) => {
-		if( action.error ) {
-			return state;
-		}
+	[logout.SUCCESS]: (state, action) => {
 		return { ...initialState };
 	},
+  [logout.FAILURE]: (state, action) => {
+	  return state;
+  },
 	[loggedIn.SUCCESS]: (state, action) => {
 		return Object.assign({}, action.payload );
 	},
   [loggedIn.FAILURE]: (state) => {
 	  return state;
   },
-  [join]: (state, action) => {
-    if( action.error ) {
-      return state;
-    }
+  [join.SUCCESS]: (state, action) => {
     return { ...initialState };
+  },
+  [join.FAILURE]: (state, action) => {
+    return state;
   },
 	[setProfile]: (state, action) => {
 		if( action.error ) {

@@ -42,7 +42,7 @@ class Newsfeed extends Component {
 	}
 	handleRemovePost = deleted => {
 		const { posts } = this.state;
-        const index = posts.findIndex( post => post.id === deleted.id );
+    const index = posts.findIndex( post => post.id === deleted.id );
 		this.setState({
         	posts : posts.slice(0,index).concat(deleted).concat(posts.slice(index+1))
 		})

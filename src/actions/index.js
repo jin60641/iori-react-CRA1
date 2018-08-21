@@ -8,10 +8,12 @@ import socketEpic from './socket';
 import noticeEpic from './notice';
 
 export const rootEpic = combineEpics(authEpic,socketEpic,chatEpic,noticeEpic);
+
 /*
 export const rootEpic$ = new BehaviorSubject( combineEpics(authEpic,socketEpic,chatEpic) );
 const rootEpic = (action$, store, dependencies) =>
   rootEpic$.pipe(mergeMap(epic => epic(action$, store, dependencies)))
+
 const epics = [];
 export const addEpic = epic$ => {
   epics.push(epic$);
