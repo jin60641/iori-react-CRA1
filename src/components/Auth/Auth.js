@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { login, fetchJoin, fetchFindPw, fetchChangePw } from '../../actions/auth';
+import { login, join, findPw, changePw } from '../../actions/auth';
 import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 import Login from './Login';
 import Join from './Join';
@@ -29,7 +29,7 @@ class Auth extends Component {
 		history.push(url);
 	}
 	render(){
-		const { login, fetchJoin, pushState } = this.props;
+		const { login, join, pushState } = this.props;
 		const { path } = this.props.match;
 		return(
 			<div className="Auth">
@@ -42,17 +42,17 @@ class Auth extends Component {
 				)}/>
 				<Route path={`${path}/join`} render={(props) => (
 					<Join {...props}
-						fetchJoin={fetchJoin}
+						join={join}
 					/>
 				)}/>
 				<Route path={`${path}/find`} render={(props) => (
 					<Find {...props}
-						fetchFindPw={fetchFindPw}
+						findPw={findPw}
 					/>
 				)}/>
 				<Route path={`${path}/change/:email?/:link?`} render={(props) => (
 					<Change {...props}
-						fetchChangePw={fetchChangePw}
+						changePw={changePw}
 					/>
 				)}/>
 			</div>
@@ -62,8 +62,9 @@ class Auth extends Component {
 
 const actionToProps = {
 	login : login.REQUEST,
-	fetchJoin,
-	fetchFindPw,
+	join : join.REQUEST,
+	findPw : findPw.REQUEST,
+  changePw : changePw.REQUEST
 };
 
 export default connect(undefined, actionToProps)(withRouter(Auth));

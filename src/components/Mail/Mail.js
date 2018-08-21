@@ -2,19 +2,16 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './Mail.css';
-import { fetchCertifyMail } from '../../actions/auth';
+import { verifyMail } from '../../actions/auth';
 
 class Mail extends Component {
 	constructor(props){
 		super(props);
 	}
 	componentDidMount(){
-		const { fetchCertifyMail, match } = this.props;
+		const { verifyMail, match } = this.props;
 		const data = match.params;
-		fetchCertifyMail(data)
-			.then((action) => {
-				console.log(action);
-			});
+		verifyMail(data)
 	}
 	render(){
 		return(
@@ -39,7 +36,7 @@ class Mail extends Component {
 }
 
 const actionToProps = {
-	fetchCertifyMail
+	verifyMail : verifyMail.REQUEST
 }
 
 export default connect(undefined,actionToProps)(Mail);

@@ -20,13 +20,8 @@ class Header extends Component {
 		};
 	}
 	handleLogout = () => {
-		const {history, fetchLogout} = this.props;
-		fetchLogout()
-			.then(() => {
-				history.push('/');
-			});
-	}
-	componentWillMount(){
+		const {logout} = this.props;
+		logout();
 	}
 	render() {
 		const { user } = this.props;

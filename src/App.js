@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import Header from './components/Header/Header';
 import Body from './components/Body/Body';
 //import Footer from './components/Footer/Footer';
-import { loggedIn, fetchLogout } from './actions/auth';
+import { loggedIn, logout } from './actions/auth';
 
 
 class App extends Component {
@@ -26,11 +26,11 @@ class App extends Component {
 		}
 	}
 	render() {
-		const { fetchLogout, user } = this.props;
+		const { logout, user } = this.props;
 		return (
 			<Router>
 				<div>
-					<Header fetchLogout={ fetchLogout } user={ user } />
+					<Header logout={ logout } user={ user } />
 					<Body user={ user } />
 				</div>
 			</Router>
@@ -41,7 +41,7 @@ class App extends Component {
 const stateToProps = ({user,socket}) => ({user,socket});
 
 const actionToProps = {
-	fetchLogout,
+	logout : logout.REQUEST,
 	loggedIn : loggedIn.REQUEST,
 }
 export default connect(stateToProps,actionToProps)(App);
