@@ -5,13 +5,7 @@ import { combineEpics, ofType } from 'redux-observable';
 
 import { connectSocket } from './socket'
 
-export const login = createAction('LOGIN');
-export const logout = createAction('LOGOUT');
-export const loggedIn = createAction('LOGGEDIN');
-export const join = createAction('JOIN');
-export const verifyMail = createAction('VERIFY_MAIL');
-export const findPw = createAction('FIND_PW');
-export const changePw = createAction('CHANGE_PW');
+import api from '../api/auth';
 
 const loginUri = '/api/auth/login/local';
 const logoutUri = '/api/auth/logout';
@@ -20,6 +14,14 @@ const joinUri = '/api/auth/join';
 const verifyMailUri = '/api/auth/verify';
 const findPwUri = '/api/auth/findpw';
 const changePwUri = '/api/auth/changepw';
+
+export const login = createAction('LOGIN');
+export const logout = createAction('LOGOUT');
+export const loggedIn = createAction('LOGGEDIN');
+export const join = createAction('JOIN');
+export const verifyMail = createAction('VERIFY_MAIL');
+export const findPw = createAction('FIND_PW');
+export const changePw = createAction('CHANGE_PW');
 
 export const fetchFindPw = (data) => {
 	return async (dispatch) => {
@@ -99,15 +101,7 @@ const fetchLogin = (action$) => action$.pipe(
 const fetchLoggedIn = (action$) => action$.pipe(
   ofType(loggedIn.REQUEST),
   mergeMap(action => from (
-    fetch(loggedInUri, {
-  	  headers: {
-  		  'Accept': 'application/json',
-  			'Content-Type': 'application/json'
-  		},
-  		method: 'POST',
-  		credentials: 'include'
-    })
-    .then( response => response.json() )
+    api.loggedIn()
   )),
   mergeMap( body => {
     if( body.data ){
