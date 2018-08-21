@@ -14,7 +14,7 @@ global.socketIds = socketIds;
 
 function socketCore( socket ){
   socket.on( 'login', () => {
-  	if( socket.request.headers.cookie != undefined && cookie.parse( socket.request.headers.cookie )[ 'connect.sid' ] != undefined ){
+  	if( socket.request.headers.cookie && cookie.parse( socket.request.headers.cookie )[ 'connect.sid' ] ){
   		global.store.get( cookie.parse( socket.request.headers.cookie )[ 'connect.sid' ].split('.')[0].substring(2) , function( err, session ){
   			if( session && session.passport && session.passport.user ){
   				if( session.passport.user.verify ){

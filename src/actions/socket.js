@@ -19,7 +19,7 @@ const socketEpic = (action$,state$) => action$.pipe(
   ofType(connectSocket.REQUEST),
   mergeMap(action => from(
     new Promise( resolve => {
-      state$.value.socket.emit('login')
+      state$.value.socket.emit('login');
       resolve();
     })
   )),

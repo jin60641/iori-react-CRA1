@@ -32,7 +32,7 @@ module.exports = function(sequelize, DataTypes){
 	};
 	User.attributeNames = ["id","email","name","handle","profile","header","introduce","verify"];
 	User.associate = models => {
-		User.include = { model : models.Group, as : 'groups', attributes : models.Group.attributes };
+		User.include = { model : models.Group, as : 'groups', attributes : models.Group.attributeNames };
 	}
 	return User;
 };

@@ -5,8 +5,9 @@ import { combineEpics } from 'redux-observable';
 import authEpic from './auth';
 import chatEpic from './chat';
 import socketEpic from './socket';
+import noticeEpic from './notice';
 
-export const rootEpic = combineEpics(authEpic,socketEpic,chatEpic);
+export const rootEpic = combineEpics(authEpic,socketEpic,chatEpic,noticeEpic);
 /*
 export const rootEpic$ = new BehaviorSubject( combineEpics(authEpic,socketEpic,chatEpic) );
 const rootEpic = (action$, store, dependencies) =>

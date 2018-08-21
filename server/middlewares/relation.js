@@ -1,6 +1,7 @@
 
 let db = require('../models/index.js');
 const obj = {};
+const noticeMws = require('./notice.js');
 
 obj.follow = async (req,res) => {
 	const { to : toId } = req.body;
@@ -15,10 +16,12 @@ obj.follow = async (req,res) => {
 		} else {
 			const [updated] = await db.Follow.update({ deletedAt : null },{ where : current, paranoid : false });
 			if( updated ){
+        noticeMws.makeNotice(req.user,'follow',updated.dataValues.id,userIds);
 				res.send({ "data" : true });
 			} else {
 				db.Follow.create(current)
-				.then( () => {
+				.then( created => {
+          makeNotice(req.user,'follow',current.dataValues.id,userIds);
 					res.send({ "data" : true });
 				});
 			}

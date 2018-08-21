@@ -27,11 +27,16 @@ describe('setting controller', function () {
 	
 	context('when user tries to setting profile', function () {
 		it('should return object that contain updated field', async function () {
+      const name = userInfo+'new';
 			const resp = await agent
 				.post('/api/setting/profile')
-				.send({})
+				.send({ name })
 				.expect(200)
-
+      
+      const { body : { data } } = resp;
+      expect(data).to.deep.match({
+        name
+      });
 		});
 	});
 });

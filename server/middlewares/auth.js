@@ -107,7 +107,7 @@ obj.changePw = async ( req, res ) => {
 	const where = { email : req.user?req.user.email:email } 
 	const user = await db.User.findOne({ where });
 	if( user && ( obj.isLoggedIn(req) || (db.User.createHashedEmail(email) === link) ) ){
-		db.User.update({ password },{ where });
+		await db.User.update({ password },{ where });
 		res.send({ data : '비밀번호가 성공적으로 재설정되었습니다.' });
 	} else {
 		res.status(401).send({ message : '잘못된 접근입니다.' });

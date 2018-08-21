@@ -6,6 +6,8 @@ const path = require('path');
 obj.fs = fs;
 obj.path = path;
 const multer = require('multer');
+const noticeMws = require('./notice.js');
+
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -50,13 +52,13 @@ obj.writePost = async (req,res) => {
 		file : req.files.length
 	}
 	const created = await db.Post.create(current);
-	const result = db.Post.findOne({
+	const result = await db.Post.findOne({
 		where : {
 			id : created.dataValues.id
 		},
 		include : db.Post.include
 	});
-	const post = result.get({ plain : true });
+	const post = await result.get({ plain : true });
 	req.user.posts += 1;
 	const dir = path.join(__dirname,'..','..','files','post',post.id.toString());
 	if (!fs.existsSync(dir)){
@@ -74,7 +76,8 @@ obj.writePost = async (req,res) => {
 			io.sockets.connected[socketId].emit( 'getpost', post );
 		}
 	});
-	res.send({ "data" : post.get({ plain : true }) });
+  noticeMws.makeNotice(req.user,'post',post.id,userIds);
+	res.send({ "data" : post });
 }
 
 obj.getPosts = async ( req, res ) => {

@@ -6,6 +6,7 @@ import socket from "./socket";
 import search from "./search";
 import chat from "./chat";
 import dialog from "./dialog";
+import notice from "./notice";
 
 export default combineReducers({
 	user,
@@ -13,5 +14,6 @@ export default combineReducers({
 	socket,
 	searched : search,
 	chats : chat,
-	dialogs : dialog
+	dialogs : dialog,
+  notices : notice
 })

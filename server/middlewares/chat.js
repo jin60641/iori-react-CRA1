@@ -6,6 +6,7 @@ const path = require('path');
 obj.fs = fs;
 obj.path = path;
 const multer = require('multer');
+const noticeMws = require('./notice.js');
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -47,12 +48,14 @@ obj.sendChat = async (req,res) => {
 		const dir = path.join(__dirname,'..','..','files','chat');
 		fs.move(req.file.path,path.join(dir,chat.id+".png"));
 	}
-	(chat.group?chat.group.users:[chat.to]).forEach( user => {
-		const socketId = socketIds[user.id];
-		if( socketId && req.user.id != user.id ){
+  const userIds = await (chat.group?chat.group.users:[chat.to]).map( user => user.id );
+	userIds.forEach( userId => {
+		const socketId = socketIds[userId];
+		if( socketId && req.user.id != userId ){
 			io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle : chr + (chat.type==="user"?chat.from.handle:chat.to.handle), chat } );
 		}
 	})
+  noticeMws.makeNotice(req.user,'chat',chat.id,userIds);
 	res.send({ 
 		"data" : {
 			handle : chr + chat.to.handle,
