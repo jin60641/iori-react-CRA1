@@ -30,7 +30,6 @@ const initialState = {
 	type : null,
 	to : null,
 	text : "",
-	loading : false,
 	height : 17
 }
 
@@ -71,15 +70,12 @@ class Chat extends Component {
 			}
 		}
 	}
-	getChats = (from,type,offset) => {
-		const { loading } = this.state;
-		if( loading === false ){
-			this.setState({loading : true });
+	getChats = (from,type,offset=0) => {
+		const { getChats, isFetching } = this.props;
+		if( isFetching.getChats === false ){
+    console.log(offset);
 			const { getChats } = this.props;
-			getChats({ from, type, limit, offset })
-			//.then( action => {
-				this.setState({loading : false });
-		  //});
+			getChats({ from, type, limit, offset });
 		}
 	}
 	handleScrollTop = async (callback) => {
@@ -278,7 +274,12 @@ class Chat extends Component {
 	}
 }
 
-const stateToProps = ({dialogs,searched,chats}) => ({dialogs,searched,chats});
+const stateToProps = ({ dialogs, searched, chats }) => ({ 
+    dialogs, searched, chats, 
+    isFetching : {
+      getChats : getChats.isFetching
+    }
+})
 const actionToProps = {
 	fetchSearchUserByHandle,
 	fetchSearchUsers,

@@ -1,6 +1,6 @@
 @import "../../styles/utils.scss";
 
-$chat-dialog-width : 230px;
+$dialog-img-size : 48px;
 
 .Dialog {
 	text-align : left;
@@ -19,25 +19,27 @@ $chat-dialog-width : 230px;
 	}
 	.dialog-img {
 		background-color : white;
-		width : 48px;
-		height : 48px;
+		width : $dialog-img-size;
+		height : $dialog-img-size;
 		vertical-align : middle;
 		border-radius : 50%;
 		overflow : hidden;
-		margin-right : 15px;
 		display : inline-block;
 	}
 	.dialog-message-wrap {
 		vertical-align : middle;
+		padding-left : 10px;
+    max-width : calc( 100% - #{$dialog-img-size} );
 		font-size : 13px;
 		display : inline-block;
-		word-wrap : break-word;
 		overflow : hidden;
+    box-sizing : border-box;
 		.dialog-message-name {
 			color : black;
 			font-weight : 700;
 		}
 		.dialog-message-text {
+      white-space : nowrap;
 			margin-top : 2px;
 			color : #999;
 		}

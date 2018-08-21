@@ -9,9 +9,10 @@ class Change extends Component {
 		}
 	}
 	handleChangePw = data => {
-		const { fetchChangePw, user } = this.props;
+		const { changePw, user } = this.props;
 		const { email, link } = this.props.params.match;
-		fetchChangePw({ ...data, email, link })
+    changePw({ ...data, email, link })
+    /*
 		.then( action => {
 			if( action.error ){
 				this.setState({
@@ -23,6 +24,7 @@ class Change extends Component {
 				});
 			}
 		});
+    */
 	}
 	handleSubmit = e => {
 		e.preventDefault();

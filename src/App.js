@@ -27,6 +27,9 @@ class App extends Component {
 	}
 	render() {
 		const { logout, user } = this.props;
+    if( !user ){
+      return null;
+    }
 		return (
 			<Router>
 				<div>
@@ -41,8 +44,8 @@ class App extends Component {
 const stateToProps = ({user,socket}) => ({user,socket});
 
 const actionToProps = {
-	logout : logout.REQUEST,
-	loggedIn : loggedIn.REQUEST,
+  logout : logout.REQUEST,
+  loggedIn : loggedIn.REQUEST,
 }
 export default connect(stateToProps,actionToProps)(App);
 

@@ -8,7 +8,8 @@ const actionTypes = {
 
 const createAsyncAction = (type) => {
   const Action = {
-    ORIGIN : type
+    ORIGIN : type,
+    isFetching : false
   }
   Object.keys(actionTypes).forEach( key => {
     Action[key] = createAction(`${type}_${actionTypes[key]}`);

@@ -9,8 +9,9 @@ class Find extends Component {
 		}
 	}
 	handleFindPw = data => {
-		const { fetchFindPw } = this.props;
-		fetchFindPw(data)
+		const { findPw } = this.props;
+		findPw(data)
+    /*
 		.then( action => {
 			if( action.error ){
 				this.setState({
@@ -22,6 +23,7 @@ class Find extends Component {
 				});
 			}
 		});
+    */
 	}
 	handleSubmit = e => {
 		e.preventDefault();

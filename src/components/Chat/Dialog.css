@@ -18,18 +18,20 @@
     vertical-align: middle;
     border-radius: 50%;
     overflow: hidden;
-    margin-right: 15px;
     display: inline-block; }
   .Dialog .dialog-message-wrap {
     vertical-align: middle;
+    padding-left: 10px;
+    max-width: calc( 100% - 48px);
     font-size: 13px;
     display: inline-block;
-    word-wrap: break-word;
-    overflow: hidden; }
+    overflow: hidden;
+    box-sizing: border-box; }
     .Dialog .dialog-message-wrap .dialog-message-name {
       color: black;
       font-weight: 700; }
     .Dialog .dialog-message-wrap .dialog-message-text {
+      white-space: nowrap;
       margin-top: 2px;
       color: #999; }
 

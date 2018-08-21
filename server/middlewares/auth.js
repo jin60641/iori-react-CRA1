@@ -158,10 +158,10 @@ obj.logOut = ( req, res ) => {
 			if( req.user ){
 				delete req.user;
 			}
-			res.status(200).send();
+			res.status(200).send({ data : '로그아웃되었습니다.' });
 		});
 	} else {
-		res.status(200).send();
+		res.status(200).send({ data : '로그아웃되었습니다.' });
 	}
 }
 

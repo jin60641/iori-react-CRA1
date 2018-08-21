@@ -10,7 +10,8 @@ class Join extends Component {
 	}
 	handleJoin = data => {
 		const { fetchJoin } = this.props;
-		fetchJoin(data)
+		Join(data)
+    /*
 		.then( action => {
 			if( action.error ){
 				this.setState({
@@ -22,6 +23,7 @@ class Join extends Component {
 				});
 			}
 		});
+    */
 	}
 	handleSubmit = e => {
 		e.preventDefault();

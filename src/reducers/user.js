@@ -23,7 +23,7 @@ export default handleActions({
 		return Object.assign({}, action.payload );
 	},
   [loggedIn.FAILURE]: (state) => {
-	  return state;
+	  return {};
   },
   [join.SUCCESS]: (state, action) => {
     return { ...initialState };
