@@ -1,42 +1,34 @@
-import {handleActions} from 'redux-actions';
+import { handleActions } from 'redux-actions';
 import { getChats, sendChat, getChat } from '../actions/chat';
 
 let initialState = {};
 
 export default handleActions({
-  [getChats.REQUEST]: function(state, action) {
+  [getChats.REQUEST]: (state, action) => {
     getChats.isFetching = true;
     return state;
   },
-	[getChats.SUCCESS]: function(state, action) {
+	[getChats.SUCCESS]: (state, action) => {
     getChats.isFetching = false;
 		const { chats, handle } = action.payload;
-		const nextState = {}
-		nextState[handle] = chats.reverse().concat(state[handle]?state[handle]:[]);
-		return Object.assign({...state},nextState);
-//		return state.concat(action.payload);
+		return { ...state, [handle] : chats.reverse().concat(state[handle]?state[handle]:[]) };
 	},
-	[getChats.Failure]: function(state, action) {
+	[getChats.Failure]: (state, action) => {
     getChats.isFetching = false;
     return state;
   },
-	[sendChat.SUCCESS]: function(state, action) {
-		if( action.error ) {
-			return state;
-		}
+	[sendChat.SUCCESS]: (state, action) => {
 		const { chat, handle } = action.payload;
-		const nextState = {}
-		nextState[handle] = (state[handle]?state[handle]:[]).concat([chat]);
-		return Object.assign({...state},nextState);
-//		return [action.payload].concat(state);
+		return {...state, [handle] : (state[handle]?state[handle]:[]).concat([chat]) };
 	},
-	[getChat.SUCCESS]: function(state, action) {
+	[sendChat.FAILURE]: (state, action) => {
+		return state;
+  },
+	[getChat.SUCCESS]: (state, action) => {
 		const { chat, handle } = action.payload;
-		const nextState = {}
-		nextState[handle] = (state[handle]?state[handle]:[]).concat([chat]);
-		return Object.assign({...state},nextState);
+    return { ...state, [handle] : (state[handle]?state[handle]:[]).concat([chat]) };
 	},
-  [getChat.FAILURE]: function(state, action) {
+  [getChat.FAILURE]: (state, action) => {
 	  return state;
   }
 }, initialState );

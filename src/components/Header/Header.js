@@ -21,7 +21,7 @@ class Header extends Component {
 	}
 	handleLogout = () => {
 		const {logout} = this.props;
-		logout.REQUEST();
+		logout();
 	}
 	render() {
 		const { user } = this.props;

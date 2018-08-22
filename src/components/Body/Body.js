@@ -106,6 +106,7 @@ class Body extends Component {
 								<Left user={ user }/>
 								<Newsfeed {...props}
 									key="Home"
+                  id="Home"
 									write={true}
 									isBottom={ isBottom }
 									options={ {} }

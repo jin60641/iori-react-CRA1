@@ -1,35 +1,41 @@
-import {handleActions} from 'redux-actions';
-import { removePost, resetPosts, getPost, getPosts, writePost } from '../actions/newsfeed';
+import { handleActions } from 'redux-actions';
+import { removePost, getPost, getPosts, writePost } from '../actions/newsfeed';
 
-let initialState = [];
+let initialState = {
+  Home : []
+};
 
 export default handleActions({
-	[removePost]: (state, action) => {
-		if( action.error ){
-			return state;
-		}
-		const index = state.findIndex( post => post.id === action.payload.id );
-		return state.slice(0,index).concat(action.payload).concat(state.slice(index+1));
-	},
-	[resetPosts]: (state, action) => {
-		return [];
-	},
-	[getPosts]: (state, action) => {
-		if( action.error ) {
-			return state;
-		}
-		return state.concat(action.payload);
-	},
-	[writePost]: (state, action) => {
-		if( action.error ) {
-			return state;
-		}
-		return [action.payload].concat(state);
-	},
-	[getPost]: (state, action) => {
-		if( action.error ) {
-			return state;
-		}
-		return state.concat([action.payload]);
-	}
+  [getPost.SUCCESS]: (state, action) => {
+    return { ...state, Home : [action.payload].concat(state.Home) };
+  },
+  [getPost.FAILURE]: (state, action) => {
+    return state;
+  },
+  [getPosts.SUCCESS]: (state, action) => {
+    const { key, posts } = action.payload;
+    return { ...state, [key] : (state[key]?state[key]:[]).concat(posts) };
+  },
+  [getPosts.FAILURE]: (state, action) => {
+    return state;
+  },
+  [writePost.SUCCESS]: (state, action) => {
+    return { ...state, Home : [action.payload].concat(state.Home) };
+  },
+  [writePost.FAILURE]: (state, action) => {
+    return state;
+  },
+  [removePost.SUCCESS]: (state, action) => {
+    const { key, id } = action.payload;
+    const homeIndex = state.Home.findIndex( post => post.id === id );
+    const index = state[key].findIndex( post => post.id === id );
+    return {
+      ...state,
+      Home : state.Home.slice(0,homeIndex).concat([{ ...state.Home[homeIndex], deleted : true }]).concat(state.Home.slice(homeIndex+1)),
+      [key] : state[key].slice(0,index).concat([{ ...state[key][index], deleted : true }]).concat(state[key].slice(index+1)),
+    };
+  },
+  [removePost.FAILURE]: (state, action) => {
+    return state;
+  }
 }, initialState );

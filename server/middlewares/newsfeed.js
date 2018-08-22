@@ -23,26 +23,20 @@ obj.filter = multer({
 	}
 }).array('file',4);
 
-obj.removePost = (req,res) => {
-	const { id } = req.body;
+obj.removePost = async (req,res) => {
+	const { id, key } = req.body;
 	const where = {
 		id,
 		userId : req.user.id 
 	}
-	db.Post.findOne({ where })
-	.then( post => {
-		if( post ){
-			req.user.posts -= 1;
-			db.Post.destroy({ where })
-			.then( () => {
-				const raw = post.get({ plain : true });
-				raw.deleted = true;
-				res.send({ "data" : raw });
-			});
-		} else {
-			res.status(401).send({ message : '존재하지 않는 게시글입니다.' });
-		}
-	});
+	const post = await db.Post.findOne({ where });
+	if( post ){
+		req.user.posts -= 1;
+		await db.Post.destroy({ where });
+		res.send({ data : { id, key } });
+	} else {
+		res.status(401).send({ message : '존재하지 않는 게시글입니다.' });
+	}
 }
 
 obj.writePost = async (req,res) => {
@@ -81,7 +75,7 @@ obj.writePost = async (req,res) => {
 }
 
 obj.getPosts = async ( req, res ) => {
-	const { userId, id, limit, offset, file, gt, text } = req.body;
+	const { key, userId, id, limit, offset, file, gt, text } = req.body;
 	const where = {};
 	if( userId ){
 		where.userId = userId;
@@ -104,15 +98,18 @@ obj.getPosts = async ( req, res ) => {
 	}
 	if( id ){
 		if( gt ){
-			query.where.id = { id : { $gt : id } }
+			query.where.id = { $gt : id };
 		} else {
-			query.where.id = { id }
+			query.where.id = id;
 		}
 	} else {
 		query.limit = limit?limit:20;
 	}
 	const posts = await db.Post.findAll(query);
-	res.send({ "data" : posts.map( post => post.get({ plain : true }) ) });
+	res.send({ data : {
+    posts : posts.map( post => post.get({ plain : true }) ),
+    key
+  }});
 };
 
 module.exports = obj;

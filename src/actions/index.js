@@ -5,9 +5,16 @@ import { combineEpics } from 'redux-observable';
 import authEpic from './auth';
 import chatEpic from './chat';
 import socketEpic from './socket';
+import newsfeedEpic from './newsfeed';
 import noticeEpic from './notice';
 
-export const rootEpic = combineEpics(authEpic,socketEpic,chatEpic,noticeEpic);
+export const rootEpic = combineEpics(
+  authEpic,
+  socketEpic,
+  chatEpic,
+  newsfeedEpic,
+  noticeEpic
+);
 
 /*
 export const rootEpic$ = new BehaviorSubject( combineEpics(authEpic,socketEpic,chatEpic) );

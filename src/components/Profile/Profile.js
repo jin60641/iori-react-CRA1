@@ -378,6 +378,7 @@ class Profile extends Component {
 						<Route exact path="/@:handle" render={(props) => (
 							<Newsfeed {...props}
 								key={`Profile-${user.id}`}
+                id={user.id}
 								isBottom={ isBottom }
 								options={ { userId : user.id } }
 							/>

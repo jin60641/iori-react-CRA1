@@ -33,7 +33,7 @@ const initialState = {
 	height : 17
 }
 
-const limit = 10;
+const limit = 30;
 
 class Chat extends Component {
 	constructor(props){
@@ -43,9 +43,14 @@ class Chat extends Component {
 	getFullHandle = (type,handle) => {
 		return strToChar[type] + handle;
 	}
-	componentWillMount = (e) => {
+	componentWillUnmount = () => {
+		const { showScroll } = this.props;
+		showScroll(true);
+	}
+	componentDidMount = (e) => {
+		const { showScroll, fetchSearchGroupById, fetchSearchUserByHandle, getChats, getDialogs } = this.props;
+		showScroll(false);
 		const chatHandle = this.props.match.params.handle;
-		const { fetchSearchGroupById, fetchSearchUserByHandle, getChats, getDialogs } = this.props;
 		getDialogs();
 		if( chatHandle ){
 			const type = charToStr[chatHandle[0]];
@@ -70,13 +75,14 @@ class Chat extends Component {
 			}
 		}
 	}
-	getChats = (from,type,offset=0) => {
+	getChats = (from) => {
 		const { getChats, isFetching } = this.props;
-		if( isFetching.getChats === false ){
-    console.log(offset);
+		const { to, type } = this.state;
+    const chats = this.props.chats[this.getFullHandle(type,to.handle)];
+		if( !isFetching.getChats ){
 			const { getChats } = this.props;
-			getChats({ from, type, limit, offset });
-		}
+			getChats({ from, type, limit, offset : chats?chats.length:0 });
+    }
 	}
 	handleScrollTop = async (callback) => {
 		const { to, type } = this.state;
@@ -133,14 +139,6 @@ class Chat extends Component {
 				}
 			});
 		}
-	}
-	componentWillUnmount = () => {
-		const { showScroll } = this.props;
-		showScroll(true);
-	}
-	componentDidMount = () => {
-		const { showScroll } = this.props;
-		showScroll(false);
 	}
 	handleClickOutside = () => {
 		this.hideAll();
@@ -274,12 +272,7 @@ class Chat extends Component {
 	}
 }
 
-const stateToProps = ({ dialogs, searched, chats }) => ({ 
-    dialogs, searched, chats, 
-    isFetching : {
-      getChats : getChats.isFetching
-    }
-})
+const stateToProps = ({ dialogs, searched, chats, isFetching }) => ({ dialogs, searched, chats, isFetching })
 const actionToProps = {
 	fetchSearchUserByHandle,
 	fetchSearchUsers,

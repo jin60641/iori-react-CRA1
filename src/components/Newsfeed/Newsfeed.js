@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchGetPosts } from '../../actions/newsfeed';
+import { getPosts } from '../../actions/newsfeed';
 import './Newsfeed.css';
 import Post from './Post';
 import Write from './Write';
 
 const initialState = {
-	posts : [],
-	offset : 0,
 	limit : 10,
 }
 class Newsfeed extends Component {
@@ -16,7 +14,7 @@ class Newsfeed extends Component {
 		this.state = initialState;
 	}
 	componentDidMount(){
-		const { posts } = this.state;
+		const { posts } = this.props;
 		if( posts.length === 0 ){
 			this.handleGetPosts();
 		}
@@ -27,47 +25,24 @@ class Newsfeed extends Component {
 		}
 	}
 	handleGetPosts = (options = {}) => {
-		const { fetchGetPosts } = this.props;
-		const { offset, limit } = this.state;
-		const data = Object.assign( { offset, limit }, this.props.options, options );
-		fetchGetPosts(data)
-		.then( action => {
-			if( !action.error ){
-				this.setState( state => ({ 
-					posts : state.posts.concat(action.payload),
-					offset : offset + action.payload.length
-				}));
-			}
-		});
-	}
-	handleRemovePost = deleted => {
-		const { posts } = this.state;
-    const index = posts.findIndex( post => post.id === deleted.id );
-		this.setState({
-        	posts : posts.slice(0,index).concat(deleted).concat(posts.slice(index+1))
-		})
-	}
-	handleWritePost = post => {
-		this.setState( state => ({
-			posts : [post].concat(state.posts),
-			offset : state.offset + 1
-		}));
+		const { getPosts, id, posts } = this.props;
+		const { limit } = this.state;
+		const data = Object.assign( { key : id, limit, offset : posts.length }, this.props.options, options );
+		getPosts(data);
 	}
 	render() {
-		const { posts } = this.state;
-		const { user, write } = this.props;
+		const { user, write, id, posts } = this.props;
 		return (
 			<div className="Newsfeed">
-				{ write ? <Write handleWritePost={this.handleWritePost}/> : null }
-				{ posts.map((post,i) => {
-					return (<Post post={post} key={post.id} handleRemovePost={this.handleRemovePost}/>);
-				})}
+				{ write ? <Write /> : null }
+				{ posts.map((post,i) => (<Post post={post} key={post.id} newsfeed={id} />) ) }
 			</div>
 		);
 	}
 };
-const stateToProps = ({posts,user}) => ({posts,user});
+
+const stateToProps = ({posts,user},props) => ({posts : posts[props.id]?posts[props.id]:[],user});
 const actionToProps = {
-	fetchGetPosts,
+	getPosts : getPosts.REQUEST,
 }
 export default connect(stateToProps, actionToProps)(Newsfeed);

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styles from './Write.css';
 import { connect } from 'react-redux';
-import { fetchWritePost } from '../../actions/newsfeed';
+import { writePost } from '../../actions/newsfeed';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 const initialState = {
@@ -16,7 +16,7 @@ class Write extends Component {
 		this.state = initialState;
 	}
 	handleSubmit = () => {
-		const { fetchWritePost, handleWritePost } = this.props;
+		const { writePost } = this.props;
 		const { text, files } = this.state;
 		let formData = new FormData();
 		if( !( text.length || files.length ) ){
@@ -27,16 +27,7 @@ class Write extends Component {
 			formData.append('file',file.data);
 		})
 		this.setState(initialState);
-		fetchWritePost(formData)
-		.then( action => {
-			if( !action.error ){
-				if( handleWritePost ){
-					handleWritePost(action.payload);
-				}
-			} else {
-				
-			}
-		});
+		writePost(formData);
 	}
 	handleChangeText = (e) => {
 		this.setState({ text : e.target.value })
@@ -75,7 +66,7 @@ class Write extends Component {
 }
 
 const actionToProps = {
-	fetchWritePost,
+	writePost : writePost.REQUEST
 }
 export default connect(undefined,actionToProps)(Write);
 

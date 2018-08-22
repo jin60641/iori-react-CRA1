@@ -7,6 +7,7 @@ import search from "./search";
 import chat from "./chat";
 import dialog from "./dialog";
 import notice from "./notice";
+import isFetching from "./isFetching"
 
 export default combineReducers({
 	user,
@@ -15,5 +16,6 @@ export default combineReducers({
 	searched : search,
 	chats : chat,
 	dialogs : dialog,
-  notices : notice
+  notices : notice,
+  isFetching
 })

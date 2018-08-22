@@ -1,77 +1,53 @@
-import {createAction} from 'redux-actions';
+import createAction from './createAsyncAction';
+  
+import { from } from 'rxjs'
+import { map, mergeMap } from 'rxjs/operators';
+import { combineEpics, ofType } from 'redux-observable';
+import api from '../api/newsfeed';
 
-export const writePost = createAction('WRITE_POST');
-export const getPosts = createAction('GET_POSTS');
 export const getPost = createAction('GET_POST');
-export const resetPosts = createAction('RESET_POSTS');
+export const getPosts = createAction('GET_POSTS');
+export const writePost = createAction('WRITE_POST');
 export const removePost = createAction('REMOVE_POSTS');
 
-const writePostUri = '/api/newsfeed/writepost';
-const getPostsUri = '/api/newsfeed/getposts';
-const removePostUri = '/api/newsfeed/removepost';
+const getPostEpic = action$ => action$.pipe(
+  ofType('getpost'),
+  map( action => getPost.SUCCESS(action.payload) )
+);
 
-export const newsfeedSocket = (socket,dispatch) => {
-	socket.on( 'getpost', data => {
-		dispatch(getPost(data));
-	});
-};
+const getPostsEpic = (action$) => action$.pipe(
+  ofType(getPosts.REQUEST),
+  mergeMap( action => from(api.getPosts(action.payload)) ),
+  map( body =>
+    body.data
+      ? getPosts.SUCCESS(body.data)
+      : getPosts.FAILURE(new Error(body.message))
+  )
+);
 
-export const fetchResetPosts = (data) => {
-	return dispatch => dispatch(resetPosts());
-}
+const writePostEpic = (action$) => action$.pipe(
+  ofType(writePost.REQUEST),
+  mergeMap( action => from(api.writePost(action.payload)) ),
+  map( body =>
+    body.data
+      ? writePost.SUCCESS(body.data)
+      : writePost.FAILURE(new Error(body.message))
+  )
+);
 
-export const fetchRemovePost = (data) => {
-	return async (dispatch) => {
-		const resp = await fetch(removePostUri, {
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			method: 'POST',
-			body: JSON.stringify(data),
-			credentials: 'include'
-		});
-		const body = await resp.json();
-		if(body.data){
-			return dispatch(removePost(body.data));
-		} else {
-			return dispatch(removePost(new Error(body.message)));
-		}
-	}
-};
+const removePostEpic = (action$) => action$.pipe(
+  ofType(removePost.REQUEST),
+  mergeMap( action => from(api.removePost(action.payload)) ),
+  map( body =>
+    body.data
+      ? removePost.SUCCESS(body.data)
+      : removePost.FAILURE(new Error(body.message))
+  )
+);
 
-export const fetchWritePost = (data) => {
-	return async (dispatch) => {
-		const resp = await fetch(writePostUri, {
-			method: 'POST',
-			body: data,
-			credentials: 'include'
-		});
-		const body = await resp.json();
-		if(body.data){
-			return dispatch(writePost(body.data));
-		} else {
-			return dispatch(writePost(new Error(body.message)));
-		}
-	}
-};
-
-export const fetchGetPosts = (data) => {
-	return async (dispatch) => {
-		const resp = await fetch(getPostsUri, {
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			method: 'POST',
-			body: JSON.stringify(data),
-			credentials: 'include'
-		});
-		const body = await resp.json();
-		if(body.data){
-			return dispatch(getPosts(body.data));
-		} else {
-			return dispatch(getPosts(new Error(body.message)));
-		}
-	}
-};
+export default combineEpics(
+  getPostEpic,
+  getPostsEpic,
+  writePostEpic,
+  removePostEpic,
+);

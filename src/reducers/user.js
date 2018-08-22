@@ -37,18 +37,18 @@ export default handleActions({
 		}
 		return Object.assign(state,action.payload);
 	},
-	[writePost]: (state, action) => {
-		if( action.error ) {
-			return state;
-		}
+	[writePost.SUCCESS]: (state, action) => {
 		return { ...state, posts : state.posts+1 };
 	},
-	[removePost]: (state, action) => {
-		if( action.error ) {
-			return state;
-		}
+	[writePost.FAILURE]: (state, action) => {
+		return state;
+  },
+	[removePost.SUCCESS]: (state, action) => {
 		return { ...state, posts : state.posts-1 };
 	},
+	[removePost.FAILURE]: (state, action) => {
+		return state;
+  },
 	[follow]: (state, action) => {
 		if( action.error ) {
 			return state;
