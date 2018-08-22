@@ -17,18 +17,6 @@ class Login extends Component {
 	handleLogin = (email, password) => {
 		const { login, pushState } = this.props;
 		login({email,password});
-    /*
-    (action) => {
-      console.log(action);
-			if(!action.error) {
-				pushState('/');
-			} else {
-				this.setState({
-					message : action.payload.message
-				});
-			}
-    })
-    */
 	}
 	handleSubmit = (e) => {
 		e.preventDefault();
@@ -50,8 +38,6 @@ class Login extends Component {
 		} else {
 			this.handleLogin(email, password);
 		}
-	}
-	componentWillUnmount() {
 	}
 	render(){
 		const { message } = this.state;

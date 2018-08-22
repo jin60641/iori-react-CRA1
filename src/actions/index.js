@@ -8,6 +8,7 @@ import socketEpic from './socket';
 import newsfeedEpic from './newsfeed';
 import relationEpic from './relation';
 import searchEpic from './search';
+import settingEpic from './setting';
 import noticeEpic from './notice';
 
 export const rootEpic = combineEpics(
@@ -17,6 +18,7 @@ export const rootEpic = combineEpics(
   newsfeedEpic,
   relationEpic,
   searchEpic,
+  settingEpic,
   noticeEpic
 );
 

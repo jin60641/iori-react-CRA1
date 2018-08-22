@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch, Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { searchUserByHandle } from '../../actions/search';
-import { fetchSetProfile } from '../../actions/setting';
+import { setProfile } from '../../actions/setting';
 import { follow } from '../../actions/relation';
 
 import Newsfeed from '../Newsfeed/Newsfeed';
@@ -50,20 +50,19 @@ class Profile extends Component {
       const { searchUserByHandle } = this.props;
 			searchUserByHandle({ query : handle })
     }
-    if( prevProps.searched.id !== this.props.searched.id ){
+    if( prevProps.searched.id !== this.props.searched.id 
+      || prevProps.isFetching.setProfile !== this.props.isFetching.setProfile 
+    ){
 			this.getImage("profile");
 			this.getImage("header");
     }
 	}
-	getImage = (type,refresh) => {
+	getImage = (type) => {
 		const nextState = {};
     const { searched : user } = this.props;
 		if( user[type] ){
 			const img = new Image();
-			img.src = `/files/${type}/${user.id}.png`;
-			if( refresh ){
-				img.src = img.src + '?' + new Date().getTime();
-			}
+			img.src = `/files/${type}/${user.id}.png?${new Date().getTime()}`;
 			img.onload = (e) => {
 				const { width, height } = img;
 				nextState[type] = { ...initialState[type], img, width, height };
@@ -91,7 +90,7 @@ class Profile extends Component {
 		this.setState(nextState);
 	}
 	sendSetting = () => {
-		const { fetchSetProfile, user } = this.props;
+		const { setProfile, user } = this.props;
 		let formData = new FormData();
 		['profile','header'].forEach( key => {
 			const { file, img, x, y, height, width, remove } = this.state[key];
@@ -107,18 +106,8 @@ class Profile extends Component {
 				formData.append(key+"[remove]",true);
 			}
 		});
-		fetchSetProfile(formData)
-		.then( action => {
-			console.log(action.payload);
-			if( !action.error ){
-				if( action.payload ){
-                    this.setState( state => ({ user : { ...state.user, ...action.payload } }) );
-					this.getImage('header',true);
-					this.getImage('profile',true);
-					this.handleClickSetting(false);
-				}
-			}
-		});
+		setProfile(formData);
+    this.handleClickSetting(false);
 	}
 	handleClickSettingSave = () => {
 		const { showScroll } = this.props;
@@ -368,11 +357,12 @@ class Profile extends Component {
 		);
 	}
 }
-const stateToProps = ({searched,user}) => ({searched : searched.user,user});
+
+const stateToProps = ({searched,user,isFetching}) => ({searched : searched.user,user,isFetching});
 
 const actionToProps = {
 	searchUserByHandle : searchUserByHandle.REQUEST,
-	fetchSetProfile,
+	setProfile : setProfile.REQUEST,
 	follow : follow.REQUEST
 }
 
