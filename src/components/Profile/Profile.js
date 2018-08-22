@@ -43,24 +43,21 @@ class Profile extends Component {
 		const { searchUserByHandle } = this.props;
 		const { handle, tab } = this.props.match.params;
 		searchUserByHandle({ query : handle });
-		//this.getImage("profile");
-	  //this.getImage("header");
 	}
-	componentWillReceiveProps = nextProps => {
-		const { searchUserByHandle } = this.props;
-		const handle = nextProps.match.params.handle;
-		if( this.props.match.params.handle !== handle ){
+  componentDidUpdate = prevProps => {
+		const handle = this.props.match.params.handle;
+		if( prevProps.match.params.handle !== handle ){
+      const { searchUserByHandle } = this.props;
 			searchUserByHandle({ query : handle })
-			//this.getImage("profile");
-			//this.getImage("header");
-		}
+    }
+    if( prevProps.searched.id !== this.props.searched.id ){
+			this.getImage("profile");
+			this.getImage("header");
+    }
 	}
-	getImage = (user,type,refresh) => {
+	getImage = (type,refresh) => {
 		const nextState = {};
-		if( this.state.user ){
-			nextState.user = this.state.user;
-			nextState.user[type] = user[type];
-		}
+    const { searched : user } = this.props;
 		if( user[type] ){
 			const img = new Image();
 			img.src = `/files/${type}/${user.id}.png`;
@@ -116,8 +113,8 @@ class Profile extends Component {
 			if( !action.error ){
 				if( action.payload ){
                     this.setState( state => ({ user : { ...state.user, ...action.payload } }) );
-					this.getImage(user,'header',true);
-					this.getImage(user,'profile',true);
+					this.getImage('header',true);
+					this.getImage('profile',true);
 					this.handleClickSetting(false);
 				}
 			}

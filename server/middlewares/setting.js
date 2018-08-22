@@ -25,7 +25,7 @@ obj.profile = async (req,res) => {
 	const query = {};
 	await ['profile','header'].forEach( async key => {
 		const file = (req.files&&req.files[key])?req.files[key][0]:null;
-		req.user[key] = query[key] = (req.body[key] && req.body[key].remove)?false:(file||req.user[key])
+		req.user[key] = query[key] = (req.body[key] && req.body[key].remove)?false:(!!file||req.user[key])
 		if( query[key] && file && req.body[key] ){
 			const { width, height, x, y, crop } = req.body[key];
 			const dir = path.join(__dirname,'..','..','files',key);
