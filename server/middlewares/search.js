@@ -29,7 +29,7 @@ obj.userByHandle = (req,res) => {
 	.then( async result => {
 		if( result ){
 			let user = result.get({ plain : true });
-			if( authMws.isLoggedIn(req) ){
+			if( await authMws.isLoggedIn(req) ){
 				user = await makeUserObj(req,user);
 			}
 			user.posts = await db.Post.count({ where: { userId : user.id } });

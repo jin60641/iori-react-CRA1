@@ -6,6 +6,8 @@ import authEpic from './auth';
 import chatEpic from './chat';
 import socketEpic from './socket';
 import newsfeedEpic from './newsfeed';
+import relationEpic from './relation';
+import searchEpic from './search';
 import noticeEpic from './notice';
 
 export const rootEpic = combineEpics(
@@ -13,6 +15,8 @@ export const rootEpic = combineEpics(
   socketEpic,
   chatEpic,
   newsfeedEpic,
+  relationEpic,
+  searchEpic,
   noticeEpic
 );
 

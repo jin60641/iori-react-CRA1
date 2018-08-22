@@ -7,7 +7,7 @@ import Dialog from './Dialog';
 import Panel from './Panel';
 import Layer from './Layer';
 
-import { fetchSearchGroupById, fetchSearchUserByHandle, fetchSearchUsers } from '../../actions/search';
+import { searchGroupById, searchUserByHandle, searchUsers } from '../../actions/search';
 import { sendChat, getChats, getDialogs, makeGroup } from '../../actions/chat';
 
 import styles from './Chat.css';
@@ -48,7 +48,7 @@ class Chat extends Component {
 		showScroll(true);
 	}
 	componentDidMount = (e) => {
-		const { showScroll, fetchSearchGroupById, fetchSearchUserByHandle, getChats, getDialogs } = this.props;
+		const { showScroll, searchGroupById, searchUserByHandle, getChats, getDialogs } = this.props;
 		showScroll(false);
 		const chatHandle = this.props.match.params.handle;
 		getDialogs();
@@ -59,26 +59,23 @@ class Chat extends Component {
 				"query" : handle
 			}
 			if( type === "user" ){
-				fetchSearchUserByHandle(data)
-				.then( action => {
-					if( !action.error ){
-						this.openChat(action.payload,type);
-					}
-				});
+				searchUserByHandle(data);
 			} else {
-				fetchSearchGroupById(data)
-				.then( action => {
-					if( !action.error ){
-						this.openChat(action.payload,type);
-					}
-				});
+				searchGroupById(data);
 			}
 		}
 	}
-	getChats = (from) => {
+  componentDidUpdate = (prevProps,prevState) => {
+    if( prevProps.searched.user.id !== this.props.searched.user.id ){
+				this.openChat(this.props.searched.user,"user");
+    } else if( prevProps.searched.group.id !== this.props.searched.group.id ){
+				this.openChat(this.props.searched.group,"group");
+    }
+  }
+	getChats = () => {
 		const { getChats, isFetching } = this.props;
-		const { to, type } = this.state;
-    const chats = this.props.chats[this.getFullHandle(type,to.handle)];
+		const { to : from, type } = this.state;
+    const chats = this.props.chats[this.getFullHandle(type,from.handle)];
 		if( !isFetching.getChats ){
 			const { getChats } = this.props;
 			getChats({ from, type, limit, offset : chats?chats.length:0 });
@@ -88,7 +85,7 @@ class Chat extends Component {
 		const { to, type } = this.state;
 		const chats = this.props.chats[this.getFullHandle(type,to.handle)];
 		if( to ){
-			await this.getChats(to,type,chats?chats.length:0);
+			await this.getChats();
 		}
 		if( callback ){
 			callback();
@@ -121,10 +118,11 @@ class Chat extends Component {
 			layer : null,
 			type,
 			to
-		});
-		if( !chats[this.getFullHandle(type,to.handle)] ){
-			this.getChats(to,type);
-		}
+		}, () => {
+		  if( !chats[this.getFullHandle(type,to.handle)] ){
+			  this.getChats();
+		  }
+    });
 	}
 	inviteUsers = users => {
 		const { layer } = this.state;
@@ -133,11 +131,7 @@ class Chat extends Component {
 		} else if( layer === "group" ){
 			const { makeGroup, history } = this.props;
 			makeGroup({ userIds : users.map( user => user.id )  })
-			.then( action => {
-				if( !action.error ){
-					this.openChat(action.payload,layer);
-				}
-			});
+			//this.openChat(action.payload,layer);
 		}
 	}
 	handleClickOutside = () => {
@@ -200,7 +194,7 @@ class Chat extends Component {
 		this.textarea.style.height = height+"px"
 	}
 	render(){
-		const { fetchSearchUsers, searched, chats, user, dialogs } = this.props;
+		const { searchUsers, searched, chats, user, dialogs } = this.props;
 		const { to, menu, layer, type, text, height } = this.state;
 		return(
 			<div className="Chat">
@@ -265,7 +259,7 @@ class Chat extends Component {
 				</div>
 				{ layer === null ? 
 					<div /> 
-					: <Layer user={user} type={layer} showChatLayer={this.showChatLayer} fetchSearchUsers={fetchSearchUsers} searched={searched} inviteUsers={this.inviteUsers} />
+					: <Layer user={user} type={layer} showChatLayer={this.showChatLayer} searchUsers={searchUsers} searched={searched} inviteUsers={this.inviteUsers} />
 				}
 			</div>
 		);
@@ -274,9 +268,9 @@ class Chat extends Component {
 
 const stateToProps = ({ dialogs, searched, chats, isFetching }) => ({ dialogs, searched, chats, isFetching })
 const actionToProps = {
-	fetchSearchUserByHandle,
-	fetchSearchUsers,
-	fetchSearchGroupById,
+	searchUserByHandle : searchUserByHandle.REQUEST,
+	searchUsers : searchUsers.REQUEST,
+	searchGroupById : searchGroupById.REQUEST,
 	sendChat : sendChat.REQUEST,
 	getChats : getChats.REQUEST,
 	getDialogs : getDialogs.REQUEST,

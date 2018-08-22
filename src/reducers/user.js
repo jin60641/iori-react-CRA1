@@ -49,10 +49,10 @@ export default handleActions({
 	[removePost.FAILURE]: (state, action) => {
 		return state;
   },
-	[follow]: (state, action) => {
+	[follow.SUCCESS]: (state, action) => {
 		if( action.error ) {
 			return state;
 		}
-		return Object.assign(state,{ followings : state.followings+(action.payload?1:-1) })
+		return { ...state, followings : state.followings+(action.payload.following?1:-1) }
 	}
 }, initialState);

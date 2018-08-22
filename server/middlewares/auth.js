@@ -106,7 +106,7 @@ obj.changePw = async ( req, res ) => {
 	const { password = "", email = "", link = "" } = req.body;
 	const where = { email : req.user?req.user.email:email } 
 	const user = await db.User.findOne({ where });
-	if( user && ( obj.isLoggedIn(req) || (db.User.createHashedEmail(email) === link) ) ){
+	if( user && ( await obj.isLoggedIn(req) || (db.User.createHashedEmail(email) === link) ) ){
 		await db.User.update({ password },{ where });
 		res.send({ data : '비밀번호가 성공적으로 재설정되었습니다.' });
 	} else {
@@ -124,8 +124,8 @@ obj.checkSession = async ( req, res, next ) => {
 	}
 }
 
-obj.checkAdmin = ( req, res, next ) => {
-	if( obj.isLoggedIn(req) ){
+obj.checkAdmin = async ( req, res, next ) => {
+	if( await obj.isLoggedIn(req) ){
 		db.User.findOne({ where : { id : req.user.id, adin : true }, raw : true }).then( user => {
 			if( user ){
 				return next();

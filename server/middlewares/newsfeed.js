@@ -79,7 +79,7 @@ obj.getPosts = async ( req, res ) => {
 	const where = {};
 	if( userId ){
 		where.userId = userId;
-	} else {
+	} else if( req.user ){
 		const follows = await db.Follow.findAll({ where : { fromId : req.user.id }});
 		const userIds = follows.map( follow => follow.dataValues.toId ).concat([req.user.id]);
 		where.userId = { $in : userIds };

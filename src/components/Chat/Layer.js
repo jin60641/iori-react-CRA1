@@ -37,7 +37,7 @@ class Layer extends Component {
 		this.setState({selected});
 	}
 	handleSearch = (e) => {
-		const { fetchSearchUsers } = this.props;
+		const { searchUsers } = this.props;
 		const query = e.target.value
 		this.setState({
 			query
@@ -46,12 +46,7 @@ class Layer extends Component {
 			return null;
 		}
 		const data = { query };
-		fetchSearchUsers(data)
-		.then( (action) => {
-			if( !action.error ){
-			} else {
-			}
-		});
+		searchUsers(data);
 	}
 	handleClickInvite = () => {
 		const { type, inviteUsers } = this.props;

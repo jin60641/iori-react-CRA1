@@ -1,26 +1,22 @@
-import {createAction} from 'redux-actions';
+import createAction from './createAsyncAction';
+
+import { from } from 'rxjs'
+import { map, mergeMap } from 'rxjs/operators';
+import { combineEpics, ofType } from 'redux-observable';
+import api from '../api/relation';
 
 export const follow = createAction('FOLLOW');
 
-const followUri = '/api/relation/follow';
+const followEpic = (action$) => action$.pipe(
+  ofType(follow.REQUEST),
+  mergeMap( action => from(api.follow(action.payload)) ),
+  map( body =>
+    body.data
+      ? follow.SUCCESS(body.data)
+      : follow.FAILURE(new Error(body.message))
+  )
+);
 
-export const fetchFollow = (data) => {
-	return async (dispatch) => {
-		const resp = await fetch(followUri, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(data),
-			credentials: 'include'
-		});
-		const body = await resp.json();
-		if(body.data !== null){
-			return dispatch(follow(body.data));
-		} else {
-			return dispatch(follow(new Error(body.message)));
-		}
-	}
-};
-
+export default combineEpics(
+  followEpic,
+);
