@@ -11,7 +11,7 @@ export const writePost = createAction('WRITE_POST');
 export const removePost = createAction('REMOVE_POSTS');
 
 const getPostEpic = action$ => action$.pipe(
-  ofType('getpost'),
+  ofType(getPost.ORIGIN),
   map( action => getPost.SUCCESS(action.payload) )
 );
 

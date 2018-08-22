@@ -62,12 +62,12 @@ obj.writePost = async (req,res) => {
 		fs.move(file.path,path.join(dir,(i+1)+".png"));
 	});
 
-	const follows = await db.Follow.findAll({ where : { fromId : req.user.id }});
-	const userIds = follows.map( follow => follow.dataValues.toId ).concat([req.user.id]);
-	userIds.forEach( user => {
-		const socketId = socketIds[user.id];
-		if( socketId && req.user.id != user.id ){
-			io.sockets.connected[socketId].emit( 'getpost', post );
+	const follows = await db.Follow.findAll({ where : { toId : req.user.id }});
+	const userIds = follows.map( follow => follow.dataValues.fromId );
+	userIds.forEach( userId => {
+		const socketId = socketIds[userId];
+		if( socketId && req.user.id != userId ){
+			io.sockets.connected[socketId].emit( 'GET_POST', post );
 		}
 	});
   noticeMws.makeNotice(req.user,'post',post.id,userIds);

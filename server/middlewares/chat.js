@@ -52,7 +52,7 @@ obj.sendChat = async (req,res) => {
 	userIds.forEach( userId => {
 		const socketId = socketIds[userId];
 		if( socketId && req.user.id != userId ){
-			io.sockets.connected[socketId].emit( 'getchat', { from : req.user, handle : chr + (chat.type==="user"?chat.from.handle:chat.to.handle), chat } );
+			io.sockets.connected[socketId].emit( 'GET_CHAT', { from : req.user, handle : chr + (chat.type==="user"?chat.from.handle:chat.to.handle), chat } );
 		}
 	})
   noticeMws.makeNotice(req.user,'chat',chat.id,userIds);

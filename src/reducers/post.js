@@ -6,11 +6,8 @@ let initialState = {
 };
 
 export default handleActions({
-  [getPost.SUCCESS]: (state, action) => {
+  [getPost.ORIGIN]: (state, action) => {
     return { ...state, Home : [action.payload].concat(state.Home) };
-  },
-  [getPost.FAILURE]: (state, action) => {
-    return state;
   },
   [getPosts.SUCCESS]: (state, action) => {
     const { key, posts } = action.payload;

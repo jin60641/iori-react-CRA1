@@ -18,7 +18,7 @@ const sendChatUri = '/api/chat/sendchat';
 const makeGroupUri = '/api/chat/makegroup';
 
 const getChatEpic = action$ => action$.pipe(
-  ofType('getchat'),
+  ofType(getChat.ORIGIN),
   mergeMap( action => [
     getChat.SUCCESS(action.payload),
     getDialog.SUCCESS(action.payload)

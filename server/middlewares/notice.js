@@ -8,26 +8,26 @@ const noticeString = {
 }
 
 
-obj.makeNotice = async (user,type,id,to) => {
-  const current = {
-    type,
-    text : noticeString[type](user.name),
-    [`${type}Id`] : id,
-    fromId : user.id,
-    toId : to
-  };
-  const created = await db.Notice.create(current);
-  const result = await db.Notice.findOne({
-    where : {
-      id : created.dataValues.id
-    },
-    include : db.Notice.include
-  });
-  const notice = await result.get({ plain : true });
-  (to.constructor === Array?to:[to]).forEach( userId => {
+obj.makeNotice = (user,type,id,to) => {
+  (to.constructor === Array?to:[to]).forEach( async userId => {
+    const current = {
+      type,
+      text : noticeString[type](user.name),
+      [`${type}Id`] : id,
+      fromId : user.id,
+      toId : userId
+    };
+    const created = await db.Notice.create(current);
+    const result = await db.Notice.findOne({
+      where : {
+        id : created.dataValues.id
+      },
+      include : db.Notice.include
+    });
+    const notice = await result.get({ plain : true });
     const socketId = socketIds[userId];
     if( socketId ){
-      io.sockets.connected[socketId].emit( 'getnotice', notice );
+      io.sockets.connected[socketId].emit( 'GET_NOTICE', notice );
     }
   })
 }

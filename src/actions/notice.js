@@ -7,7 +7,7 @@ import { combineEpics, ofType } from 'redux-observable';
 export const getNotice = createAction('GET_NOTICE');
 
 const fetchGetNotice = action$ => action$.pipe(
-  ofType('getnotice'),
+  ofType(getNotice.ORIGIN),
   mergeMap( action => [
     getNotice.SUCCESS(action.payload),
   ])
