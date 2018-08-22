@@ -1,3 +1,1 @@
-iori, created by react
-
-iori.kr
+iori, powered by react ( create-react-app )
