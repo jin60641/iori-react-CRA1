@@ -20,9 +20,14 @@ const loginEpic = (action$) => action$.pipe(
   ofType(login.REQUEST),
   mergeMap( action => from(api.login(action.payload)) ),
   mergeMap( body => 
-    body.data
-      ? [login.SUCCESS(body.data),connectSocket.REQUEST(),successToastr(body.message)]
-      : [login.FAILURE(new Error(body.message)),warningToastr(body.message)]
+    body.data ? [
+      login.SUCCESS(body.data),
+      connectSocket.REQUEST(),
+      successToastr(body.message)
+    ] : [
+      login.FAILURE(new Error(body.message)),
+      warningToastr(body.message)
+    ]
   )
 );
 
@@ -30,9 +35,13 @@ const logoutEpic = (action$) => action$.pipe(
   ofType(logout.REQUEST),
   mergeMap( action => from(api.logout()) ),
   mergeMap( body =>
-    body.data
-      ? [logout.SUCCESS(body.data),successToastr(body.message)]
-      : [logout.FAILURE(new Error(body.message)),warningToastr(body.message)]
+    body.data ? [
+      logout.SUCCESS(body.data),
+      successToastr(body.message)
+    ] : [
+      logout.FAILURE(new Error(body.message)),
+      warningToastr(body.message)
+    ]
   )
 );
 
@@ -40,9 +49,12 @@ const loggedInEpic = (action$) => action$.pipe(
   ofType(loggedIn.REQUEST),
   mergeMap( action => from(api.loggedIn()) ),
   mergeMap( body =>
-    body.data
-      ? [loggedIn.SUCCESS(body.data),connectSocket.REQUEST()]
-      : [loggedIn.FAILURE(new Error(body.message))]
+    body.data ? [
+      loggedIn.SUCCESS(body.data),
+      connectSocket.REQUEST()
+    ] : [
+      loggedIn.FAILURE(new Error(body.message))
+    ]
   )
 );
 
@@ -50,9 +62,13 @@ const joinEpic = (action$) => action$.pipe(
   ofType(join.REQUEST),
   mergeMap( action => from(api.join(action.payload)) ),
   mergeMap( body =>
-    body.data
-      ? [join.SUCCESS(body.data),successToastr(body.message)]
-      : [join.FAILURE(new Error(body.message)),warningToastr(body.message)]
+    body.data ? [
+      join.SUCCESS(body.data),
+      successToastr(body.message)
+    ] : [
+      join.FAILURE(new Error(body.message)),
+      warningToastr(body.message)
+    ]
   )
 );
 
@@ -61,8 +77,8 @@ const verifyMailEpic = (action$) => action$.pipe(
   mergeMap( action => from(api.verifyMail(action.payload)) ),
   map( body =>
     body.data
-      ? verifyMail.SUCCESS(body.data)
-      : verifyMail.FAILURE(new Error(body.message))
+    ? verifyMail.SUCCESS(body.data)
+    : verifyMail.FAILURE(new Error(body.message))
   )
 );
 
@@ -70,9 +86,13 @@ const findPwEpic = (action$) => action$.pipe(
   ofType(findPw.REQUEST),
   mergeMap( action => from(api.findPw(action.payload)) ),
   mergeMap( body =>
-    body.data
-      ? [findPw.SUCCESS(body.data),successToastr(body.message)]
-      : [findPw.FAILURE(new Error(body.message)),warningToastr(body.message)]
+    body.data ? [
+      findPw.SUCCESS(body.data),
+      successToastr(body.message)
+    ] : [
+      findPw.FAILURE(new Error(body.message)),
+      warningToastr(body.message)
+    ]
   )
 );
 
@@ -80,9 +100,13 @@ const changePwEpic = (action$) => action$.pipe(
   ofType(changePw.REQUEST),
   mergeMap( action => from(api.changePw(action.payload)) ),
   mergeMap( body => 
-    body.data
-      ? [changePw.SUCCESS(body.data),successToastr(body.message)]
-      : [changePw.FAILURE(new Error(body.message)),warningToastr(body.message)]
+    body.data ? [
+      changePw.SUCCESS(body.data),
+      successToastr(body.message)
+    ] : [
+      changePw.FAILURE(new Error(body.message)),
+      warningToastr(body.message)
+    ]
   )
 );
 
