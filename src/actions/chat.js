@@ -53,10 +53,10 @@ const sendChatEpic = (action$) => action$.pipe(
 const makeGroupEpic = (action$) => action$.pipe(
   ofType(makeGroup.REQUEST),
   mergeMap( action => from(api.makeGroup(action.payload)) ),
-  map( body =>
+  mergeMap( body =>
     body.data
-      ? makeGroup.SUCCESS(body.data)
-      : makeGroup.FAILURE(new Error(body.message))
+      ? [makeGroup.SUCCESS(body.data),getDialog.SUCCESS(body.data)]
+      : [makeGroup.FAILURE(new Error(body.message))]
   )
 )
 

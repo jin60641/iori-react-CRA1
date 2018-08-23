@@ -14,6 +14,7 @@ export default handleActions({
 		return nextState;
 	},
 	[getDialog.SUCCESS]: (state, action) => {
+    console.log(action);
 		const { chat, handle } = action.payload;
 		chat.handle = handle;
 		let nextState = [].concat(state);

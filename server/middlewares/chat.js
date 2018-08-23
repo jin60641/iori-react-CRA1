@@ -145,7 +145,15 @@ obj.makeGroup = async (req,res) => {
 			await created.update({ name : names.length <= 7 ? names.join(", ") : `${names.slice(0,5).join(", ")} 외 ${names.length-5}명` });
 			const raw = await db.Group.findOne({ where : { id }, include : db.Group.include });
 			const group = raw.get({ plain : true });
-			res.send({ "data" : group });
+			res.send({ "data" : {
+        handle : strToChar['group'] + group.handle,
+        chat : {
+          to : group,
+          group,
+          from : req.user,
+          type : 'group'
+        }
+      }});
 		});
 	}
 }

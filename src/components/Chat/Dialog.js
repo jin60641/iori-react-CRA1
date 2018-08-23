@@ -5,8 +5,8 @@ const cx = classNames.bind(styles);
 
 class Dialog extends Component {
 	getDateString = createdAt => {
-		const date = new Date(createdAt);
 		const now = new Date();
+		const date = new Date(createdAt?createdAt:now);
 		const date_time = Math.floor(date.getTime()/1000)
 		const now_time = Math.floor(now.getTime()/1000)
 		const gap = now_time - date_time;
@@ -32,8 +32,8 @@ class Dialog extends Component {
 					<div className="dialog-message-name">
 						{ my ? to.name : from.name }
 					</div>
-					<div className="dialog-message-text">
-						{ my ? `나 : ${dialog.text}`  : dialog.text }
+					<div className={cx("dialog-message-text",{"dialog-message-text-hidden":!dialog.text&&!dialog.file})}>
+            { my ? `나 : ${dialog.text}`  : dialog.text }
 					</div>
 				</div>
 			</div>

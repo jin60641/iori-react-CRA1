@@ -50,16 +50,17 @@ class Layer extends Component {
 	}
 	handleClickInvite = () => {
 		const { type, inviteUsers } = this.props;
-        const { selected } = this.state;
-        const keys = Object.keys(selected);
-        if( !keys.length ){
-            return false;
-        }
-        if( type === "user" ){
+    const { selected } = this.state;
+    const keys = Object.keys(selected);
+    if( !keys.length ){
+      return false;
+    }
+    if( type === "user" ){
 			inviteUsers([selected[keys[0]]]);
-        } else if( type === "group" ){
+    } else if( type === "group" ){
 			inviteUsers(keys.map( key => { return selected[key] } ));
-        }
+    }
+    this.handleClickLayer();
 	}
 	render(){
 		const { showChatLayer, searched, type } = this.props
