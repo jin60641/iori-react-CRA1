@@ -4,6 +4,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { combineEpics, ofType } from 'redux-observable';
 
 import { connectSocket } from './socket'
+import { warningToastr } from './toastr'
 
 import api from '../api/auth';
 
@@ -21,7 +22,7 @@ const loginEpic = (action$) => action$.pipe(
   mergeMap( body => 
     body.data
       ? [login.SUCCESS(body.data),connectSocket.REQUEST()]
-      : [login.FAILURE(new Error(body.message))]
+      : [login.FAILURE(new Error(body.message)),warningToastr(body.message)]
   )
 );
 
