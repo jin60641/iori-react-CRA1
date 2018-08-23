@@ -4,7 +4,7 @@
   vertical-align: top;
   padding-top: 10px;
   overflow-y: hidden;
-  min-height: calc( 100vh - 42px);
+  min-height: calc( 100vh - $header-height);
   width: 600px;
   max-width: 100%;
   box-sizing: border-box; }
