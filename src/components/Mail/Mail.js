@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 import './Mail.css';
 import { verifyMail } from '../../actions/auth';
 
+const actionToProps = {
+	verifyMail : verifyMail.REQUEST
+}
+
+@connect(undefined,actionToProps)
 class Mail extends Component {
-	constructor(props){
-		super(props);
-	}
 	componentDidMount(){
 		const { verifyMail, match } = this.props;
 		const data = match.params;
@@ -35,8 +37,4 @@ class Mail extends Component {
 	}
 }
 
-const actionToProps = {
-	verifyMail : verifyMail.REQUEST
-}
-
-export default connect(undefined,actionToProps)(Mail);
+export default Mail;

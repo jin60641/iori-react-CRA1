@@ -4,9 +4,6 @@ import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
 class Dialog extends Component {
-	constructor(props){
-		super(props);
-	}
 	getDateString = createdAt => {
 		const date = new Date(createdAt);
 		const now = new Date();
@@ -14,8 +11,8 @@ class Dialog extends Component {
 		const now_time = Math.floor(now.getTime()/1000)
 		const gap = now_time - date_time;
 		if( gap < 86400 ){
-			return ((date.getDate()!=now.getDate())?"어제 ":"") + (date.getHours()<=9?"0":"") + date.getHours() + ":" + (date.getMinutes()<=9?"0":"") + date.getMinutes();
-		} else if( date.getDate() != now.getDate() ){
+			return ((date.getDate() !== now.getDate())?"어제 ":"") + (date.getHours()<=9?"0":"") + date.getHours() + ":" + (date.getMinutes()<=9?"0":"") + date.getMinutes();
+		} else if( date.getDate() !== now.getDate() ){
 			return (date.getYear()-100)+'/'+(date.getMonth()<=8?"0":"")+(date.getMonth()+1)+'/'+(date.getDate()<=9?0:"")+date.getDate();
 		}
 	}
@@ -30,7 +27,7 @@ class Dialog extends Component {
 				<div className="dialog-time">
 					{ this.getDateString(dialog.createdAt) }
 				</div>
-				<img className="dialog-img" src={profileUri} />
+				<img className="dialog-img" src={profileUri} alt={`${my?to.name:from.name}'s profile`} />
 				<div className="dialog-message-wrap">
 					<div className="dialog-message-name">
 						{ my ? to.name : from.name }

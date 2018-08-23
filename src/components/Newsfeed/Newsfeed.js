@@ -8,6 +8,13 @@ import Write from './Write';
 const initialState = {
 	limit : 10,
 }
+
+const stateToProps = ({posts,user},props) => ({posts : posts[props.id]?posts[props.id]:[],user});
+const actionToProps = {
+	getPosts : getPosts.REQUEST,
+}
+
+@connect(stateToProps,actionToProps)
 class Newsfeed extends Component {
 	constructor(props) {
 		super(props);
@@ -31,7 +38,7 @@ class Newsfeed extends Component {
 		getPosts(data);
 	}
 	render() {
-		const { user, write, id, posts } = this.props;
+		const { write, id, posts } = this.props;
 		return (
 			<div className="Newsfeed">
 				{ write ? <Write /> : null }
@@ -41,8 +48,4 @@ class Newsfeed extends Component {
 	}
 };
 
-const stateToProps = ({posts,user},props) => ({posts : posts[props.id]?posts[props.id]:[],user});
-const actionToProps = {
-	getPosts : getPosts.REQUEST,
-}
-export default connect(stateToProps, actionToProps)(Newsfeed);
+export default Newsfeed;

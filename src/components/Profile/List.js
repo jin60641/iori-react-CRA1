@@ -4,14 +4,18 @@ import { connect } from 'react-redux';
 import { searchFollows } from '../../actions/search';
 import { follow } from '../../actions/relation';
 
-import styles from './List.css';
+import './List.css';
 
+const stateToProps = ({searched}) => ({follows : searched.follows});
+
+const actionToProps = {
+	follow : follow.REQUEST,
+	searchFollows : searchFollows.REQUEST
+}
+
+@connect(stateToProps,actionToProps)
 class List extends Component {
-	constructor(props){
-		super(props);
-	}
 	componentDidMount = () => {
-		const { follows } = this.props;
 		const { userId, searchFollows } = this.props;
 		const tab = this.props.match.params.tab;
 		const query = {
@@ -51,11 +55,4 @@ class List extends Component {
 	}
 }
 
-const stateToProps = ({searched}) => ({follows : searched.follows});
-
-const actionToProps = {
-	follow : follow.REQUEST,
-	searchFollows : searchFollows.REQUEST
-}
-
-export default connect(stateToProps,actionToProps)(List);
+export default List;

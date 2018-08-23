@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 class Change extends Component {
 	constructor(props){
@@ -9,22 +8,9 @@ class Change extends Component {
 		}
 	}
 	handleChangePw = data => {
-		const { changePw, user } = this.props;
+		const { changePw } = this.props;
 		const { email, link } = this.props.params.match;
     changePw({ ...data, email, link })
-    /*
-		.then( action => {
-			if( action.error ){
-				this.setState({
-					message : action.payload.message
-				});
-			} else {
-				this.setState({
-					message : action.payload
-				});
-			}
-		});
-    */
 	}
 	handleSubmit = e => {
 		e.preventDefault();
@@ -44,7 +30,6 @@ class Change extends Component {
 	}
 
 	render(){ 
-		const { cx } = this.props;
 		const { message } = this.state;
 		return (
 			<form className="auth-form" onSubmit={this.handleSubmit} >

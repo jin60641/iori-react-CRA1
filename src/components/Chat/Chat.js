@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Textarea from 'react-textarea-autosize';
 
 import Dialog from './Dialog';
 import Panel from './Panel';
@@ -35,6 +34,18 @@ const initialState = {
 
 const limit = 30;
 
+const stateToProps = ({ dialogs, searched, chats, isFetching }) => ({ dialogs, searched, chats, isFetching })
+const actionToProps = {
+	searchUserByHandle : searchUserByHandle.REQUEST,
+	searchUsers : searchUsers.REQUEST,
+	searchGroupById : searchGroupById.REQUEST,
+	sendChat : sendChat.REQUEST,
+	getChats : getChats.REQUEST,
+	getDialogs : getDialogs.REQUEST,
+	makeGroup : makeGroup.REQUEST,
+};
+
+@connect(stateToProps,actionToProps)
 class Chat extends Component {
 	constructor(props){
 		super(props);
@@ -48,7 +59,7 @@ class Chat extends Component {
 		showScroll(true);
 	}
 	componentDidMount = (e) => {
-		const { showScroll, searchGroupById, searchUserByHandle, getChats, getDialogs } = this.props;
+		const { showScroll, searchGroupById, searchUserByHandle, getDialogs } = this.props;
 		showScroll(false);
 		const chatHandle = this.props.match.params.handle;
 		getDialogs();
@@ -77,18 +88,13 @@ class Chat extends Component {
 		const { to : from, type } = this.state;
     const chats = this.props.chats[this.getFullHandle(type,from.handle)];
 		if( !isFetching.getChats ){
-			const { getChats } = this.props;
 			getChats({ from, type, limit, offset : chats?chats.length:0 });
     }
 	}
-	handleScrollTop = async (callback) => {
-		const { to, type } = this.state;
-		const chats = this.props.chats[this.getFullHandle(type,to.handle)];
+	handleScrollTop = () => {
+		const { to } = this.state;
 		if( to ){
-			await this.getChats();
-		}
-		if( callback ){
-			callback();
+			this.getChats();
 		}
 	}
 	handleClickMenu = (e) => {
@@ -129,9 +135,8 @@ class Chat extends Component {
 		if( layer === "user" ){
 			this.openChat(users[0],layer);
 		} else if( layer === "group" ){
-			const { makeGroup, history } = this.props;
+			const { makeGroup } = this.props;
 			makeGroup({ userIds : users.map( user => user.id )  })
-			//this.openChat(action.payload,layer);
 		}
 	}
 	handleClickOutside = () => {
@@ -266,14 +271,4 @@ class Chat extends Component {
 	}
 }
 
-const stateToProps = ({ dialogs, searched, chats, isFetching }) => ({ dialogs, searched, chats, isFetching })
-const actionToProps = {
-	searchUserByHandle : searchUserByHandle.REQUEST,
-	searchUsers : searchUsers.REQUEST,
-	searchGroupById : searchGroupById.REQUEST,
-	sendChat : sendChat.REQUEST,
-	getChats : getChats.REQUEST,
-	getDialogs : getDialogs.REQUEST,
-	makeGroup : makeGroup.REQUEST,
-};
-export default connect(stateToProps, actionToProps)(Chat);
+export default Chat;

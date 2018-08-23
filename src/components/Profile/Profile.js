@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, Link, Redirect } from 'react-router-dom'
+import { Route, Switch, Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { searchUserByHandle } from '../../actions/search';
 import { setProfile } from '../../actions/setting';
@@ -30,6 +30,15 @@ const initialState = {
 	tab : null,
 }
 
+const stateToProps = ({searched,user,isFetching}) => ({searched : searched.user,user,isFetching});
+
+const actionToProps = {
+	searchUserByHandle : searchUserByHandle.REQUEST,
+	setProfile : setProfile.REQUEST,
+	follow : follow.REQUEST
+}
+
+@connect(stateToProps,actionToProps)
 class Profile extends Component {
 	constructor(props){
 		super(props);
@@ -41,7 +50,7 @@ class Profile extends Component {
 	}
 	componentDidMount = () => {
 		const { searchUserByHandle } = this.props;
-		const { handle, tab } = this.props.match.params;
+		const { handle } = this.props.match.params;
 		searchUserByHandle({ query : handle });
 	}
   componentDidUpdate = prevProps => {
@@ -90,7 +99,7 @@ class Profile extends Component {
 		this.setState(nextState);
 	}
 	sendSetting = () => {
-		const { setProfile, user } = this.props;
+		const { setProfile } = this.props;
 		let formData = new FormData();
 		['profile','header'].forEach( key => {
 			const { file, img, x, y, height, width, remove } = this.state[key];
@@ -358,13 +367,5 @@ class Profile extends Component {
 	}
 }
 
-const stateToProps = ({searched,user,isFetching}) => ({searched : searched.user,user,isFetching});
-
-const actionToProps = {
-	searchUserByHandle : searchUserByHandle.REQUEST,
-	setProfile : setProfile.REQUEST,
-	follow : follow.REQUEST
-}
-
-export default connect(stateToProps,actionToProps)(Profile);
+export default Profile;
 

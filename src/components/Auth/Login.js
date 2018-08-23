@@ -12,15 +12,9 @@ class Login extends Component {
 			message : " "
 		}
 	}
-	componentWillMount() {
-	}
-	handleLogin = (email, password) => {
-		const { login, pushState } = this.props;
-		login({email,password});
-	}
 	handleSubmit = (e) => {
 		e.preventDefault();
-
+		const { login } = this.props;
 		const email = this.refs.email.value;
 		const password = this.refs.password.value;
 		if( email.length === 0 ){
@@ -36,7 +30,7 @@ class Login extends Component {
 				message : "비밀번호를 입력해 주세요."
 			});
 		} else {
-			this.handleLogin(email, password);
+		  login({email,password});
 		}
 	}
 	render(){
@@ -50,10 +44,10 @@ class Login extends Component {
 				<div className={ cx('auth-btn','login-local') } onClick={this.handleSubmit} >로그인</div>
 				<div className="auth-message"> { message } </div>
 				<div className={ cx('auth-btn','login-facebook') }>
-					<img className={ cx('auth-btn-img', 'auth-facebook-img') } src="/images/ic_facebook.png" />페이스북으로 로그인
+					<img className={ cx('auth-btn-img', 'auth-facebook-img') } src="/images/ic_facebook.png" alt="login by facebook"/>페이스북으로 로그인
 				</div>
 				<div className={ cx('auth-btn','login-twitter') }>
-					<img className={ cx('auth-btn-img', 'auth-twitter-img') } src="/images/ic_twitter.png" />트위터로 로그인
+					<img className={ cx('auth-btn-img', 'auth-twitter-img') } src="/images/ic_twitter.png" alt="login by twitter"/>트위터로 로그인
 				</div>
 				<div className="auth-text">비밀번호를 잊으셨나요? <Link className="auth-text-link" to="/auth/find">비밀번호 찾기</Link></div>
 				<div className="auth-text">아직 회원이 아니신가요? <Link className="auth-text-link" to="/auth/join">회원가입</Link></div>

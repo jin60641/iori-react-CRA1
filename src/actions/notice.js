@@ -1,7 +1,6 @@
 import createAction from './createAsyncAction';
 
-import { fromEvent, of } from 'rxjs'
-import { map, mergeMap, concat } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { combineEpics, ofType } from 'redux-observable';
 
 export const getNotice = createAction('GET_NOTICE');

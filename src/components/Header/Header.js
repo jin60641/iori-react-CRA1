@@ -4,6 +4,7 @@ import { NavLink, withRouter } from "react-router-dom";
 import './Header.css';
 import Menu from './Menu';
 
+@withRouter
 class Header extends Component {
 	constructor(props) {
 		super(props);
@@ -40,5 +41,4 @@ class Header extends Component {
 	}
 }
 
-export default withRouter(Header);
-
+export default Header;

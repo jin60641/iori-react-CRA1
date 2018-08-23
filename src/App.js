@@ -8,10 +8,15 @@ import Body from './components/Body/Body';
 import { loggedIn, logout } from './actions/auth';
 import ReduxToastr from 'react-redux-toastr'
 
+const stateToProps = ({user,socket}) => ({user,socket});
+
+const actionToProps = {
+  logout : logout.REQUEST,
+  loggedIn : loggedIn.REQUEST,
+}
+
+@connect(stateToProps,actionToProps)
 class App extends Component {
-  constructor(props){
-    super(props);
-  }
   componentDidMount(){
     const { loggedIn } = this.props;
     loggedIn();
@@ -50,11 +55,5 @@ class App extends Component {
   }
 };
 
-const stateToProps = ({user,socket}) => ({user,socket});
-
-const actionToProps = {
-  logout : logout.REQUEST,
-  loggedIn : loggedIn.REQUEST,
-}
-export default connect(stateToProps,actionToProps)(App);
+export default App;
 

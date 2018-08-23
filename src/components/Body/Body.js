@@ -15,7 +15,7 @@ import Profile from '../Profile/Profile';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
-
+@withRouter
 class Body extends Component {
 	constructor(props){
 		super(props);
@@ -125,4 +125,4 @@ class Body extends Component {
 	}
 }
 
-export default withRouter(Body);
+export default Body;

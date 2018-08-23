@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { login, join, findPw, changePw } from '../../actions/auth';
-import { BrowserRouter as Router, Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { Redirect, Route, withRouter } from 'react-router-dom';
 import Login from './Login';
 import Join from './Join';
 import Find from './Find';
@@ -10,11 +10,17 @@ import styles from './Auth.css';
 import classNames from 'classnames/bind'
 const cx = classNames.bind(styles);
 
+const stateToProps = ({ user }) => ({ user });
+const actionToProps = {
+  login : login.REQUEST,
+  join : join.REQUEST,
+  findPw : findPw.REQUEST,
+  changePw : changePw.REQUEST,
+};
 
+@connect(stateToProps,actionToProps)
+@withRouter
 class Auth extends Component {
-  constructor(props){
-    super(props);
-  }
   componentDidMount(){
     const { showScroll } = this.props;
     showScroll(false);
@@ -29,10 +35,10 @@ class Auth extends Component {
     history.push(url);
   }
   render(){
-    const { login, join, pushState, user } = this.props;
+    const { login, join, user } = this.props;
     const { path } = this.props.match;
     return(
-      <div className="Auth">
+      <div className={cx("Auth")}>
         <div className="auth-helper"></div>
         <Route path={`${path}/login`} render={(props) => {
           if( user.verify ){
@@ -68,12 +74,4 @@ class Auth extends Component {
   }
 }
 
-const stateToProps = ({ user }) => ({ user });
-const actionToProps = {
-  login : login.REQUEST,
-  join : join.REQUEST,
-  findPw : findPw.REQUEST,
-  changePw : changePw.REQUEST,
-};
-
-export default connect(stateToProps,actionToProps)(withRouter(Auth));
+export default Auth;

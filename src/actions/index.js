@@ -1,5 +1,5 @@
-import { BehaviorSubject, concat } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+//import { BehaviorSubject } from 'rxjs';
+//import { mergeMap } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 
 import authEpic from './auth';

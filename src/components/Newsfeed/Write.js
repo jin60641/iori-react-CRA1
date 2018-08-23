@@ -10,6 +10,11 @@ const initialState = {
 }
 const maxFileCount = 4;
 
+const actionToProps = {
+	writePost : writePost.REQUEST
+}
+
+@connect(undefined,actionToProps)
 class Write extends Component {
 	constructor(props) {
 		super(props);
@@ -50,7 +55,7 @@ class Write extends Component {
 	}
 	render() {
 		return (
-			<div className="Write">
+			<div className={cx("Write")}>
 				<textarea className="write-text" value={this.state.text} onChange={this.handleChangeText} placeholder="글을 입력하세요" />
 				<div className="write-preview">
 					{ this.state.files.map((file) => {
@@ -65,8 +70,4 @@ class Write extends Component {
 	}
 }
 
-const actionToProps = {
-	writePost : writePost.REQUEST
-}
-export default connect(undefined,actionToProps)(Write);
-
+export default Write;

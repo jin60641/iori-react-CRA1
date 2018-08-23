@@ -44,7 +44,6 @@ class Panel extends Component {
 		});
 	}
    componentDidUpdate = (nextProps,nextState) => {
-		const dom = ReactDOM.findDOMNode(this.refs.Panel);
 		const { chats, to } = this.props;
 		const { timer } = this.state;
 		if( to.handle
@@ -54,7 +53,7 @@ class Panel extends Component {
 					to.handle === nextProps.to.handle
 					&& chats[to.handle]
 					&& nextProps.chats[to.handle]
-					&& ( chats[to.handle].length != nextProps.chats[to.handle].length )
+					&& ( chats[to.handle].length !== nextProps.chats[to.handle].length )
 				)
 			||
 				(
@@ -88,9 +87,9 @@ class Panel extends Component {
 		}
 	}
 	render(){
-		const { chats, to, user, handle, height } = this.props;
+		const { chats, user, handle, height } = this.props;
 		return(
-			<div className="Panel" ref="Panel" style={{ height : `calc(100% - ${height}px)` }}>
+			<div className={cx("Panel")} ref="Panel" style={{ height : `calc(100% - ${height}px)` }}>
 			{
 				chats[handle] ?
 					chats[handle].map( chat => {

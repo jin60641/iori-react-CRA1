@@ -27,7 +27,7 @@ class Menu extends Component {
 		if( user && user.verify ) {
 			return(
 				<div className="Menu">
-					<img src={ user.profile?`/files/profile/${user.id}.png`:defaultProfileUri } className="menu-profile" onClick={this.toggleMenu}/>
+					<img src={ user.profile?`/files/profile/${user.id}.png`:defaultProfileUri } className="menu-profile" onClick={this.toggleMenu} alt="your profile" />
 					<div className={cx("menu-list",{"menu-list-active":menu})} onClick={this.toggleMenu} >
 						<div className="menu-caret"> <div className="menu-caret-outer" /> <div className="menu-caret-inner" /> </div>
 						<Link to={`/@${user.handle}`} className="menu-list-item">프로필</Link>
@@ -38,7 +38,7 @@ class Menu extends Component {
 		} else {
 			return( 
 				<Link to="/auth/login" className="Menu">
-					<img src={ defaultProfileUri } className="menu-profile" />
+					<img src={ defaultProfileUri } className="menu-profile" alt="click to login" />
 				</Link>
 			);
 		}

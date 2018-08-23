@@ -12,11 +12,6 @@ export const getDialog = createAction('GET_DIALOG');
 export const sendChat = createAction('SEND_CHAT');
 export const makeGroup = createAction('MAKE_GROUP');
 
-const getChatsUri = '/api/chat/getchats';
-const getDialogsUri = '/api/chat/getdialogs';
-const sendChatUri = '/api/chat/sendchat';
-const makeGroupUri = '/api/chat/makegroup';
-
 const getChatEpic = action$ => action$.pipe(
   ofType(getChat.ORIGIN),
   mergeMap( action => [

@@ -1,12 +1,8 @@
 import createAction from './createAsyncAction';
 
-import { from, fromEvent, of } from 'rxjs'
-import { bindActionCreators } from 'redux'
-import { map, mergeMap, takeUntil } from 'rxjs/operators';
+import { from } from 'rxjs'
+import { map, mergeMap } from 'rxjs/operators';
 import { ofType, combineEpics } from 'redux-observable';
-
-import { newsfeedSocket } from './newsfeed.js';
-
 
 export const connectSocket = createAction('CONNECT_SOCKET');
 export const closeSocket = createAction('CLOSE_SOCKET');

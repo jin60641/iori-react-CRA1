@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 class Find extends Component {
 	constructor(props){
@@ -42,7 +41,6 @@ class Find extends Component {
 	}
 
 	render(){ 
-		const { cx } = this.props;
 		const { message } = this.state;
 		return (
 			<form className="auth-form" onSubmit={this.handleSubmit} >

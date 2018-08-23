@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 class Join extends Component {
 	constructor(props){
@@ -8,25 +7,9 @@ class Join extends Component {
 			message : ' '
 		}
 	}
-	handleJoin = data => {
-		const { fetchJoin } = this.props;
-		Join(data)
-    /*
-		.then( action => {
-			if( action.error ){
-				this.setState({
-					message : action.payload.message
-				});
-			} else {
-				this.setState({
-					message : action.payload
-				});
-			}
-		});
-    */
-	}
 	handleSubmit = e => {
 		e.preventDefault();
+		const { join } = this.props;
 		const email = this.refs.email.value;
 		const password = this.refs.password.value;
 		const passwordCheck = this.refs.passwordCheck.value;
@@ -57,12 +40,11 @@ class Join extends Component {
 				message : "비밀번호 확인이 일치하지 않습니다."
 			});
 		} else {
-			this.handleJoin({email,password,name,handle});
+			join({email,password,name,handle});
 		}
 	}
 
 	render(){ 
-		const { cx } = this.props;
 		const { message } = this.state;
 		return (
 			<form className="auth-form" onSubmit={this.handleSubmit} >

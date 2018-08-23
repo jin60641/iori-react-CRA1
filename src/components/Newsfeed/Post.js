@@ -5,10 +5,13 @@ import { removePost } from '../../actions/newsfeed';
 import { Link } from 'react-router-dom';
 import './Post.css';
 
+const stateToProps = ({user}) => ({user});
+const actionToProps = {
+  removePost : removePost.REQUEST,
+}
+
+@connect(stateToProps, actionToProps)
 class Post extends Component {
-  constructor(props) {
-    super(props);
-  }
   getDateString(str){
     let date = new Date(str);
     let now = new Date();
@@ -21,7 +24,7 @@ class Post extends Component {
       return Math.floor(gap/60/60)+"시간 전";
     } else {
       let day = Math.floor(gap/60/60/24);
-      if( day == 1 ){
+      if( day === 1 ){
         return "어제";
       } else if( day <= 7 ){
         return day + "일 전";
@@ -31,7 +34,7 @@ class Post extends Component {
     }
   }
   handleClickRemove = () => {
-    const { removePost, handleRemovePost, post, newsfeed } = this.props;
+    const { removePost, post, newsfeed } = this.props;
     removePost({ id : post.id, key : newsfeed })
   }
   render() {
@@ -73,10 +76,5 @@ class Post extends Component {
   }
 }
 
-
-const stateToProps = ({user}) => ({user});
-const actionToProps = {
-  removePost : removePost.REQUEST,
-}
-export default connect(stateToProps, actionToProps)(Post);
+export default Post;
 

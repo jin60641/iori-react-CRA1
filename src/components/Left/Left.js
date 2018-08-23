@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './Left.css';
+import './Left.css';
 
 class Left extends Component {
-	constructor(props){
-		super(props);
-	}
 	render(){
 		const { user } = this.props;
 		const profileLink = `/@${user.handle}`;

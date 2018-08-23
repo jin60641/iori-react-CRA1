@@ -5,6 +5,8 @@ import styles from './Menu.css';
 const cx = classNames.bind(styles);
 
 const initialState = { active : false };
+
+@withClickOutside
 class Menu extends Component {
 	constructor(props){
 		super(props);
@@ -40,4 +42,4 @@ class Menu extends Component {
 		);
 	}
 }
-export default withClickOutside(Menu);
+export default Menu;
