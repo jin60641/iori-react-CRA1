@@ -66,7 +66,7 @@ obj.writePost = async (req,res) => {
 	const userIds = follows.map( follow => follow.dataValues.fromId );
 	userIds.forEach( userId => {
 		const socketId = socketIds[userId];
-		if( socketId && req.user.id != userId ){
+		if( socketId && req.user.id != userId && io.sockets.connected[socketId] ){
 			io.sockets.connected[socketId].emit( 'GET_POST', post );
 		}
 	});

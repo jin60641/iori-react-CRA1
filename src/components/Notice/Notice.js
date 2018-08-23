@@ -10,7 +10,7 @@ const actionToProps = {
   getNotices : getNotices.REQUEST
 }
 
-const limit = 20;
+const limit = 5;
 
 @connect(stateToProps,actionToProps)
 class Notice extends Component {

@@ -4,6 +4,7 @@ const actionTypes = {
   SUCCESS : 'SUCCESS',
   FAILURE : 'FAILURE',
   CANCEL : 'CANCEL',
+  RESET : 'RESET',
 }
 
 const createAsyncAction = (type) => {

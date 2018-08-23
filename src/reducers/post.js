@@ -2,7 +2,8 @@ import { handleActions } from 'redux-actions';
 import { removePost, getPost, getPosts, writePost } from '../actions/newsfeed';
 
 let initialState = {
-  Home : []
+  Home : [],
+  detail : null
 };
 
 export default handleActions({
@@ -11,10 +12,17 @@ export default handleActions({
   },
   [getPosts.SUCCESS]: (state, action) => {
     const { key, posts } = action.payload;
-    return { ...state, [key] : (state[key]?state[key]:[]).concat(posts) };
+    if( key === 'detail' ){
+      return { ...state, detail : posts[0] };
+    } else {
+      return { ...state, [key] : (state[key]?state[key]:[]).concat(posts) };
+    }
   },
   [getPosts.FAILURE]: (state, action) => {
     return state;
+  },
+  [getPosts.RESET]: (state, action) => {
+    return { ...state, [action.payload] : initialState[action.payload] };
   },
   [writePost.SUCCESS]: (state, action) => {
     return { ...state, Home : [action.payload].concat(state.Home) };

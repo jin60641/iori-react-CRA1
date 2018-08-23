@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import styles from './Body.css';
 
 import Newsfeed from '../Newsfeed/Newsfeed';
+import Post from '../Newsfeed/Post';
 import Error from '../Error/Error';
 import Slider from '../Slider/Slider';
 import Mail from '../Mail/Mail';
@@ -108,6 +109,11 @@ class Body extends Component {
 						  />
 						: <Redirect to="/auth/login/notice" />
 					)}/>
+					<Route path="/post/:id" render={(props) => (
+            <Post {...props}
+              user={user}
+            />
+          )} />
 					<Route exact path="/" render={(props) => (
 						this.isLoggedIn() ? 
 							<div className="body-wrap"> 

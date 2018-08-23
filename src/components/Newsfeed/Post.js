@@ -1,17 +1,30 @@
 import React, { Component } from 'react';
 import Menu from './Menu';
 import { connect } from 'react-redux';
-import { removePost } from '../../actions/newsfeed';
+import { getPosts, removePost } from '../../actions/newsfeed';
 import { Link } from 'react-router-dom';
 import './Post.css';
 
-const stateToProps = ({user}) => ({user});
+const stateToProps = ({user,posts},props) => ({user,post : props.post?props.post:posts.detail});
 const actionToProps = {
+  getPost : getPosts.REQUEST,
+  resetPost : getPosts.RESET,
   removePost : removePost.REQUEST,
 }
 
 @connect(stateToProps, actionToProps)
 class Post extends Component {
+  componentDidMount = () => {
+    const { post, getPost } = this.props;
+    const id = this.props.match?this.props.match.params.id:null;
+    if( ( !post && id ) || ( post && id && id !== post.id ) ){
+      getPost({ key : 'detail', id });
+    }
+  }
+  componentWillUnmount = () => {
+    const { resetPost } = this.props;
+    resetPost('detail');
+  }
   getDateString(str){
     let date = new Date(str);
     let now = new Date();
@@ -39,6 +52,9 @@ class Post extends Component {
   }
   render() {
     const { post, user } = this.props;
+    if( !post ){
+      return null;
+    }
     if( post.deleted ){
       return (
         <div className="Post">
