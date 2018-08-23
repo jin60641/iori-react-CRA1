@@ -32,8 +32,47 @@ obj.makeNotice = (user,type,id,to) => {
   })
 }
 
-obj.getNotices = (req,res) => {
-  
+obj.getNotices = async (req,res) => {
+  const { id, limit, offset, type, gt, text } = req.body;
+  const where = {};
+  if( text ){
+    where.text = { $like : `%${text}%` };
+  }
+  if( type ){
+    where.type = type;
+  }
+  const query = {
+    where,
+    include : db.Notice.include,
+    order : [ ['id','DESC'] ],
+    offset,
+  }
+  if( id ){
+    if( gt ){
+      query.where.id = { $gt : id };
+    } else {
+      query.where.id = id;
+    }
+  } else {
+    query.limit = limit?limit:20;
+  }
+  const notices = await db.Notice.findAll(query);
+  res.send({ data : notices.map( notice => notice.get({ plain : true }) ) });
+};
+
+obj.removeNotice = async (req,res) => {
+  const { id } = req.body;
+  const where = {
+    id,
+    userId : req.user.id
+  }
+  const notice = await db.Notice.findOne({ where });
+  if( notice ){
+    await db.Notice.destroy({ where });
+    res.send({ data : id });
+  } else {
+    res.status(401).send({ message : '존재하지 않는 알림입니다.' });
+  }
 }
 
 module.exports = obj;

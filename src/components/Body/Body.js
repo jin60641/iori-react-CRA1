@@ -11,6 +11,7 @@ import Auth from '../Auth/Auth';
 import Chat from '../Chat/Chat';
 import Left from '../Left/Left';
 import Profile from '../Profile/Profile';
+import Notice from '../Notice/Notice';
 
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
@@ -99,6 +100,13 @@ class Body extends Component {
 							user = { user }
 							showScroll = { this.showScroll }
 						/>
+					)}/>
+					<Route path="/notice" render={(props) => (
+						this.isLoggedIn() ? 
+						  <Notice {...props} 
+						  	user = { user }
+						  />
+						: <Redirect to="/auth/login/notice" />
 					)}/>
 					<Route exact path="/" render={(props) => (
 						this.isLoggedIn() ? 

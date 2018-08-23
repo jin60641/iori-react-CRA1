@@ -25,7 +25,7 @@ class Auth extends Component {
     const { showScroll } = this.props;
     showScroll(false);
   }
-  componentWillUnMount(){
+  componentWillUnmount(){
     const { showScroll } = this.props;
     showScroll(true);
   }
