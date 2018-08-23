@@ -48,10 +48,10 @@ obj.sendChat = async (req,res) => {
 		const dir = path.join(__dirname,'..','..','files','chat');
 		fs.move(req.file.path,path.join(dir,chat.id+".png"));
 	}
-  const userIds = await (chat.group?chat.group.users:[chat.to]).map( user => user.id );
+  const userIds = await (chat.group?chat.group.users.filter( user => user.id !== req.user.id ):[chat.to]).map( user => user.id );
 	userIds.forEach( userId => {
 		const socketId = socketIds[userId];
-		if( socketId && req.user.id != userId ){
+		if( socketId ){
 			io.sockets.connected[socketId].emit( 'GET_CHAT', { from : req.user, handle : chr + (chat.type==="user"?chat.from.handle:chat.to.handle), chat } );
 		}
 	})

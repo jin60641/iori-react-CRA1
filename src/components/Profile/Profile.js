@@ -235,9 +235,9 @@ class Profile extends Component {
 	render(){
 		const { isSetting, helper, header, moving, profile } = this.state;
 		const { isTop, isBottom, isLoggedIn, searched : user } = this.props;
-		if( !user ){
+		if( !user.id ){
 			return( null );
-		} 
+		}
 		const my = isLoggedIn() && user.id === this.props.user.id;
 		const headerLabelStyle = {
 			backgroundImage : ( !isSetting || header.file ) ? `url("${header.img.src}")` : "none",
@@ -351,7 +351,7 @@ class Profile extends Component {
 					<Route exact path="/@:handle" render={(props) => (
 						<Newsfeed {...props}
 							key={`Profile-${user.id}`}
-                id={user.id}
+              id={user.id}
 							isBottom={ isBottom }
 							options={ { userId : user.id } }
 						/>

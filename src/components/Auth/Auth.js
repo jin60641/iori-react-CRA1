@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { login, join, findPw, changePw } from '../../actions/auth';
+import { warningToastr } from '../../actions/toastr';
 import { Redirect, Route, withRouter } from 'react-router-dom';
 import Login from './Login';
 import Join from './Join';
@@ -16,6 +17,7 @@ const actionToProps = {
   join : join.REQUEST,
   findPw : findPw.REQUEST,
   changePw : changePw.REQUEST,
+  warningToastr
 };
 
 @connect(stateToProps,actionToProps)
@@ -35,7 +37,7 @@ class Auth extends Component {
     history.push(url);
   }
   render(){
-    const { login, join, user, findPw, changePw } = this.props;
+    const { login, join, user, findPw, changePw, warningToastr } = this.props;
     const { path } = this.props.match;
     return(
       <div className={cx("Auth")}>
@@ -49,7 +51,7 @@ class Auth extends Component {
             return (
               <Login {...props}
                 login={login}
-                pushState={ this.pushState }
+                warningToastr={warningToastr}
               />
             )
           }
@@ -57,16 +59,19 @@ class Auth extends Component {
         <Route path={`${path}/join`} render={(props) => (
           <Join {...props}
             join={join}
+            warningToastr={warningToastr}
           />
         )}/>
         <Route path={`${path}/find`} render={(props) => (
           <Find {...props}
             findPw={findPw}
+            warningToastr={warningToastr}
           />
         )}/>
         <Route path={`${path}/change/:email?/:link?`} render={(props) => (
           <Change {...props}
             changePw={changePw}
+            warningToastr={warningToastr}
           />
         )}/>
       </div>

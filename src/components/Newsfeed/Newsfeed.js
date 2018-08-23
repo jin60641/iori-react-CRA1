@@ -42,7 +42,7 @@ class Newsfeed extends Component {
 		return (
 			<div className="Newsfeed">
 				{ write ? <Write /> : null }
-				{ posts.map((post,i) => (<Post post={post} key={post.id} newsfeed={id} />) ) }
+				{ posts.map((post,i) => (<Post post={post} key={`${id}-${post.id}`} newsfeed={id} />) ) }
 			</div>
 		);
 	}

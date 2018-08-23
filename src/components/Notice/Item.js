@@ -12,7 +12,7 @@ const actionToProps = {
 const links = {
   post : (notice) => `/post/${notice.postId}`,
   follow : (notice) => `/@${notice.from.handle}`,
-  chat : (notice) => notice.chat.type==="user"?`@${notice.from.handle}`:`#${notice.group.handle}`
+  chat : (notice) => notice.chat.type==="user"?`/chat/@${notice.from.handle}`:`/chat/$${notice.chat.group.handle}`
 }
 
 @connect(undefined,actionToProps)
@@ -31,11 +31,9 @@ class Item extends Component {
   }
 	render(){
     const { notice } = this.props;
-//  const profileLink = `/@${user.handle}`;
-    const link = "";
     const icon = notice.from.profile?`/files/profile/${notice.from.id}.png`:'/images/profile.png';
     return (
-		  <Link className="Notice-Item" to={link} >
+		  <Link className="Notice-Item" to={links[notice.type](notice)} >
   		  <img className="item-icon" src={icon} alt="notice icon" />
         <div className="item-text">
           { notice.text }

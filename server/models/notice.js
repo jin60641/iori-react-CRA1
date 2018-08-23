@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes){
 	const Notice = sequelize.define('Notice', {
 		id : { type : DataTypes.INTEGER, primaryKey : true, autoIncrement : true },
     text : { type : DataTypes.STRING },
+    type : { type : DataTypes.STRING },
 	},{
 		timestamps : true,
 		paranoid : true,
@@ -16,7 +17,7 @@ module.exports = function(sequelize, DataTypes){
     Notice.include = [
       { model : models.User, as : 'from', attributes : models.User.attributes },
       { model : models.User, as : 'to', attributes : models.User.attributes },
-      { model : models.Chat, as : 'chat', attributes : models.Chat.attributes },
+      { model : models.Chat, as : 'chat', attributes : models.Chat.attributes, include : [{ model : models.Group, as : 'group', attributes : models.Group.attributeNames }] },
       { model : models.Post, as : 'post', attributes : models.Post.attributes },
       { model : models.Follow, as : 'follow', attributes : models.Follow.attributes },
     ]

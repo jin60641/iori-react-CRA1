@@ -27,6 +27,7 @@ class Notice extends Component {
         { notices.length ? 
           notices.map( notice => <Item notice={notice} key={`Notice-${notice.id}`} /> )
           : <div className="notice-none">
+            알림이 존재하지 않습니다.
           </div>
         }
 			</div>

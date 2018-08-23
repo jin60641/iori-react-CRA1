@@ -1,33 +1,22 @@
 import React, { Component } from 'react';
 
 class Change extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
-			message : ' '
-		}
-	}
 	handleSubmit = e => {
 		e.preventDefault();
-		const { changePw } = this.props;
+		const { changePw, warningToastr } = this.props;
 		const { email, link } = this.props.match.params;
 		const password = this.refs.password.value;
 		const passwordCheck = this.refs.passwordCheck.value;
 		if( password.length === 0 ){
-			this.setState({
-				message : "비밀번호를 입력해 주세요."
-			});
+			warningToastr("비밀번호를 입력해 주세요.");
 		} else if( passwordCheck !== password ){
-			this.setState({
-				message : "비밀번호 확인이 일치하지 않습니다."
-			});
+			warningToastr("비밀번호 확인이 일치하지 않습니다.");
 		} else {
       changePw({ password, email, link })
 		}
 	}
 
 	render(){ 
-		const { message } = this.state;
 		return (
 			<form className="auth-form" onSubmit={this.handleSubmit} >
 				<label className="auth-label" htmlFor="password">새 비밀번호</label>
@@ -35,7 +24,6 @@ class Change extends Component {
 				<label className="auth-label" htmlFor="passwordCheck">새 비밀번호 확인</label>
 				<input ref="passwordCheck" type="password" className="auth-input" placeholder="" />
 				<div className="auth-btn" onClick={this.handleSubmit} >비밀번호 변경</div>
-				<div className="auth-message"> { message } </div>
 				<input type="submit" hidden />
 			</form>
 		);

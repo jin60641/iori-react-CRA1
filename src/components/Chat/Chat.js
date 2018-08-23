@@ -59,10 +59,11 @@ class Chat extends Component {
 		showScroll(true);
 	}
 	componentDidMount = (e) => {
-		const { showScroll, searchGroupById, searchUserByHandle, getDialogs } = this.props;
+    console.log("DIDMOUNT");
+		const { showScroll, searchGroupById, searchUserByHandle, getDialogs, searched } = this.props;
 		showScroll(false);
-		const chatHandle = this.props.match.params.handle;
 		getDialogs();
+		const chatHandle = this.props.match.params.handle;
 		if( chatHandle ){
 			const type = charToStr[chatHandle[0]];
 			const handle = chatHandle.substr(1);
@@ -70,17 +71,25 @@ class Chat extends Component {
 				"query" : handle
 			}
 			if( type === "user" ){
-				searchUserByHandle(data);
+        if( searched.user.handle === handle ){
+			    this.openChat(this.props.searched.user,"user");
+        } else{
+				  searchUserByHandle(data);
+        }
 			} else {
-				searchGroupById(data);
+        if( searched.group.handle === handle ){
+			    this.openChat(this.props.searched.group,"group");
+        } else{
+				  searchGroupById(data);
+        }
 			}
 		}
 	}
   componentDidUpdate = (prevProps,prevState) => {
     if( prevProps.searched.user.id !== this.props.searched.user.id ){
-				this.openChat(this.props.searched.user,"user");
+			this.openChat(this.props.searched.user,"user");
     } else if( prevProps.searched.group.id !== this.props.searched.group.id ){
-				this.openChat(this.props.searched.group,"group");
+	  	this.openChat(this.props.searched.group,"group");
     }
   }
 	getChats = () => {
@@ -125,7 +134,8 @@ class Chat extends Component {
 			type,
 			to
 		}, () => {
-		  if( chats[this.getFullHandle(type,to.handle)] ){
+      const chatArray = chats[this.getFullHandle(type,to.handle)]
+		  if( !chatArray || chatArray.length < limit ){
 			  this.getChats();
 		  }
     });
