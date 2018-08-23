@@ -82,7 +82,7 @@ obj.findPw = ( req, res ) => {
 	let shasum = crypto.createHash('sha1');
 	shasum.update(email);
 	let link = shasum.digest('hex');
-	const string = `${host}/auth/changepw/${email}/${link}`;
+	const string = `${host}/auth/change/${email}/${link}`;
 	db.User.findOne({ where : { email } })
 	.then( user => {
 		if( user ) {
@@ -95,7 +95,7 @@ obj.findPw = ( req, res ) => {
 				if( err ){
 				}
 			});
-			res.send({ data : '이메일로 비밀번호 재설정 방법을 발신하였습니다.' });
+			res.send({ data : 'success', message : '이메일로 비밀번호 재설정 방법을 발신하였습니다.' });
 		} else {
 			res.status(401).send({ message : '입력하신 이메일로 가입된 계정이 존재하지 않습니다.' });
 		}
@@ -108,7 +108,7 @@ obj.changePw = async ( req, res ) => {
 	const user = await db.User.findOne({ where });
 	if( user && ( await obj.isLoggedIn(req) || (db.User.createHashedEmail(email) === link) ) ){
 		await db.User.update({ password },{ where });
-		res.send({ data : '비밀번호가 성공적으로 재설정되었습니다.' });
+		res.send({ data : 'success', message : '비밀번호가 성공적으로 재설정되었습니다.' });
 	} else {
 		res.status(401).send({ message : '잘못된 접근입니다.' });
 	}
@@ -158,10 +158,10 @@ obj.logOut = ( req, res ) => {
 			if( req.user ){
 				delete req.user;
 			}
-			res.status(200).send({ data : '로그아웃되었습니다.' });
+			res.status(200).send({ data : 'success', message : '로그아웃되었습니다.' });
 		});
 	} else {
-		res.status(200).send({ data : '로그아웃되었습니다.' });
+		res.status(200).send({ data : 'success', message : '로그아웃되었습니다.' });
 	}
 }
 
@@ -178,7 +178,7 @@ obj.authLocal = ( req, res, next ) => {
 				if( error ){
 					return next( error );
 				} else {
-					return res.send({ 'data' : user });
+					return res.send({ data : user, message : '로그인되었습니다.' });
 				}
 			});
 		}
@@ -240,7 +240,7 @@ obj.join = ( req, res ) => {
 				if( err ){
 				}
 			});
-			res.send({ 'data' : '입력하신 이메일로 인증메일을 전송하였습니다.' });
+			res.send({ data : 'success', message : '입력하신 이메일로 인증메일을 전송하였습니다.' });
 		})
 	}).catch( e => {
 		res.status(400).send({ message : e.message });

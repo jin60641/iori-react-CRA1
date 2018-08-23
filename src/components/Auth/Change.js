@@ -7,13 +7,10 @@ class Change extends Component {
 			message : ' '
 		}
 	}
-	handleChangePw = data => {
-		const { changePw } = this.props;
-		const { email, link } = this.props.params.match;
-    changePw({ ...data, email, link })
-	}
 	handleSubmit = e => {
 		e.preventDefault();
+		const { changePw } = this.props;
+		const { email, link } = this.props.match.params;
 		const password = this.refs.password.value;
 		const passwordCheck = this.refs.passwordCheck.value;
 		if( password.length === 0 ){
@@ -25,7 +22,7 @@ class Change extends Component {
 				message : "비밀번호 확인이 일치하지 않습니다."
 			});
 		} else {
-			this.handleChangePw({password});
+      changePw({ password, email, link })
 		}
 	}
 

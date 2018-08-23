@@ -4,7 +4,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { combineEpics, ofType } from 'redux-observable';
 
 import { connectSocket } from './socket'
-import { warningToastr } from './toastr'
+import { successToastr, warningToastr } from './toastr'
 
 import api from '../api/auth';
 
@@ -21,7 +21,7 @@ const loginEpic = (action$) => action$.pipe(
   mergeMap( action => from(api.login(action.payload)) ),
   mergeMap( body => 
     body.data
-      ? [login.SUCCESS(body.data),connectSocket.REQUEST()]
+      ? [login.SUCCESS(body.data),connectSocket.REQUEST(),successToastr(body.message)]
       : [login.FAILURE(new Error(body.message)),warningToastr(body.message)]
   )
 );
@@ -29,10 +29,10 @@ const loginEpic = (action$) => action$.pipe(
 const logoutEpic = (action$) => action$.pipe(
   ofType(logout.REQUEST),
   mergeMap( action => from(api.logout()) ),
-  map( body =>
+  mergeMap( body =>
     body.data
-      ? logout.SUCCESS(body.data)
-      : logout.FAILURE(new Error(body.message))
+      ? [logout.SUCCESS(body.data),successToastr(body.message)]
+      : [logout.FAILURE(new Error(body.message)),warningToastr(body.message)]
   )
 );
 
@@ -49,10 +49,10 @@ const loggedInEpic = (action$) => action$.pipe(
 const joinEpic = (action$) => action$.pipe(
   ofType(join.REQUEST),
   mergeMap( action => from(api.join(action.payload)) ),
-  map( body =>
+  mergeMap( body =>
     body.data
-      ? join.SUCCESS(body.data)
-      : join.FAILURE(new Error(body.message))
+      ? [join.SUCCESS(body.data),successToastr(body.message)]
+      : [join.FAILURE(new Error(body.message)),warningToastr(body.message)]
   )
 );
 
@@ -69,10 +69,10 @@ const verifyMailEpic = (action$) => action$.pipe(
 const findPwEpic = (action$) => action$.pipe(
   ofType(findPw.REQUEST),
   mergeMap( action => from(api.findPw(action.payload)) ),
-  map( body =>
+  mergeMap( body =>
     body.data
-      ? findPw.SUCCESS(body.data)
-      : findPw.FAILURE(new Error(body.message))
+      ? [findPw.SUCCESS(body.data),successToastr(body.message)]
+      : [findPw.FAILURE(new Error(body.message)),warningToastr(body.message)]
   )
 );
 
@@ -81,8 +81,8 @@ const changePwEpic = (action$) => action$.pipe(
   mergeMap( action => from(api.changePw(action.payload)) ),
   mergeMap( body => 
     body.data
-      ? [changePw.SUCCESS(body.data),connectSocket.REQUEST()]
-      : [changePw.FAILURE(new Error(body.message))]
+      ? [changePw.SUCCESS(body.data),successToastr(body.message)]
+      : [changePw.FAILURE(new Error(body.message)),warningToastr(body.message)]
   )
 );
 

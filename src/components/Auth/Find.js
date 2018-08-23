@@ -7,25 +7,9 @@ class Find extends Component {
 			message : ' '
 		}
 	}
-	handleFindPw = data => {
-		const { findPw } = this.props;
-		findPw(data)
-    /*
-		.then( action => {
-			if( action.error ){
-				this.setState({
-					message : action.payload.message
-				});
-			} else {
-				this.setState({
-					message : action.payload
-				});
-			}
-		});
-    */
-	}
 	handleSubmit = e => {
 		e.preventDefault();
+		const { findPw } = this.props;
 		const email = this.refs.email.value;
 		if( email.length === 0 ){
 			this.setState({
@@ -36,7 +20,7 @@ class Find extends Component {
 				message : "유효하지 않은 이메일입니다."
 			});
 		} else {
-			this.handleFindPw({email});
+  		findPw({ email });
 		}
 	}
 

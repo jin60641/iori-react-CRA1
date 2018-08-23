@@ -35,7 +35,7 @@ class Auth extends Component {
     history.push(url);
   }
   render(){
-    const { login, join, user } = this.props;
+    const { login, join, user, findPw, changePw } = this.props;
     const { path } = this.props.match;
     return(
       <div className={cx("Auth")}>
