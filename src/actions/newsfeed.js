@@ -61,4 +61,5 @@ export default combineEpics(
   getPostsEpic,
   writePostEpic,
   removePostEpic,
+  hidePostEpic
 );

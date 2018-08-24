@@ -49,8 +49,8 @@ export default handleActions({
     const index = state[key].findIndex( post => post.id === id );
     return {
       ...state,
-      Home : state.Home.slice(0,homeIndex).concat([{ ...state.Home[homeIndex], deleted : !status }]).concat(state.Home.slice(homeIndex+1)),
-      [key] : state[key].slice(0,index).concat([{ ...state[key][index], deleted : !status }]).concat(state[key].slice(index+1)),
+      Home : state.Home.slice(0,homeIndex).concat([{ ...state.Home[homeIndex], deleted : status }]).concat(state.Home.slice(homeIndex+1)),
+      [key] : state[key].slice(0,index).concat([{ ...state[key][index], deleted : status }]).concat(state[key].slice(index+1)),
     };
   },
 }, initialState );
