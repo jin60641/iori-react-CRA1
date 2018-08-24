@@ -9,6 +9,7 @@ const noticeString = {
 
 
 obj.makeNotice = (user,type,id,to) => {
+  console.log(to);
   (to.constructor === Array?to:[to]).forEach( async userId => {
     const current = {
       type,
@@ -34,7 +35,9 @@ obj.makeNotice = (user,type,id,to) => {
 
 obj.getNotices = async (req,res) => {
   const { id, limit, offset, type, gt, text } = req.body;
-  const where = {};
+  const where = {
+    toId : req.user.id
+  };
   if( text ){
     where.text = { $like : `%${text}%` };
   }

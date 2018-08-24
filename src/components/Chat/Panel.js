@@ -5,12 +5,13 @@ import styles from './Panel.css';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
+const initialState = {
+	isBottom : true,
+}
 class Panel extends Component {
 	constructor(props){
 		super(props);
-		this.state = {
-			isBottom : true,
-		}
+		this.state = { ...initialState };
 		this.handleScroll = this.handleScroll.bind(this);
 	}
 	componentDidMount(){

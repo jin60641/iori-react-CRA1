@@ -58,7 +58,10 @@ class Post extends Component {
     hidePost({ id : post.id, key : newsfeed })
   }
   render() {
-    const { post, user, delay, animation } = this.props;
+    const { post, user, delay, animation, top } = this.props;
+    if( !post ){
+      return null;
+    }
     const my= post.user.id === user.id;
     if( post.deleted ){
       return (
@@ -74,7 +77,7 @@ class Post extends Component {
     } else {
       const profileUri = post.user.profile?`/files/profile/${post.user.id}.png`:'/images/profile.png';
       return (
-        <div className={cx("Post",{"Post-animation":animation})} style={ { animationDelay : 0.05*delay+'s'} }>
+        <div className={cx("Post",{"Post-animation":animation&&!top,"Post-top":top})} style={ { animationDelay : 0.05*delay+'s'} }>
           <Link to={`/@${post.user.handle}`} className="post-profile"> 
             <img src={profileUri} className="post-profile-img" alt={"profile"} />
           </Link>

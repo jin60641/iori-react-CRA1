@@ -42,6 +42,8 @@
   margin-top: 10px;
   opacity: 1;
   text-decoration: none;
+  animation-duration: 0.7s;
+  animation-fill-mode: forwards;
   cursor: default;
   color: black; }
   @media (max-width: 609px) {
@@ -109,6 +111,4 @@
 
 .Post-animation {
   opacity: 0;
-  animation-duration: 0.7s;
-  animation-name: fadein;
-  animation-fill-mode: forwards; }
+  animation-name: fadein; }
