@@ -37,35 +37,24 @@ class Panel extends Component {
 			isBottom : dom.scrollHeight - dom.scrollTop === dom.clientHeight,
 		});
 	}
-  componentDidUpdate = (nextProps,nextState) => {
+  componentDidUpdate = (prevProps,prevState) => {
 		const { chats, to, handle } = this.props;
 		if( to.handle
-			&&
-			(
-				(
-					to.handle === nextProps.to.handle
-					&& chats[handle]
-					&& nextProps.chats[handle]
-					&& ( chats[handle].length !== nextProps.chats[handle].length )
-				)
-			||
-				(
-					to.handle !== nextProps.to.handle
-				)
-			)
+			&& to.handle === prevProps.to.handle
+			&& chats[handle]
+			&& prevProps.chats[handle]
+			&& ( chats[handle].length !== prevProps.chats[handle].length )
 	  ){
 			const dom = this.Panel;
 			if( dom.scrollTop < 150 ){
         if( dom.scrollTop === 0 ){
           dom.scrollTop = 180;
         }
-				const { handleScrollTop } = this.props;
-				handleScrollTop();
 			}
 		}
 	}
   handleMessageMount = () => {
-		const { isBottom, scrollTop } = this.state;
+		const { isBottom } = this.state;
     if( isBottom ){
       this.handleScrollBottom();
     }

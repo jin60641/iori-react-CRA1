@@ -4,10 +4,10 @@ import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
 class Message extends Component {
-	componentDidMount = () => {
-		const { handleMessageMount } = this.props;
+  componentDidMount(){
+    const { handleMessageMount } = this.props;
     setTimeout( handleMessageMount, 0 );
-	}
+  }
 	render(){
 		const { user, chat } = this.props;
 		const my = user.id === chat.from.id;

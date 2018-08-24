@@ -115,6 +115,7 @@ class Chat extends Component {
 	handleScrollTop = () => {
 		const { to } = this.state;
 		if( to ){
+      this.setState({ loading : true });
 			this.getChats();
 		}
 	}
