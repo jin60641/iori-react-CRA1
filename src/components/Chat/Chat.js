@@ -29,7 +29,8 @@ const initialState = {
 	type : null,
 	to : null,
 	text : "",
-	height : 17
+	height : 17,
+  loading : false
 }
 
 const limit = 30;
@@ -91,11 +92,23 @@ class Chat extends Component {
 	  	this.openChat(this.props.searched.group,"group");
     }
   }
+  static getDerivedStateFromProps(nextProps,prevState){
+    if( !nextProps.isFetching.getChats && prevState.loading ){
+      return {
+        loading : false
+      }
+    } else {
+      return null;
+    }
+  }
 	getChats = () => {
-		const { getChats, isFetching } = this.props;
-		const { to : from, type } = this.state;
+		const { getChats } = this.props;
+		const { to : from, type, loading } = this.state;
     const chats = this.props.chats[this.getFullHandle(type,from.handle)];
-		if( !isFetching.getChats ){
+		if( !loading ){
+      this.setState({
+        loading : true
+      });
 			getChats({ from, type, limit, offset : chats?chats.length:0 });
     }
 	}

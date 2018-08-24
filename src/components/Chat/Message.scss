@@ -1,7 +1,19 @@
 @import "../../styles/utils.scss";
 
+@include keyframes(pushup){
+  0% {
+    max-height : 0%;
+  }
+  100% {
+    max-height : 100%;
+  }
+}
+
+
+
 .Message {
 	margin : 8px;
+  text-align : left;
 	.message-body-caret {
 		display : inline-block;
 		margin : 0px;
@@ -27,12 +39,15 @@
 		vertical-align : top;
 	}
 	.message-body {
-		width : 100%;
+    text-align : left;
 		display : inline-block;
 		margin-bottom : 4px;
 		position : relative;
 		vertical-align : top;
 		text-align : left;
+    animation-duration: 0.7s;
+    animation-name: pushup;
+    animation-fill-mode: forwards;
 		.message-body-div {
 			margin : 5px;
 		}
@@ -82,8 +97,9 @@
 	}
 }
 .Message-my {
+  text-align : right;
 	.message-body {
-		text-align : right;
+    text-align : right;
 		.message-body-name {
 			margin-left : 0px;
 		}

@@ -1,3 +1,27 @@
+@-webkit-keyframes fadein {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@-moz-keyframes fadein {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@-ms-keyframes fadein {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@keyframes fadein {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
 .Post {
   margin: auto;
   box-sizing: border-box;
@@ -16,7 +40,7 @@
   padding: 10px;
   display: block;
   margin-top: 10px;
-  transition: opacity .3s linear;
+  opacity: 1;
   text-decoration: none;
   cursor: default;
   color: black; }
@@ -82,3 +106,9 @@
       .Post .post-img-outer .post-img-inner:hover {
         cursor: pointer;
         transform: scale(1.1); }
+
+.Post-animation {
+  opacity: 0;
+  animation-duration: 0.7s;
+  animation-name: fadein;
+  animation-fill-mode: forwards; }

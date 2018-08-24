@@ -83,8 +83,7 @@ class Panel extends Component {
 					chats[handle].map( chat => {
 						return(<Message chat={chat} user={user}  key={`chat-message-${chat.id}`}  handleMessageMount={this.handleMessageMount} />);
 					})
-				:
-					<div></div>
+				: null
 			}
 			</div>
 		);

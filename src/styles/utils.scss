@@ -1,6 +1,21 @@
 @import "../../node_modules/breakpoint-sass/stylesheets/_breakpoint.scss";
 @import "../../node_modules/include-media/dist/include-media";
 
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content; 
+  }
+  @-moz-keyframes #{$name} {
+    @content;
+  }
+  @-ms-keyframes #{$name} {
+    @content;
+  }
+  @keyframes #{$name} {
+    @content;
+  } 
+}
+
 $breakpoints: (
 	medium : 610px,
 	large : 932px,

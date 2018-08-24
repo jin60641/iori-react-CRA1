@@ -3,7 +3,9 @@ import Menu from './Menu';
 import { connect } from 'react-redux';
 import { getPosts, removePost, hidePost } from '../../actions/newsfeed';
 import { Link } from 'react-router-dom';
-import './Post.css';
+import style from './Post.css';
+import classNames from 'classnames/bind';
+const cx = classNames.bind(style);
 
 const stateToProps = ({user,posts},props) => ({user,post : props.post?props.post:posts.detail});
 const actionToProps = {
@@ -56,11 +58,8 @@ class Post extends Component {
     hidePost({ id : post.id, key : newsfeed })
   }
   render() {
-    const { post, user } = this.props;
+    const { post, user, delay, animation } = this.props;
     const my= post.user.id === user.id;
-    if( !post ){
-      return null;
-    }
     if( post.deleted ){
       return (
         <div className="Post">
@@ -75,7 +74,7 @@ class Post extends Component {
     } else {
       const profileUri = post.user.profile?`/files/profile/${post.user.id}.png`:'/images/profile.png';
       return (
-        <div className="Post">
+        <div className={cx("Post",{"Post-animation":animation})} style={ { animationDelay : 0.05*delay+'s'} }>
           <Link to={`/@${post.user.handle}`} className="post-profile"> 
             <img src={profileUri} className="post-profile-img" alt={"profile"} />
           </Link>
@@ -96,8 +95,7 @@ class Post extends Component {
           { post.file ?
             <div className="post-img-outer">
               <img className="post-img-inner" src={`/files/post/${post.id}/1.png`} alt="post img" />
-            </div>
-            : null
+            </div> : null
           }
         </div>
       );
