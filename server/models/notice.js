@@ -1,4 +1,3 @@
-const crypto = require('crypto');
 module.exports = function(sequelize, DataTypes){
 	const Notice = sequelize.define('Notice', {
 		id : { type : DataTypes.INTEGER, primaryKey : true, autoIncrement : true },

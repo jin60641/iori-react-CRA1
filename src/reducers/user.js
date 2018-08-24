@@ -44,7 +44,7 @@ export default handleActions({
 		return state;
   },
 	[removePost.SUCCESS]: (state, action) => {
-		return { ...state, posts : state.posts-1 };
+		return { ...state, posts : state.posts+(action.payload.status?1:-1) };
 	},
 	[removePost.FAILURE]: (state, action) => {
 		return state;

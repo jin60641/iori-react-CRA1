@@ -10,22 +10,18 @@ obj.follow = async (req,res) => {
 		res.status(400).send({ "message" : "자신을 팔로우 할 수 없습니다." });
 	} else {
 		const current = { toId, fromId };
-		const follow = await db.Follow.findOne({ where : current, paranoid : false });
-    const following = !follow || follow.dataValues.deletedAt;
+		const follow = await db.Follow.findOne({ where : current });
 
-    if( follow && !following ){
+    if( follow ){
 		  await db.Follow.destroy({ where : current });
-    } else if( follow && following ){
-      await db.Follow.update({ deletedAt : null }, { where : current, paranoid : false });
-      noticeMws.makeNotice(req.user,'follow',follow.dataValues.id,toId);
     } else {
 			const created = await db.Follow.create(current);
       noticeMws.makeNotice(req.user,'follow',created.dataValues.id,toId);
     }
-    req.user.followings += following?1:-1;
+    req.user.followings += follow?1:-1;
 	  res.send({ "data" : {
       to : toId,
-      following
+      following : !!follow
     }});
 	}
 }

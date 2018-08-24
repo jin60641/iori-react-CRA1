@@ -61,6 +61,10 @@
   .Post .post-inside {
     padding: 9px 10px 8px 10px;
     display: block; }
+    .Post .post-inside .post-delete-cancel {
+      color: #ff5c3e;
+      cursor: pointer;
+      float: right; }
   .Post .post-img-outer {
     display: inline-block;
     border-radius: 3px;

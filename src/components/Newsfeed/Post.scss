@@ -71,6 +71,11 @@
 	.post-inside {
 		padding : 9px 10px 8px 10px;
 		display : block;
+    .post-delete-cancel {
+      color : $color-normal;
+      cursor : pointer;
+      float : right;
+    }
 	}
 	.post-img-outer {
 		display : inline-block;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Menu from './Menu';
 import { connect } from 'react-redux';
-import { getPosts, removePost } from '../../actions/newsfeed';
+import { getPosts, removePost, hidePost } from '../../actions/newsfeed';
 import { Link } from 'react-router-dom';
 import './Post.css';
 
@@ -10,6 +10,7 @@ const actionToProps = {
   getPost : getPosts.REQUEST,
   resetPost : getPosts.RESET,
   removePost : removePost.REQUEST,
+  hidePost : hidePost.REQUEST
 }
 
 @connect(stateToProps, actionToProps)
@@ -50,8 +51,13 @@ class Post extends Component {
     const { removePost, post, newsfeed } = this.props;
     removePost({ id : post.id, key : newsfeed })
   }
+  handleClickHide = () => {
+    const { hidePost, post, newsfeed } = this.props;
+    hidePost({ id : post.id, key : newsfeed })
+  }
   render() {
     const { post, user } = this.props;
+    const my= post.user.id === user.id;
     if( !post ){
       return null;
     }
@@ -59,7 +65,10 @@ class Post extends Component {
       return (
         <div className="Post">
           <div className="post-inside">
-            삭제되었습니다.
+            { my? "삭제되었습니다." : "더 이상 이 게시글이 표시되지 않습니다." }
+            <div className="post-delete-cancel" onClick={my?this.handleClickRemove:this.handleClickHide}>
+              취소
+            </div>
           </div>
         </div>
       );
@@ -70,7 +79,11 @@ class Post extends Component {
           <Link to={`/@${post.user.handle}`} className="post-profile"> 
             <img src={profileUri} className="post-profile-img" alt={"profile"} />
           </Link>
-          <Menu my={post.user.id === user.id} handleClickRemove={this.handleClickRemove}/>
+          <Menu 
+            my={my} 
+            handleClickRemove={this.handleClickRemove} 
+            handleClickHide={this.handleClickHide} 
+          />
           <div className="post-inform">
             <Link to={`/@${post.user.handle}`} className="post-user"> 
               {post.user.name} 

@@ -21,7 +21,7 @@ class Menu extends Component {
 		}));
 	}
 	render(){
-		const { my, handleClickRemove } = this.props;
+		const { my, handleClickRemove, handleClickHide } = this.props;
 		const { active } = this.state;
 		return (
 			<div className={cx("Menu",{"menu-active":active})} onClick={this.handleToggle}>
@@ -33,7 +33,7 @@ class Menu extends Component {
 						</div>
 					</div> 
 					: <div className="menu-box">
-						<div className="menu-row">
+						<div className="menu-row" onClick={handleClickHide}>
 							감추기
 						</div>
 					</div>

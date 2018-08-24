@@ -23,17 +23,40 @@ obj.filter = multer({
 	}
 }).array('file',4);
 
+obj.hidePost = async (req,res) => {
+	const { id, key } = req.body;
+	const where = {
+		postId : id,
+	}
+	const post = await db.Post.findOne({ where : { id } });
+	if( post ){
+    const exist = await db.Hide.findOne({ where });
+    if( exist ){
+		  await db.Hide.destroy({ where });
+    } else {
+		  await db.Hide.create(where);
+    }
+		res.send({ data : { id, key, status : !exist } });
+	} else {
+		res.status(401).send({ message : '존재하지 않는 게시글입니다.' });
+	}
+}
 obj.removePost = async (req,res) => {
 	const { id, key } = req.body;
 	const where = {
 		id,
 		userId : req.user.id 
 	}
-	const post = await db.Post.findOne({ where });
+	const post = await db.Post.findOne({ where, paranoid : false });
 	if( post ){
-		req.user.posts -= 1;
-		await db.Post.destroy({ where });
-		res.send({ data : { id, key } });
+    const exist = !post.dataValues.deletedAt;
+    if( exist ){
+		  await db.Post.destroy({ where });
+    } else {
+      await db.Post.update({ deletedAt : null },{ where, paranoid : false })
+    }
+		req.user.posts += exist?-1:1;
+		res.send({ data : { id, key, status : !exist } });
 	} else {
 		res.status(401).send({ message : '존재하지 않는 게시글입니다.' });
 	}

@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
 		id : { type : DataTypes.INTEGER, primaryKey : true, autoIncrement : true },
 	},{
 		timestamps : true,
-		paranoid : true,
 	});
 	Follow.associate = models => {
 		Follow.belongsTo(models.User, { as : 'to', foreignKey : 'toId', targetKey : 'id' });

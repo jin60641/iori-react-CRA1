@@ -9,6 +9,7 @@ export const getPost = createAction('GET_POST');
 export const getPosts = createAction('GET_POSTS');
 export const writePost = createAction('WRITE_POST');
 export const removePost = createAction('REMOVE_POSTS');
+export const hidePost = createAction('HIDE_POSTS');
 
 const getPostEpic = action$ => action$.pipe(
   ofType(getPost.ORIGIN),
@@ -42,6 +43,16 @@ const removePostEpic = (action$) => action$.pipe(
     body.data
       ? removePost.SUCCESS(body.data)
       : removePost.FAILURE(new Error(body.message))
+  )
+);
+
+const hidePostEpic = (action$) => action$.pipe(
+  ofType(hidePost.REQUEST),
+  mergeMap( action => from(api.hidePost(action.payload)) ),
+  map( body =>
+    body.data
+      ? hidePost.SUCCESS(body.data)
+      : hidePost.FAILURE(new Error(body.message))
   )
 );
 
