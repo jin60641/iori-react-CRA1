@@ -21,7 +21,7 @@ obj.follow = async (req,res) => {
     req.user.followings += follow?1:-1;
 	  res.send({ "data" : {
       to : toId,
-      following : !!follow
+      following : !follow
     }});
 	}
 }

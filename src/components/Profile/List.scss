@@ -11,6 +11,7 @@ $profile-size : 60px;
 }
 
 .list-card {
+  text-align : left;
 	display : inline-block;
 	vertical-align : top;
 	margin-right : 10px;
@@ -60,10 +61,10 @@ $profile-size : 60px;
 		margin-top : 10px;
 		margin-bottom : 10px;
 		padding-right : 10px;
-		cursor : pointer;
 		box-sizing : border-box;
 		.list-btn {
 			display : inline-block;
+		  cursor : pointer;
 			text-align : center;
 			font-size : 12px;
 			height : 26px;

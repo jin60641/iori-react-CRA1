@@ -54,17 +54,14 @@ class Profile extends Component {
 		searchUserByHandle({ query : handle });
     this.setState({ tab });
 	}
-  getDerivedStateFromProps(nextProps, prevState) {
-    const { tab } = nextProps.match.params
-    if( tab !== prevState.tab ) {
-      return { tab };
-    }
-  }
   componentDidUpdate = prevProps => {
-		const { handle } = this.props.match.params;
+		const { handle,tab } = this.props.match.params;
 		if( prevProps.match.params.handle !== handle ){
       const { searchUserByHandle } = this.props;
 			searchUserByHandle({ query : handle })
+    }
+		if( prevProps.match.params.tab !== tab ){
+      this.setState({ tab })
     }
     if( prevProps.searched.id !== this.props.searched.id 
       || prevProps.isFetching.setProfile !== this.props.isFetching.setProfile 

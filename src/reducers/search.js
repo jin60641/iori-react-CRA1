@@ -18,6 +18,7 @@ export default handleActions({
     }
     const index = state.follows.findIndex( user => user.id === to );
     if( index >= 0 ){
+      console.log(following);
       nextState.follows = state.follows.slice(0,index).concat([{ ...state.follows[index], following }]).concat(state.follows.slice(index+1));
     }
     return nextState;

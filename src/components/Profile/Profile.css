@@ -19,8 +19,9 @@
     .Profile .profile-nav .profile-nav-user {
       position: absolute;
       transition: left .3s;
-      left: 110px;
-      top: calc( ( 60px - 36px ) / 2); }
+      left: 115px;
+      top: calc( ( 60px - 36px ) / 2);
+      text-align: left; }
       .Profile .profile-nav .profile-nav-user .profile-nav-handle {
         color: #657786;
         font-size: 13px;
@@ -151,13 +152,13 @@
     .Profile-top .profile-img {
       bottom: -35px;
       width: 150px;
-      height: 150px; } }
+      height: 150px; }
+    .Profile-top .profile-nav .profile-nav-user {
+      left: 205px; } }
   .Profile-top .profile-img-setting {
     bottom: -35px;
     width: 150px;
     height: 150px; }
-  .Profile-top .profile-nav .profile-nav-user {
-    left: 205px; }
 
 .Profile-top-header {
   height: 300px; }

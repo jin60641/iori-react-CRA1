@@ -29,7 +29,7 @@ obj.userByHandle = (req,res) => {
 	.then( async result => {
 		if( result ){
 			let user = result.get({ plain : true });
-			if( await authMws.isLoggedIn(req) ){
+			if( req.user && req.user.verify ){
 				user = await makeUserObj(req,user);
 			}
 			user.posts = await db.Post.count({ where: { userId : user.id } });
@@ -54,7 +54,7 @@ obj.follows = async (req,res) => {
 			.then( async follows => {
 				Promise.all(follows.map( async follow => {
 					let friend = follow.get({ plain : true })[query.toId?"from":"to"];
-					if( authMws.isLoggedIn(req) ){
+					if( req.user && req.user.verify  ){
 						friend = await makeUserObj(req,friend);
 					}
 					return friend;
