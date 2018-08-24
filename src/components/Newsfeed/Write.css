@@ -11,6 +11,7 @@
   border-color: #e5e6e9 #dfe0e4 #d0d1d5;
   border-radius: 3px;
   display: block;
+  margin-top: 10px;
   margin-bottom: 10px;
   transition: opacity .3s linear;
   text-decoration: none;
@@ -95,3 +96,14 @@
       margin-right: 5px;
       position: relative;
       display: inline-block; }
+      .Write .write-preview .write-img .write-img-remove {
+        display: none;
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 14px;
+        height: 14px;
+        background-color: #ff5c3e;
+        cursor: pointer; }
+      .Write .write-preview .write-img:hover .write-img-remove {
+        display: block; }

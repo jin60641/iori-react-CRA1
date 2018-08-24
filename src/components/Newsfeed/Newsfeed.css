@@ -2,12 +2,12 @@
   text-align: left;
   display: inline-block;
   vertical-align: top;
-  padding-top: 10px;
   overflow-y: hidden;
   min-height: calc( 100vh - $header-height);
   width: 600px;
   max-width: 100%;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  padding-bottom: 10px; }
   @media (max-width: 609px) {
     .Newsfeed {
       padding-top: 0px; } }

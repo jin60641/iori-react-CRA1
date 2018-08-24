@@ -46,20 +46,31 @@ class Write extends Component {
 		Array.from(files).forEach( file => {
 			const reader = new FileReader();
 			reader.onloadend = () => {
-				this.setState({
-					files: this.state.files.concat([{ data : file, url : reader.result }])
-				});
+				this.setState( state => ({
+					files: state.files.concat([{ data : file, url : reader.result }])
+				}));
 			}
 			reader.readAsDataURL(file)
 		});
 	}
+  handleRemoveFile = url => e => {
+    const { files } = this.state;
+    const index = files.findIndex( file => file.url === url );
+    this.setState({
+      files : files.slice(0,index).concat(files.slice(index+1))
+    });
+  }
 	render() {
 		return (
 			<div className={cx("Write")}>
 				<textarea className="write-text" value={this.state.text} onChange={this.handleChangeText} placeholder="글을 입력하세요" />
 				<div className="write-preview">
 					{ this.state.files.map((file) => {
-						return (<div key={ file.url } style={{ "backgroundImage" : `url('${file.url}')` }} className="write-img"  />);
+						return (
+              <div key={ file.url } style={{ "backgroundImage" : `url('${file.url}')` }} className="write-img">
+                <div className="write-img-remove" onClick={this.handleRemoveFile(file.url)} />
+              </div>
+            );
 					})}
 				</div>
 				<div className="write-submit" onClick={ this.handleSubmit } > 게시 </div>

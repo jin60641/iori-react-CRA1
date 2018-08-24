@@ -61,7 +61,7 @@ class Profile extends Component {
     }
   }
   componentDidUpdate = prevProps => {
-		const { handle, tab } = this.props.match.params;
+		const { handle } = this.props.match.params;
 		if( prevProps.match.params.handle !== handle ){
       const { searchUserByHandle } = this.props;
 			searchUserByHandle({ query : handle })
