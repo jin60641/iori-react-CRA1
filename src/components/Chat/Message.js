@@ -4,13 +4,9 @@ import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
 class Message extends Component {
-	componentDidUpdate = () => {
-		const { handleScrollBottom } = this.props;
-		handleScrollBottom();
-	}
 	componentDidMount = () => {
-		const { handleScrollBottom } = this.props;
-		handleScrollBottom();
+		const { handleMessageMount } = this.props;
+    setTimeout( handleMessageMount, 0 );
 	}
 	render(){
 		const { user, chat } = this.props;

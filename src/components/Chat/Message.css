@@ -31,7 +31,7 @@
       margin: 5px; }
     .Message .message-body .message-body-name {
       margin-bottom: 5px;
-      display: block;
+      display: inline-block;
       text-decoration: none;
       cursor: pointer;
       color: #ff5c3e;

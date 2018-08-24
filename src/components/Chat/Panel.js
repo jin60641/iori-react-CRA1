@@ -26,26 +26,27 @@ class Panel extends Component {
 			e.preventDefault();
 			return false;
 		}
-		if( dom.scrollTop < 150 ){
+		if( dom.scrollTop < Math.max(150,dom.scrollHeight/8) ){
 			e.preventDefault();
 			const { handleScrollTop } = this.props;
 			handleScrollTop();
 			return false;
 		}
 		this.setState({
+      scrollTop : dom.scrollHeight - dom.scrollTop,
 			isBottom : dom.scrollHeight - dom.scrollTop === dom.clientHeight,
 		});
 	}
   componentDidUpdate = (nextProps,nextState) => {
-		const { chats, to } = this.props;
+		const { chats, to, handle } = this.props;
 		if( to.handle
 			&&
 			(
 				(
 					to.handle === nextProps.to.handle
-					&& chats[to.handle]
-					&& nextProps.chats[to.handle]
-					&& ( chats[to.handle].length !== nextProps.chats[to.handle].length )
+					&& chats[handle]
+					&& nextProps.chats[handle]
+					&& ( chats[handle].length !== nextProps.chats[handle].length )
 				)
 			||
 				(
@@ -55,20 +56,23 @@ class Panel extends Component {
 	  ){
 			const dom = this.Panel;
 			if( dom.scrollTop < 150 ){
-				if( dom.scrollTop === 0 ){
-					dom.scrollTop = 150;
-				}
+        if( dom.scrollTop === 0 ){
+          dom.scrollTop = 180;
+        }
 				const { handleScrollTop } = this.props;
 				handleScrollTop();
 			}
 		}
 	}
+  handleMessageMount = () => {
+		const { isBottom, scrollTop } = this.state;
+    if( isBottom ){
+      this.handleScrollBottom();
+    }
+  }
 	handleScrollBottom = () => {
-		const { isBottom } = this.state;
-		if( isBottom && this.Panel ){
 			const dom = this.Panel;
 			dom.scrollTop = dom.scrollHeight;
-		}
 	}
 	render(){
 		const { chats, user, handle, height } = this.props;
@@ -77,7 +81,7 @@ class Panel extends Component {
 			{
 				chats[handle] ?
 					chats[handle].map( chat => {
-						return(<Message chat={chat} user={user}  key={`chat-message-${chat.id}`}  handleScrollBottom={this.handleScrollBottom} />);
+						return(<Message chat={chat} user={user}  key={`chat-message-${chat.id}`}  handleMessageMount={this.handleMessageMount} />);
 					})
 				:
 					<div></div>
