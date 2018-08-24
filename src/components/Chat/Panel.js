@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import Message from './Message';
 
 import styles from './Panel.css';
@@ -11,20 +10,14 @@ class Panel extends Component {
 		super(props);
 		this.state = {
 			isBottom : true,
-			timer : null,
-			isTop : false
 		}
 		this.handleScroll = this.handleScroll.bind(this);
 	}
 	componentDidMount(){
-		ReactDOM.findDOMNode(this.refs.Panel).addEventListener('scroll',this.handleScroll);
+		this.Panel.addEventListener('scroll',this.handleScroll);
 	}
 	componentWillUnmount(){
-		const { timer } = this.state;
-		this.setState({
-			timer : clearInterval(timer)
-		});
-		ReactDOM.findDOMNode(this.refs.Panel).removeEventListener('scroll',this.handleScroll);
+		this.Panel.removeEventListener('scroll',this.handleScroll);
 	}
 	handleScroll(e){
 		const { loading } = this.props;
@@ -33,7 +26,7 @@ class Panel extends Component {
 			e.preventDefault();
 			return false;
 		}
-		if( dom.scrollTop < 80 ){
+		if( dom.scrollTop < 150 ){
 			e.preventDefault();
 			const { handleScrollTop } = this.props;
 			handleScrollTop();
@@ -43,9 +36,8 @@ class Panel extends Component {
 			isBottom : dom.scrollHeight - dom.scrollTop === dom.clientHeight,
 		});
 	}
-   componentDidUpdate = (nextProps,nextState) => {
+  componentDidUpdate = (nextProps,nextState) => {
 		const { chats, to } = this.props;
-		const { timer } = this.state;
 		if( to.handle
 			&&
 			(
@@ -60,36 +52,28 @@ class Panel extends Component {
 					to.handle !== nextProps.to.handle
 				)
 			)
-		){
-			this.setState({
-				timer : setTimeout( () => {
-					const dom = ReactDOM.findDOMNode(this.refs.Panel);
-					if( dom.scrollTop < 80 ){
-						if( dom.scrollTop === 0 ){
-							dom.scrollTop = 80;
-						}
-						const { handleScrollTop } = this.props;
-						handleScrollTop();
-					} else {
-						this.setState({
-							timer : clearInterval(timer)
-						});
-					}
-				},300)
-			});
+	  ){
+			const dom = this.Panel;
+			if( dom.scrollTop < 150 ){
+				if( dom.scrollTop === 0 ){
+					dom.scrollTop = 150;
+				}
+				const { handleScrollTop } = this.props;
+				handleScrollTop();
+			}
 		}
 	}
 	handleScrollBottom = () => {
 		const { isBottom } = this.state;
-		if( isBottom && this.refs.Panel ){
-			const dom = ReactDOM.findDOMNode(this.refs.Panel);
+		if( isBottom && this.Panel ){
+			const dom = this.Panel;
 			dom.scrollTop = dom.scrollHeight;
 		}
 	}
 	render(){
 		const { chats, user, handle, height } = this.props;
 		return(
-			<div className={cx("Panel")} ref="Panel" style={{ height : `calc(100% - ${height}px)` }}>
+			<div className={cx("Panel")} ref={ dom => { this.Panel = dom } } style={{ height : `calc(100% - ${height}px)` }}>
 			{
 				chats[handle] ?
 					chats[handle].map( chat => {

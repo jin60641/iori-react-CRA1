@@ -59,7 +59,6 @@ class Chat extends Component {
 		showScroll(true);
 	}
 	componentDidMount = (e) => {
-    console.log("DIDMOUNT");
 		const { showScroll, searchGroupById, searchUserByHandle, getDialogs, searched } = this.props;
 		showScroll(false);
 		getDialogs();

@@ -10,15 +10,24 @@ const actionToProps = {
   getNotices : getNotices.REQUEST
 }
 
-const limit = 5;
+const limit = 20;
 
 @connect(stateToProps,actionToProps)
 class Notice extends Component {
   componentDidMount = () => {
-    const { notices, getNotices } = this.props;
+    const { notices } = this.props;
     if( notices.length < limit ){
-      getNotices({ limit, offset : notices.length });
+      this.handleGetNotices();
     }
+  }
+  componentDidUpdate = (prevProps,prevState) => {
+    if( !prevProps.isBottom && this.props.isBottom ){
+      this.handleGetNotices();
+    }
+  }
+  handleGetNotices = (options = {}) => {
+    const { getNotices, notices } = this.props;
+    getNotices({ limit, offset : notices.length });
   }
 	render(){
     const { notices } = this.props;

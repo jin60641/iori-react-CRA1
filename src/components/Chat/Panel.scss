@@ -5,6 +5,7 @@ $send-panel-height : 48px;
 .Panel {
 	overflow : hidden;
 	padding-right : 2px;
+  width : 100%;
 	max-height : calc( 100% - #{$send-panel-height} );
 	min-height : 60%;
 	box-sizing : border-box;

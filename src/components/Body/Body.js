@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
-import ReactDOM from 'react-dom';
 import styles from './Body.css';
 
 import Newsfeed from '../Newsfeed/Newsfeed';
@@ -29,10 +28,10 @@ class Body extends Component {
 		}
 	}
 	componentDidMount(){
-		ReactDOM.findDOMNode(this.refs.Body).addEventListener('scroll',this.handleScroll);
+		this.Body.addEventListener('scroll',this.handleScroll);
 	}
 	componentWillUnmount(){
-		ReactDOM.findDOMNode(this.refs.Body).removeEventListener('scroll',this.handleScroll);
+		this.Body.removeEventListener('scroll',this.handleScroll);
 	}
 	handleScroll(e){
 		if( this.state.scrollBar ){
@@ -53,7 +52,7 @@ class Body extends Component {
 		return user && user.verify;
 	}
 	scrollToTop = () => {
-		this.refs.Body.scrollTop = 0;
+		this.Body.scrollTop = 0;
 		this.setState({
 			isTop : true
 		})
@@ -62,7 +61,7 @@ class Body extends Component {
 		const { user } = this.props;
 		const { isTop, isBottom, scrollBar } = this.state;
 		return(
-			<div className={cx('Body',{ 'body-scroll' : scrollBar })} ref="Body" >
+			<div className={cx('Body',{ 'body-scroll' : scrollBar })} ref={ dom => { this.Body=dom } } >
 				<Switch>
 					<Route path="/@:handle" render={(props) => (
 						<div className="body-wrap"> 
@@ -106,6 +105,7 @@ class Body extends Component {
 						this.isLoggedIn() ? 
 						  <Notice {...props} 
 						  	user = { user }
+							  isBottom={ isBottom }
 						  />
 						: <Redirect to="/auth/login/notice" />
 					)}/>

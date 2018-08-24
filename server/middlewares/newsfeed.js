@@ -63,10 +63,10 @@ obj.writePost = async (req,res) => {
 	});
 
 	const follows = await db.Follow.findAll({ where : { toId : req.user.id }});
-	const userIds = follows.map( follow => follow.dataValues.fromId );
+	const userIds = follows.map( follow => follow.dataValues.fromId ).filter( userId => userId !== req.user.id );
 	userIds.forEach( userId => {
 		const socketId = socketIds[userId];
-		if( socketId && req.user.id != userId && io.sockets.connected[socketId] ){
+		if( socketId && io.sockets.connected[socketId] ){
 			io.sockets.connected[socketId].emit( 'GET_POST', post );
 		}
 	});

@@ -5,4 +5,5 @@
   width : 500px;
   display : block;
   margin : auto;
+  min-height : calc( 100vh - $header-height );
 }
