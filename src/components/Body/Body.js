@@ -12,6 +12,7 @@ import Chat from '../Chat/Chat';
 import Left from '../Left/Left';
 import Profile from '../Profile/Profile';
 import Notice from '../Notice/Notice';
+import Search from '../Search/Search';
 
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
@@ -58,26 +59,26 @@ class Body extends Component {
 		})
 	}
 	render(){
-		const { user } = this.props;
 		const { isTop, isBottom, scrollBar } = this.state;
 		return(
 			<div className={cx('Body',{ 'body-scroll' : scrollBar })} ref={ dom => { this.Body=dom } } >
 				<Switch>
+					<Route path="/search/:tab?" render={(props) => (
+            <Search {...props }
+              isBottom = { isBottom }
+            />
+          )}/>
 					<Route path="/@:handle/:tab?" render={(props) => (
-						<div className="body-wrap"> 
 							<Profile {...props }
 								isTop = { isTop }
 								isBottom = { isBottom }
 								showScroll = { this.showScroll }
 								scrollToTop = { this.scrollToTop }
-								isLoggedIn = { this.isLoggedIn }
 							/> 
-						</div>
 					)}/>
 					<Route path="/chat/:handle" render={(props) => (
 						this.isLoggedIn() ? 
 							<Chat {...props }
-								user = { user }
 								showScroll = { this.showScroll }
 							/>
 						: <Redirect to="/auth/login/chat" />
@@ -85,7 +86,6 @@ class Body extends Component {
 					<Route path="/chat" render={(props) => (
 						this.isLoggedIn() ? 
 							<Chat {...props }
-								user = { user }
 								showScroll = { this.showScroll }
 							/>
 						: <Redirect to="/auth/login/chat" />
@@ -97,27 +97,24 @@ class Body extends Component {
 					)}/>
 					<Route path="/auth" render={(props) => (
 						<Auth {...props} 
-							user = { user }
 							showScroll = { this.showScroll }
 						/>
 					)}/>
 					<Route path="/notice" render={(props) => (
 						this.isLoggedIn() ? 
 						  <Notice {...props} 
-						  	user = { user }
 							  isBottom={ isBottom }
 						  />
 						: <Redirect to="/auth/login/notice" />
 					)}/>
 					<Route path="/post/:id" render={(props) => (
             <Post {...props}
-              user={user}
             />
           )} />
 					<Route exact path="/" render={(props) => (
 						this.isLoggedIn() ? 
 							<div className="body-wrap"> 
-								<Left user={ user }/>
+								<Left {...props} />
 								<Newsfeed {...props}
 									key="Home"
                   id="Home"

@@ -34,7 +34,7 @@ const initialState = {
 
 const limit = 30;
 
-const stateToProps = ({ dialogs, searched, chats, isFetching }) => ({ dialogs, searched, chats, isFetching })
+const stateToProps = ({ dialogs, searched, chats, isFetching, user }) => ({ dialogs, searched, chats, isFetching, user })
 const actionToProps = {
 	searchUserByHandle : searchUserByHandle.REQUEST,
 	searchUsers : searchUsers.REQUEST,

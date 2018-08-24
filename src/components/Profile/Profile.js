@@ -241,11 +241,11 @@ class Profile extends Component {
 	}
 	render(){
 		const { isSetting, helper, header, moving, profile, tab } = this.state;
-		const { isTop, isBottom, isLoggedIn, searched : user } = this.props;
+		const { isTop, isBottom, searched : user } = this.props;
 		if( !user.id ){
 			return( null );
 		}
-		const my = isLoggedIn() && user.id === this.props.user.id;
+		const my = user.id === this.props.user.id;
 		const headerLabelStyle = {
 			backgroundImage : ( !isSetting || header.file ) ? `url("${header.img.src}")` : "none",
 			backgroundPosition : `${header.x}px ${header.y}px`,
@@ -337,7 +337,7 @@ class Profile extends Component {
 							</div>
 						:
 							<div className="profile-btns">
-							{ isLoggedIn() ? 
+							{ user.verify ? 
 								<div className={cx("profile-btn","profile-btn-active")} onClick={this.handleClickFollow}>
 									{ user.following?"언팔로우":"팔로우" }
 								</div>
