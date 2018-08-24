@@ -4,9 +4,9 @@ import { BrowserRouter as Router } from 'react-router-dom'
 
 import Header from './components/Header/Header';
 import Body from './components/Body/Body';
+import Toastr from './components/Toastr/Toastr';
 //import Footer from './components/Footer/Footer';
 import { loggedIn, logout } from './actions/auth';
-import ReduxToastr from 'react-redux-toastr'
 
 const stateToProps = ({user,socket}) => ({user,socket});
 
@@ -21,15 +21,6 @@ class App extends Component {
     const { loggedIn } = this.props;
     loggedIn();
   }
-  componentWillReceiveProps(nextProps){
-    //console.log(socket,nextProps);
-    if( !this.props.socket && nextProps.socket ){
-      /*
-      nextProps.socket.on( 'say', (data) => {
-      });
-      */
-    }
-  }
   render() {
     const { logout, user } = this.props;
     if( !user ){
@@ -38,15 +29,7 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <ReduxToastr
-            timeOut={4000}
-            newestOnTop={false}
-            position='bottom-right'
-            transitionIn='fadeIn'
-            transitionOut='fadeOut'
-            progressBar
-            closeOnToastrClick
-          />
+          <Toastr />
           <Header logout={ logout } user={ user } />
           <Body user={ user } />
         </div>

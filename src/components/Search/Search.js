@@ -8,7 +8,9 @@ const actionToProps = {
 class Search extends Component {
   render(){
     return (
-      null
+      <div className="Search">
+        
+      </div>
     );
   }
 }
