@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { searchUserByHandle } from '../../actions/search';
 import { setProfile } from '../../actions/setting';
@@ -27,7 +27,7 @@ const initialState = {
 	moving : null,
 	header : { ...initialImage },
 	profile : { ...initialImage },
-	tab : null,
+  tab : null
 }
 
 const stateToProps = ({searched,user,isFetching}) => ({searched : searched.user,user,isFetching});
@@ -50,11 +50,18 @@ class Profile extends Component {
 	}
 	componentDidMount = () => {
 		const { searchUserByHandle } = this.props;
-		const { handle } = this.props.match.params;
+		const { handle, tab } = this.props.match.params;
 		searchUserByHandle({ query : handle });
+    this.setState({ tab });
 	}
+  getDerivedStateFromProps(nextProps, prevState) {
+    const { tab } = nextProps.match.params
+    if( tab !== prevState.tab ) {
+      return { tab };
+    }
+  }
   componentDidUpdate = prevProps => {
-		const handle = this.props.match.params.handle;
+		const { handle, tab } = this.props.match.params;
 		if( prevProps.match.params.handle !== handle ){
       const { searchUserByHandle } = this.props;
 			searchUserByHandle({ query : handle })
@@ -233,7 +240,7 @@ class Profile extends Component {
 	  //nextState.user.following = action.payload;
 	}
 	render(){
-		const { isSetting, helper, header, moving, profile } = this.state;
+		const { isSetting, helper, header, moving, profile, tab } = this.state;
 		const { isTop, isBottom, isLoggedIn, searched : user } = this.props;
 		if( !user.id ){
 			return( null );
@@ -347,21 +354,19 @@ class Profile extends Component {
 						</div>
 					</div>
 				</div>
-				<Switch>
-					<Route exact path="/@:handle" render={(props) => (
-						<Newsfeed {...props}
+        { !tab ?
+						<Newsfeed 
 							key={`Profile-${user.id}`}
               id={user.id}
 							isBottom={ isBottom }
 							options={ { userId : user.id } }
 						/>
-					)} />
-					<Route path="/@:handle/:tab" render={(props) => (
-						<List {...props} 
+          :
+						<List 
+              tab={tab}
 							userId={ user.id }
 						/>
-					)} />
-				</Switch>
+        }
 			</div>
 		);
 	}

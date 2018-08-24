@@ -63,7 +63,7 @@ class Body extends Component {
 		return(
 			<div className={cx('Body',{ 'body-scroll' : scrollBar })} ref={ dom => { this.Body=dom } } >
 				<Switch>
-					<Route path="/@:handle" render={(props) => (
+					<Route path="/@:handle/:tab?" render={(props) => (
 						<div className="body-wrap"> 
 							<Profile {...props }
 								isTop = { isTop }

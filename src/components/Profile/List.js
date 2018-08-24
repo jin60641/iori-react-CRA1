@@ -16,8 +16,7 @@ const actionToProps = {
 @connect(stateToProps,actionToProps)
 class List extends Component {
 	componentDidMount = () => {
-		const { userId, searchFollows } = this.props;
-		const tab = this.props.match.params.tab;
+		const { userId, searchFollows, tab } = this.props;
 		const query = {
 			type : tab === "follower" ? 'to' : 'from',
 			userId
