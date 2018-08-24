@@ -76,6 +76,7 @@ class Post extends Component {
       );
     } else {
       const profileUri = post.user.profile?`/files/profile/${post.user.id}.png`:'/images/profile.png';
+      const linkRegex = /((?:(?:http|https)):\/\/(?:[\w-]+(?:\.[\w-]+)+(?:[\w.@?^=%&amp;:\/~+#-])*[\w@?^=%&amp;\/~+#-]))/gi;
       return (
         <div className={cx("Post",{"Post-animation":animation&&!top,"Post-top":top})} style={ { animationDelay : 0.05*delay+'s'} }>
           <Link to={`/@${post.user.handle}`} className="post-profile"> 
@@ -93,7 +94,15 @@ class Post extends Component {
             <div className="post-date"> {this.getDateString(post.createdAt)} </div>
           </div>
           <div className="post-inside">
-            { post.text }
+            { post.text.split('\n').map( line => 
+              line.split(linkRegex).map( link => {
+                if( linkRegex.test(link) ) {
+                  return (<a href={link} target="_blank">{link}</a>);
+                } else if( link ){
+                  return (<span>{link}</span>)
+                }
+              })
+            )}
           </div>
           { post.file ?
             <div className="post-img-outer">
