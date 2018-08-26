@@ -10,6 +10,7 @@ import relationEpic from './relation';
 import searchEpic from './search';
 import settingEpic from './setting';
 import noticeEpic from './notice';
+import linkEpic from './link';
 
 export const rootEpic = combineEpics(
   authEpic,
@@ -19,7 +20,8 @@ export const rootEpic = combineEpics(
   relationEpic,
   searchEpic,
   settingEpic,
-  noticeEpic
+  noticeEpic,
+  linkEpic
 );
 
 /*

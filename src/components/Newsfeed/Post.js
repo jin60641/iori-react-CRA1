@@ -1,27 +1,53 @@
 import React, { Component } from 'react';
 import Menu from './Menu';
 import { connect } from 'react-redux';
+import Preview from '../Preview/Preview';
 import { getPosts, removePost, hidePost } from '../../actions/newsfeed';
+import { getLink } from '../../actions/link';
 import { Link } from 'react-router-dom';
 import style from './Post.css';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(style);
 
-const stateToProps = ({user,posts},props) => ({user,post : props.post?props.post:posts.detail});
+const initialState = {
+  link : null
+}
+
+const linkRegex = /((?:(?:http|https)):\/\/(?:[\w-]+(?:\.[\w-]+)+(?:[\w.@?^=%&amp;:\/~+#-])*[\w@?^=%&amp;\/~+#-]))/gi;
+
+const stateToProps = ({user,posts,links},props) => ({user,post : props.post?props.post:posts.detail,links});
 const actionToProps = {
   getPost : getPosts.REQUEST,
   resetPost : getPosts.RESET,
   removePost : removePost.REQUEST,
-  hidePost : hidePost.REQUEST
+  hidePost : hidePost.REQUEST,
+  getLink : getLink.REQUEST
 }
 
 @connect(stateToProps, actionToProps)
 class Post extends Component {
+  constructor(props){
+    super(props);
+    this.state = { ...initialState };
+  }
   componentDidMount = () => {
     const { post, getPost } = this.props;
     const id = this.props.match?this.props.match.params.id:null;
     if( ( !post && id ) || ( post && id && id !== post.id ) ){
       getPost({ key : 'detail', id });
+    } else {
+      this.init();
+    }
+  }
+  init(){
+    const { getLink, post : { text } } = this.props;
+    const match = text.match(linkRegex);
+    if( match ) {
+      const [link] = match;
+      this.setState({
+        link
+      });
+      getLink({ link });
     }
   }
   componentWillUnmount = () => {
@@ -49,6 +75,11 @@ class Post extends Component {
       }
     }
   }
+  componentDidUpdate = (prevProps) => {
+    if( !prevProps.post.id && this.props.post.id ){
+      this.init();
+    }
+  }
   handleClickRemove = () => {
     const { removePost, post, newsfeed } = this.props;
     removePost({ id : post.id, key : newsfeed })
@@ -57,8 +88,17 @@ class Post extends Component {
     const { hidePost, post, newsfeed } = this.props;
     hidePost({ id : post.id, key : newsfeed })
   }
+  shouldComponentUpdate = ( nextProps, nextState ) => {
+    return ( 
+      nextProps.post.id !== this.props.post.id 
+      || nextProps.post.deleted !== this.props.post.deleted 
+      || ( !this.state.link && !!nextState.link ) 
+      || ( !!this.state.link && !!nextProps.links[this.state.link] && !this.props.links[this.state.link] ) 
+    );
+  }
   render() {
-    const { post, user, delay, animation, top } = this.props;
+    const { link } = this.state;
+    const { post, user, delay, animation, top, links } = this.props;
     if( !post ){
       return null;
     }
@@ -76,7 +116,6 @@ class Post extends Component {
       );
     } else {
       const profileUri = post.user.profile?`/files/profile/${post.user.id}.png`:'/images/profile.png';
-      const linkRegex = /((?:(?:http|https)):\/\/(?:[\w-]+(?:\.[\w-]+)+(?:[\w.@?^=%&amp;:\/~+#-])*[\w@?^=%&amp;\/~+#-]))/gi;
       return (
         <div className={cx("Post",{"Post-animation":animation&&!top,"Post-top":top})} style={ { animationDelay : 0.05*delay+'s'} }>
           <Link to={`/@${post.user.handle}`} className="post-profile"> 
@@ -94,20 +133,27 @@ class Post extends Component {
             <div className="post-date"> {this.getDateString(post.createdAt)} </div>
           </div>
           <div className="post-inside">
-            { post.text.split('\n').map( line => 
-              line.split(linkRegex).map( link => {
-                if( linkRegex.test(link) ) {
-                  return (<a href={link} target="_blank">{link}</a>);
-                } else if( link ){
-                  return (<span>{link}</span>)
-                }
-              })
-            )}
+            { post.text.split('\n').map( (line,i) => (
+              <div key={`${post.id}-text-${i}`}>
+              { link ? 
+                line.split(linkRegex).map( (word,j) => {
+                  const key = `${post.id}-text-${i}-${j}`
+                  if( linkRegex.test(word) ) {
+                    return (<a href={word} key={key} target="_blank">{word}</a>);
+                  } else if( word ){
+                    return (<span key={key}>{word}</span>)
+                  }
+                })
+                : <span>{line}</span>
+              }
+              </div>
+            ))}
           </div>
-          { post.file ?
+          { link ? <Preview { ...links[link] } link={link} /> : 
+            ( post.file ?
             <div className="post-img-outer">
               <img className="post-img-inner" src={`/files/post/${post.id}/1.png`} alt="post img" />
-            </div> : null
+            </div> : null )
           }
         </div>
       );

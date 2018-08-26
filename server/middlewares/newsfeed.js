@@ -3,11 +3,8 @@ let obj = {}
 let db = require('../models/index.js');
 const fs = require('fs-extra');
 const path = require('path');
-obj.fs = fs;
-obj.path = path;
 const multer = require('multer');
 const noticeMws = require('./notice.js');
-
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -126,7 +123,7 @@ obj.getPosts = async ( req, res ) => {
 			query.where.id = id;
 		}
 	} else {
-    const hides = await db.Hide.findAll({ userId : req.user.id }).then( hides => hides.map( hide => hide.dataValues.postId ) );
+    const hides = await db.Hide.findAll({ where : { userId : req.user.id }}).then( hides => hides.map( hide => hide.dataValues.postId ) );
     if( hides.length ){
       query.where.id = { $notIn : hides };
     }

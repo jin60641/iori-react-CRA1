@@ -9,7 +9,6 @@ const noticeString = {
 
 
 obj.makeNotice = (user,type,id,to) => {
-  console.log(to);
   (to.constructor === Array?to:[to]).forEach( async userId => {
     const current = {
       type,

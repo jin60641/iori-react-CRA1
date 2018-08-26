@@ -32,6 +32,7 @@ export default handleActions({
   },
   [removePost.SUCCESS]: (state, action) => {
     const { key, id, status } = action.payload;
+    console.log(action.payload);
     const homeIndex = state.Home.findIndex( post => post.id === id );
     const index = state[key].findIndex( post => post.id === id );
     return {

@@ -8,6 +8,7 @@ import search from "./search";
 import chat from "./chat";
 import dialog from "./dialog";
 import notice from "./notice";
+import link from "./link";
 import isFetching from "./isFetching"
 
 export default combineReducers({
@@ -18,6 +19,7 @@ export default combineReducers({
 	chats : chat,
 	dialogs : dialog,
   notices : notice,
-  toastr,
+  links : link,
   isFetching,
+  toastr,
 })

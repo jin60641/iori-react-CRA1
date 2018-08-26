@@ -21,8 +21,8 @@ const getPostsEpic = (action$) => action$.pipe(
   mergeMap( action => from(api.getPosts(action.payload)) ),
   map( body =>
     body.data
-      ? getPosts.SUCCESS(body.data)
-      : getPosts.FAILURE(new Error(body.message))
+    ? getPosts.SUCCESS(body.data)
+    : getPosts.FAILURE(new Error(body.message))
   )
 );
 
@@ -31,8 +31,8 @@ const writePostEpic = (action$) => action$.pipe(
   mergeMap( action => from(api.writePost(action.payload)) ),
   map( body =>
     body.data
-      ? writePost.SUCCESS(body.data)
-      : writePost.FAILURE(new Error(body.message))
+    ? writePost.SUCCESS(body.data)
+    : writePost.FAILURE(new Error(body.message))
   )
 );
 
@@ -41,8 +41,8 @@ const removePostEpic = (action$) => action$.pipe(
   mergeMap( action => from(api.removePost(action.payload)) ),
   map( body =>
     body.data
-      ? removePost.SUCCESS(body.data)
-      : removePost.FAILURE(new Error(body.message))
+    ? removePost.SUCCESS(body.data)
+    : removePost.FAILURE(new Error(body.message))
   )
 );
 
@@ -51,8 +51,8 @@ const hidePostEpic = (action$) => action$.pipe(
   mergeMap( action => from(api.hidePost(action.payload)) ),
   map( body =>
     body.data
-      ? hidePost.SUCCESS(body.data)
-      : hidePost.FAILURE(new Error(body.message))
+    ? hidePost.SUCCESS(body.data)
+    : hidePost.FAILURE(new Error(body.message))
   )
 );
 
@@ -61,5 +61,5 @@ export default combineEpics(
   getPostsEpic,
   writePostEpic,
   removePostEpic,
-  hidePostEpic
+  hidePostEpic,
 );
