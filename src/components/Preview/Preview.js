@@ -28,7 +28,7 @@ class Preview extends Component {
       return null;
     }
     return (
-      <a href={link} target="_blank"  className="Preview">
+      <a href={link} target="_blank"  className="Preview" rel="noopener noreferrer">
         <div className="preview-img" style={ { backgroundImage : `url('${image}')` } } />
         <div className="preview-text">
           <div className="preview-title">

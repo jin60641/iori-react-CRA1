@@ -139,9 +139,11 @@ class Post extends Component {
                 line.split(linkRegex).map( (word,j) => {
                   const key = `${post.id}-text-${i}-${j}`
                   if( linkRegex.test(word) ) {
-                    return (<a href={word} key={key} target="_blank">{word}</a>);
+                    return (<a href={word} key={key} target="_blank" rel="noopener noreferrer">{word}</a>);
                   } else if( word ){
                     return (<span key={key}>{word}</span>)
+                  } else {
+                    return null;
                   }
                 })
                 : <span>{line}</span>

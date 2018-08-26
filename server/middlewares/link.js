@@ -11,18 +11,24 @@ obj.link = async ( req, res ) => {
   if( exist ){
     res.send({ data : exist.get({ plain : true }) });
   } else {
-    const resp = await fetch( link );
-    const body = await resp.text();
-    const metas = await utils.getMeta(body);
-    const { title, description, image } = metas;
-    const current = {
-      link,
-      title,
-      description,
-      image
-    };
-    await db.Link.create(current);
-    res.send({ data : current });
+    try { 
+      const resp = await utils.timeout( 2000, fetch( link ) );
+      const body = await resp.text();
+      const metas = await utils.getMeta(body);
+      const { title, description, image } = metas;
+      const current = {
+        link,
+        title,
+        description,
+        image
+      };
+      await db.Link.create(current);
+      res.send({ data : current });
+    } catch (e) {
+      const current = { link }
+      await db.Link.create(current);
+      res.send({ data : current });
+    }
   }
 };
 
