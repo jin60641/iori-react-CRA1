@@ -159,7 +159,11 @@
         width: 35px;
         height: 35px;
         border-radius: 4px;
-        background-image: url("/svg/imageupload.svg");
+        background-image: url("/images/upload-image.png");
+        background-color: #ff5c3e;
+        background-size: 60% 60%;
+        background-position: center center;
+        background-repeat: no-repeat;
         margin-right: 10px; }
       .chat-wrap .chat-box .send-panel .send-btn {
         display: inline-block;

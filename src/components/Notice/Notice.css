@@ -4,3 +4,18 @@
   display: block;
   margin: auto;
   min-height: calc( 100vh - $header-height); }
+  .Notice .notice-types {
+    display: block;
+    border-top: 1px;
+    text-align: left;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    background-color: white; }
+    .Notice .notice-types .notice-type {
+      display: inline-block;
+      font-size: 14px;
+      padding: 14px;
+      color: black;
+      cursor: pointer; }
+    .Notice .notice-types .notice-type-active {
+      color: #ff5c3e; }

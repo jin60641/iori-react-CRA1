@@ -10,4 +10,7 @@ export default handleActions({
 	[getNotices.SUCCESS]: function(state, action) {
 		return state.concat(action.payload);
 	},
+	[getNotices.RESET]: function(state, action) {
+		return [...initialState];
+	},
 }, initialState );

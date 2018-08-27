@@ -12,6 +12,7 @@ import Chat from '../Chat/Chat';
 import Left from '../Left/Left';
 import Profile from '../Profile/Profile';
 import Notice from '../Notice/Notice';
+import Setting from '../Setting/Setting';
 import Search from '../Search/Search';
 
 import classNames from 'classnames/bind';
@@ -100,15 +101,20 @@ class Body extends Component {
 							showScroll = { this.showScroll }
 						/>
 					)}/>
-					<Route path="/notice" render={(props) => (
+					<Route path="/notice/:type?" render={(props) => (
 						this.isLoggedIn() ? 
 						  <Notice {...props} 
 							  isBottom={ isBottom }
+                url='/notice'
 						  />
 						: <Redirect to="/auth/login/notice" />
 					)}/>
 					<Route path="/post/:id" render={(props) => (
             <Post {...props}
+            />
+          )} />
+					<Route path="/setting/:tab?" render={(props) => (
+            <Setting {...props}
             />
           )} />
 					<Route exact path="/" render={(props) => (

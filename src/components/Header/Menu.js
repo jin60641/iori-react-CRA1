@@ -31,6 +31,7 @@ class Menu extends Component {
 					<div className={cx("menu-list",{"menu-list-active":menu})} onClick={this.toggleMenu} >
 						<div className="menu-caret"> <div className="menu-caret-outer" /> <div className="menu-caret-inner" /> </div>
 						<Link to={`/@${user.handle}`} className="menu-list-item">프로필</Link>
+						<Link to='/setting' className="menu-list-item">설정</Link>
 						<div className="menu-list-item" onClick={handleLogout}>로그아웃</div>
 					</div>
 				</div>

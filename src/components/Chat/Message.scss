@@ -33,6 +33,7 @@
 		margin-bottom : 4px;
 		position : relative;
 		vertical-align : top;
+    max-width : 100%;
 		text-align : left;
 		.message-body-div {
 			margin : 5px;
@@ -48,6 +49,7 @@
 		}
 		.message-body-text {
 			margin-left : 8px;
+      max-width : 100%;
 			display : inline-block;
 			color : black;
 			font-size : 15px;
@@ -58,7 +60,7 @@
 			margin-top : 0px;
 		}
 		.message-body-file {
-			max-width : 50%;
+			max-width : 100%;
 			cursor : pointer;
 			max-height : 140px;
 			display : block;
