@@ -16,6 +16,7 @@
       font-size: 14px;
       padding: 14px;
       color: black;
-      cursor: pointer; }
+      cursor: pointer;
+      text-decoration: none; }
     .Notice .notice-types .notice-type-active {
       color: #ff5c3e; }

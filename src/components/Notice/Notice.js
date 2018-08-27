@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import './Notice.css';
 
 import { getNotices } from '../../actions/notice';
 import Item from './Item';
+
+import styles from './Notice.css';
+import classNames from 'classnames/bind';
+const cx = classNames.bind(styles);
 
 const limit = 20;
 const types = [{
@@ -54,11 +57,12 @@ class Notice extends Component {
   }
 	render(){
     const { url, notices } = this.props;
+    const match = this.props.match.params.type;
     return (
 		  <div className="Notice">
         <div className="notice-types">
           { types.map( type => (
-            <Link to={`${url}${type.link}`} className="notice-type" key={`notice-type-${type.key}`}>
+            <Link to={`${url}${type.link}`} className={cx("notice-type",{"notice-type-active":!match&&type.key==='all'||match===type.key})} key={`notice-type-${type.key}`}>
               {type.name}
             </Link>
           ))}
