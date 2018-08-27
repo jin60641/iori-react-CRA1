@@ -18,6 +18,10 @@
 	  background-color : white;
     background-position : center center;
 	  position : relative;
+    .preview-iframe {
+      height : 100%;
+      width : 100%;
+    }
   }
   .preview-text {
 	  padding-bottom : 10px;

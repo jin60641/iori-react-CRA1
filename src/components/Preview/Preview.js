@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './Preview.css';
 
+const initialState = {
+  play : false
+}
 class Preview extends Component {
   constructor(props){
     super(props);
@@ -18,18 +21,36 @@ class Preview extends Component {
     if( vid && vid.length ){
       vid = vid.split('&')[0];
       this.state = {
+        ...initialState,
         video : vid
       }
+    } else {
+      this.state = { ...initialState };
+    }
+  }
+  handleClickImg = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    const { video } = this.state;
+    if( video ){
+      this.setState({
+        play : true
+      });
     }
   }
   render(){
     const { title, description, image, link } = this.props;
+    const { video, play } = this.state;
     if( !title ){
       return null;
     }
     return (
       <a href={link} target="_blank"  className="Preview" rel="noopener noreferrer">
-        <div className="preview-img" style={ { backgroundImage : `url('${image}')` } } />
+        <div className="preview-img" style={ { backgroundImage : `url('${image}')` } } onClick={this.handleClickImg} >
+        { ( video && play ) ? 
+          <iframe className="preview-iframe" src={`https://youtube.com/embed/${video}`} allowFullScreen /> : null
+        }
+        </div>
         <div className="preview-text">
           <div className="preview-title">
             { title }

@@ -99,7 +99,7 @@ class Post extends Component {
   render() {
     const { link } = this.state;
     const { post, user, delay, animation, top, links } = this.props;
-    if( !post ){
+    if( !post.id ){
       return null;
     }
     const my= post.user.id === user.id;

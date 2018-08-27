@@ -3,7 +3,7 @@ import { removePost, hidePost, getPost, getPosts, writePost } from '../actions/n
 
 let initialState = {
   Home : [],
-  detail : null
+  detail : {}
 };
 
 export default handleActions({
