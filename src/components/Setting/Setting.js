@@ -20,7 +20,6 @@ const stateToProps = ({ user }) => ({ user });
 @connect(stateToProps,undefined)
 class Setting extends Component {
   render(){
-    const { path } = this.props.match;
     return (
       <div className="Setting">
         <div className="setting-tabs">
@@ -31,12 +30,8 @@ class Setting extends Component {
           ))}
         </div>
         <div className="setting-body">
-	        <Route path={`${path}/account`} render={(props) => (
-	          <Account {...props} />
-	        )}/>
-	        <Route path={`${path}/notice`} render={(props) => (
-	          <Notice {...props} />
-	        )}/>
+	        <Account />
+	        <Notice />
         </div>
       </div>
     );

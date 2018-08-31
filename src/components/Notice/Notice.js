@@ -28,7 +28,7 @@ const types = [{
   link : '/follow'
 }];
 
-const stateToProps = ({ notices }) => ({ notices });
+const stateToProps = ({ notices, isFetching }) => ({ notices, isFetching });
 const actionToProps = {
   getNotices : getNotices.REQUEST,
   resetNotices : getNotices.RESET
@@ -56,7 +56,7 @@ class Notice extends Component {
     getNotices({ limit, offset : notices.length, type });
   }
 	render(){
-    const { url, notices } = this.props;
+    const { url, notices, isFetching } = this.props;
     const match = this.props.match.params.type;
     return (
 		  <div className="Notice">
@@ -67,11 +67,11 @@ class Notice extends Component {
             </Link>
           ))}
         </div>
-        { notices.length ? 
+        { !isFetching.getNotices && ( notices.length ? 
           notices.map( notice => <Item notice={notice} key={`Notice-${notice.id}`} /> )
           : <div className="notice-none">
             알림이 존재하지 않습니다.
-          </div>
+          </div> )
         }
 			</div>
 		);
