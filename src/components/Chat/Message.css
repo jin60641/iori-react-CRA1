@@ -58,6 +58,8 @@
       margin-top: 0px;
       margin-bottom: 15px;
       border-radius: 4px; }
+    .Message .message-body .message-body-preview {
+      max-width: 300px; }
   .Message .message-body-caret-outer {
     border-right: 10px solid rgba(255, 92, 62, 0.8);
     border-bottom: 10px solid transparent;

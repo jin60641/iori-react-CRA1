@@ -39,14 +39,14 @@ class Preview extends Component {
     }
   }
   render(){
-    const { title, description, image, link } = this.props;
+    const { title, description, image, link, imgHeight } = this.props;
     const { video, play } = this.state;
     if( !title ){
       return null;
     }
     return (
-      <a href={link} target="_blank"  className="Preview" rel="noopener noreferrer">
-        <div className="preview-img" style={ { backgroundImage : `url('${image}')` } } onClick={this.handleClickImg} >
+      <a href={link} target="_blank"  className="Preview" rel="noopener noreferrer" >
+        <div className="preview-img" style={ { backgroundImage : `url('${image}')`, height : imgHeight+"px" } } onClick={this.handleClickImg} >
         { ( video && play ) ? 
           <iframe className="preview-iframe" src={`https://youtube.com/embed/${video}`} allowFullScreen /> : null
         }

@@ -68,6 +68,9 @@
 			margin-bottom : 15px;
 			border-radius : 4px;
 		}
+		.message-body-preview {
+      max-width : 300px;
+    }
 	}
 	.message-body-caret-outer {
 		border-right : 10px solid rgba($color-normal,0.8);

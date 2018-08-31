@@ -133,25 +133,23 @@ class Post extends Component {
             <div className="post-date"> {this.getDateString(post.createdAt)} </div>
           </div>
           <div className="post-inside">
-            { post.text.split('\n').map( (line,i) => (
-              <div key={`${post.id}-text-${i}`}>
+          { post.text.split('\n').map( (line,i) => {
+            const key = `post-${post.id}-text-${i}`;
+            return (
+              <div key={key}>
               { link ? 
-                line.split(linkRegex).map( (word,j) => {
-                  const key = `${post.id}-text-${i}-${j}`
-                  if( linkRegex.test(word) ) {
-                    return (<a href={word} key={key} target="_blank" rel="noopener noreferrer">{word}</a>);
-                  } else if( word ){
-                    return (<span key={key}>{word}</span>)
-                  } else {
-                    return null;
-                  }
-                })
+                line.split(linkRegex).map( (word,j) => 
+                  linkRegex.test(word) ?
+                    <a href={word} key={`${key}-${j}`} target="_blank" rel="noopener noreferrer">{word}</a>
+                    : <span key={`${key}-${j}`}>{word}</span>
+                )
                 : <span>{line}</span>
               }
               </div>
-            ))}
+            )
+          })}
           </div>
-          { link ? <Preview { ...links[link] } link={link} /> : 
+          { link ? <Preview { ...links[link] } link={link} imgHeight={300} /> : 
             ( post.file ?
             <div className="post-img-outer">
               <img className="post-img-inner" src={`/files/post/${post.id}/1.png`} alt="post img" />

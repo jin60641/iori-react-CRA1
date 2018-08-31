@@ -1,15 +1,44 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import Preview from '../Preview/Preview';
+import { getLink } from '../../actions/link';
+
 import styles from './Message.css';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
+const initialState = {
+  link : null
+}
+
+const linkRegex = /((?:(?:http|https)):\/\/(?:[\w-]+(?:\.[\w-]+)+(?:[\w.@?^=%&amp;:\/~+#-])*[\w@?^=%&amp;\/~+#-]))/gi;
+
+const stateToProps = ({links}) => ({links});
+const actionToProps = {
+  getLink : getLink.REQUEST
+}
+
+@connect(stateToProps, actionToProps)
 class Message extends Component {
+  constructor(props){
+    super(props);
+    this.state = { ...initialState };
+  }
   componentDidMount(){
-    const { handleMessageMount } = this.props;
+    const { handleMessageMount, getLink, chat : { text } } = this.props;
+    const match = text.match(linkRegex);
+    if( match ) {
+      const [link] = match;
+      this.setState({
+        link
+      });
+      getLink({ link });
+    }
     setTimeout( handleMessageMount, 0 );
   }
 	render(){
-		const { user, chat } = this.props;
+		const { user, chat, links } = this.props;
+    const { link } = this.state;
 		const my = user.id === chat.from.id;
 		return(
 			<div className={cx("Message",{"Message-my":my})}>
@@ -32,7 +61,22 @@ class Message extends Component {
 									<div className="message-body-caret-inner" />
 								</div>
 								<div className="message-body-text">
-									{ chat.text.split('\n').map( (text,i) => <span key={`chat-${chat.id}-text-${i}`}>{text}<br /></span> ) }
+                  { link ? <div className="message-body-preview"><Preview { ...links[link] } link={link} imgHeight={100}/></div> : null }
+									{ chat.text.split('\n').map( (line,i) => {
+                    const key = `chat-${chat.id}-text-${i}`
+                    return (
+                      <div key={key} >
+                      { link ? 
+                        line.split(linkRegex).map( (word,j) => 
+                          linkRegex.test(word) ?
+                          <a href={word} key={`${key}-${j}`} target="_blank" rel="noopener noreferrer">{word}</a>
+                          : <span key={`${key}-${j}`}>{word}</span> 
+                        )
+                        : <span>{line}</span> 
+                      }
+                      </div>
+                    )
+                  })}
 								</div>
 							</div>
 					}
