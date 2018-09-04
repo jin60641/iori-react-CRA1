@@ -9,7 +9,7 @@ import Layer from './Layer';
 import { searchGroupById, searchUserByHandle, searchUsers } from '../../actions/search';
 import { sendChat, getChats, getDialogs, makeGroup } from '../../actions/chat';
 
-import styles from './Chat.css';
+import styles from './Chat.scss';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 

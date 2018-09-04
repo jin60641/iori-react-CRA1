@@ -7,7 +7,7 @@ import Login from './Login';
 import Join from './Join';
 import Find from './Find';
 import Change from './Change';
-import styles from './Auth.css';
+import styles from './Auth.scss';
 import classNames from 'classnames/bind'
 const cx = classNames.bind(styles);
 

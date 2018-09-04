@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
-import styles from './Body.css';
+import styles from './Body.scss';
 
 import Newsfeed from '../Newsfeed/Newsfeed';
 import Post from '../Newsfeed/Post';

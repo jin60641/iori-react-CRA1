@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Preview from '../Preview/Preview';
 import { getLink } from '../../actions/link';
 
-import styles from './Message.css';
+import styles from './Message.scss';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 

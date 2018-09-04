@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { searchFollows } from '../../actions/search';
 import { follow } from '../../actions/relation';
 
-import './List.css';
+import './List.scss';
 
 const stateToProps = ({searched}) => ({follows : searched.follows});
 

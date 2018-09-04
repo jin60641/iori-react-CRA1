@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Message from './Message';
 
-import styles from './Panel.css';
+import styles from './Panel.scss';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 

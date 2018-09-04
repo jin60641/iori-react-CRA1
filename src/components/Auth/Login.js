@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import './Auth.css';
-import styles from './Login.css';
+import styles from './Login.scss';
 import classNames from 'classnames/bind'
 const cx = classNames.bind(styles);
 

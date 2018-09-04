@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, withRouter } from 'react-router-dom';
-import './Setting.css';
+import './Setting.scss';
 
 import Notice from './Notice';
 import Account from './Account';

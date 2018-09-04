@@ -5,7 +5,7 @@ import Preview from '../Preview/Preview';
 import { getPosts, removePost, hidePost } from '../../actions/newsfeed';
 import { getLink } from '../../actions/link';
 import { Link } from 'react-router-dom';
-import style from './Post.css';
+import style from './Post.scss';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(style);
 

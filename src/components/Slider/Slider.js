@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import classNames from 'classnames/bind';
-import styles from './Slider.css';
+import styles from './Slider.scss';
 const cx = classNames.bind(styles);
 
 const sliderNums = [2,3,4,1];

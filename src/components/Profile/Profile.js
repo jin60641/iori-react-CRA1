@@ -7,7 +7,7 @@ import { follow } from '../../actions/relation';
 
 import Newsfeed from '../Newsfeed/Newsfeed';
 import List from './List';
-import styles from './Profile.css';
+import styles from './Profile.scss';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 

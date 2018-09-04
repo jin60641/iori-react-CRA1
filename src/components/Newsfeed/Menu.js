@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import withClickOutside from 'react-click-outside';
 import classNames from 'classnames/bind';
-import styles from './Menu.css';
+import styles from './Menu.scss';
 const cx = classNames.bind(styles);
 
 const initialState = { active : false };

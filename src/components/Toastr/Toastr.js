@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReduxToastr from 'react-redux-toastr'
 
-import './Toastr.css';
+import './Toastr.scss';
 
 class Toastr extends Component {
   render(){

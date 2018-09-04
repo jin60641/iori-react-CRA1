@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { getNotices } from '../../actions/notice';
 import Item from './Item';
 
-import styles from './Notice.css';
+import styles from './Notice.scss';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 

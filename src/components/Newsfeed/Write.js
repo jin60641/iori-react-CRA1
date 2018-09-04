@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styles from './Write.css';
+import styles from './Write.scss';
 import { connect } from 'react-redux';
 import { writePost } from '../../actions/newsfeed';
 import classNames from 'classnames/bind';

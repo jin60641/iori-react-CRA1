@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Preview.css';
+import './Preview.scss';
 
 const initialState = {
   play : false

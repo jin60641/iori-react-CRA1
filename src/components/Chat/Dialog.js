@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styles from './Dialog.css';
+import styles from './Dialog.scss';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink, withRouter } from "react-router-dom";
 
-import './Header.css';
+import './Header.scss';
 import Menu from './Menu';
 
 @withRouter

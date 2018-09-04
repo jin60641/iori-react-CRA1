@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getPosts } from '../../actions/newsfeed';
-import './Newsfeed.css';
+import './Newsfeed.scss';
 import Post from './Post';
 import Write from './Write';
 
