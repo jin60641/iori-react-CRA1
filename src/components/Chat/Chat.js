@@ -288,10 +288,7 @@ class Chat extends Component {
 							</div>
 					}
 				</div>
-				{ layer === null ? 
-					<div /> 
-					: <Layer user={user} type={layer} showChatLayer={this.showChatLayer} searchUsers={searchUsers} searched={searched} inviteUsers={this.inviteUsers} />
-				}
+				{ layer && (<Layer user={user} type={layer} showChatLayer={this.showChatLayer} searchUsers={searchUsers} searched={searched} inviteUsers={this.inviteUsers} />) }
 			</div>
 		);
 	}
