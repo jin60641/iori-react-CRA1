@@ -15,8 +15,8 @@ obj.groupById = (req,res) => {
 
 const makeUserObj = async (req,user) => {
   if( req.user && req.user.verify ){
-    user.following = await !!db.Follow.findOne({ where : { fromId : req.user.id, toId : user.id }, raw : true });
-    user.follower = await !!db.Follow.findOne({ where : { fromId : user.id, toId : req.user.id }, raw : true });
+    user.following = !!( await db.Follow.findOne({ where : { fromId : req.user.id, toId : user.id }, raw : true }) );
+    user.follower = !!( await db.Follow.findOne({ where : { fromId : user.id, toId : req.user.id }, raw : true }) );
   }
   return user;
 }
@@ -75,6 +75,9 @@ obj.users = (req,res) => {
       name : { $like : `%${query}%` },
       handle : { $like : `%${query}%` }
     }
+  }
+  if( req.user ){
+    where.id = { $not : req.user.id };
   }
   db.User.findAll({ where, attributes : db.User.attributeNames })
   .then( result => {

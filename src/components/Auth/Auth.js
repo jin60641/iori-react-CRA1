@@ -31,11 +31,6 @@ class Auth extends Component {
     const { showScroll } = this.props;
     showScroll(true);
   }
-  pushState = url => {
-    const { history, showScroll } = this.props;
-    showScroll(true);
-    history.push(url);
-  }
   render(){
     const { login, join, user, findPw, changePw, warningToastr } = this.props;
     const { path } = this.props.match;

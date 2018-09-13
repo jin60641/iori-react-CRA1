@@ -27,7 +27,7 @@ class List extends Component {
 		return(
 			<div className="List">
 				{ follows.map( (user,i) => {
-					return (<UserCard user={user}/>)
+					return (<UserCard data={user}/>)
 				})}
 			</div>
 		);

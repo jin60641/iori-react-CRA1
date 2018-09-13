@@ -20,10 +20,12 @@ class User extends Component {
     this.init();
   }
   shouldComponentUpdate(nextProps){
-    return ( this.props.match.params.query !== nextProps.match.params.query || ( this.props.isFetching.searchUsers && !nextProps.isFetching.searchUsers ) );
+    return ( ( this.props.match.params.query !== nextProps.match.params.query ) || ( !!this.props.isFetching.searchUsers && !nextProps.isFetching.searchUsers ) );
   }
-  componentDidUpdate = () => {
-    this.init();
+  componentDidUpdate = (prevProps) => {
+    if( prevProps.match.params.query !== this.props.match.params.query ){
+      this.init();
+    }
   }
   init = () => {
     const { match : { params : { query } }, searchUsers } = this.props;
@@ -31,7 +33,7 @@ class User extends Component {
   }
   render(){
     const { users } = this.props;
-    return users.map( user => (<UserCard user={user} />) );
+    return users.map( user => (<UserCard data={user} key={`search-user-${user.id}`}/>) );
   }
 }
 

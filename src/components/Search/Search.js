@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, NavLink, Switch, Route, withRouter } from 'react-router-dom';
+import { Link, NavLink, Redirect, Switch, Route, withRouter } from 'react-router-dom';
 
 import Post from './Post';
 import User from './User';
@@ -65,6 +65,7 @@ class Search extends Component {
                 key={`search-route-${type.key}`}
               />
             ))}
+            <Redirect to={`${url}${types[0].link}`} />
           </Switch>
         </div> 
       </div>
