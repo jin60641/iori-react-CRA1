@@ -48,10 +48,13 @@
 		.message-body-text {
 			margin-left : 8px;
       max-width : 100%;
+      word-break: break-all;
+      text-align: left;
 			display : inline-block;
 			color : black;
 			font-size : 15px;
 			background-color : white;
+      
 			border : 1px solid rgba($color-normal,8);
 			padding : 8px 10px 10px 10px;
 			border-radius : 4px;
