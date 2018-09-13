@@ -1,5 +1,8 @@
 .Notice {
   padding-top : 10px;
+  @include media("<medium"){
+    padding-top: 0px;
+  }
   width : 500px;
   display : block;
   margin : auto;

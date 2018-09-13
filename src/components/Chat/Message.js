@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Preview from '../Preview/Preview';
 import { getLink } from '../../actions/link';
@@ -65,16 +65,16 @@ class Message extends Component {
 									{ chat.text.split('\n').map( (line,i) => {
                     const key = `chat-${chat.id}-text-${i}`
                     return (
-                      <div key={key} >
+                      <Fragment key={key} >
                       { link ? 
                         line.split(linkRegex).map( (word,j) => 
                           linkRegex.test(word) ?
                           <a href={word} key={`${key}-${j}`} target="_blank" rel="noopener noreferrer">{word}</a>
-                          : <span key={`${key}-${j}`}>{word}</span> 
+                          : <Fragment key={`${key}-${j}`}>{word}</Fragment> 
                         )
-                        : <span>{line}</span> 
+                        : <Fragment>{line}</Fragment> 
                       }
-                      </div>
+                      </Fragment>
                     )
                   })}
 								</div>

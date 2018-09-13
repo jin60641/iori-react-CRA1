@@ -86,7 +86,9 @@ class Chat extends Component {
 		}
 	}
   componentDidUpdate = (prevProps,prevState) => {
-    if( prevProps.searched.user.id !== this.props.searched.user.id ){
+    if( prevProps.match.params.handle && !this.props.match.params.handle ){
+      this.setState({ ...initialState });
+    } else if( prevProps.searched.user.id !== this.props.searched.user.id ){
 			this.openChat(this.props.searched.user,"user");
     } else if( prevProps.searched.group.id !== this.props.searched.group.id ){
 	  	this.openChat(this.props.searched.group,"group");
@@ -225,9 +227,10 @@ class Chat extends Component {
 		const { searchUsers, searched, chats, user, dialogs } = this.props;
 		const { to, menu, layer, type, text, height } = this.state;
 		return(
-			<div className="Chat">
+			<div className={cx("Chat",{"Chat-default":!type})}>
 				<div className="chat-wrap" onClick={this.handleClickOutside} >
 					<div className="chat-header">
+					  <Link to="/chat" className={cx("chat-back","chat-header-div")} />
 						<div className={cx("chat-menu","chat-header-div")} onClick={this.handleClickMenu}>
 							<div className="chat-menu-text">
 								새 메시지
@@ -280,7 +283,7 @@ class Chat extends Component {
 								</div>
 							</div>
 						: 
-							<div className={cx("chat-box","chat-box-default")}>
+							<div className="chat-box">
 								새 메시지나 검색을 통해 대화를 시작해보세요
 							</div>
 					}
