@@ -42,7 +42,7 @@ class Search extends Component {
       <div className="Search">
         <div className="search-bar">
           <input className="search-input" value={input} onChange={this.handleChange} />
-          <Link to={`${url}/${type}/${input}`}>검색</Link>
+          <Link className="search-submit" to={`${url}/${type}/${input}`}>검색</Link>
         </div>
         <div className="search-types">
           { types.map( type => (
@@ -58,6 +58,7 @@ class Search extends Component {
         </div>
         <div className="search-body">
           <Switch>
+            { !type && (<Redirect to={`${url}${types[0].link}`} />) }
             { types.map( type => (
               <Route
                 path={`${url}${type.link}/:query`}
@@ -65,7 +66,6 @@ class Search extends Component {
                 key={`search-route-${type.key}`}
               />
             ))}
-            <Redirect to={`${url}${types[0].link}`} />
           </Switch>
         </div> 
       </div>
