@@ -288,7 +288,11 @@ class Chat extends Component {
 							</div>
 					}
 				</div>
+<<<<<<< HEAD
 				{ layer && (<Layer user={user} type={layer} showChatLayer={this.showChatLayer} searchUsers={searchUsers} searched={searched} inviteUsers={this.inviteUsers} />) }
+=======
+				{ !layer && (<Layer user={user} type={layer} showChatLayer={this.showChatLayer} searchUsers={searchUsers} searched={searched} inviteUsers={this.inviteUsers} />) }
+>>>>>>> 122f474a7ad549ee805187bc386701e7de2dcdcb
 			</div>
 		);
 	}
