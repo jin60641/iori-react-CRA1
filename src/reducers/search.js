@@ -1,12 +1,17 @@
 import {handleActions} from 'redux-actions';
 import {follow} from '../actions/relation';
-import {searchUserByHandle,searchGroupById,searchUsers,searchFollows} from '../actions/search';
+import {
+  searchUserByHandle,
+  searchGroupById,
+  searchUsers,
+  searchFollows
+} from '../actions/search';
 
 let initialState = {
   user : {},
   group : {},
 	users : [],
-	follows : []
+	follows : [],
 };
 
 export default handleActions({

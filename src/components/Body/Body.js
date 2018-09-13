@@ -64,9 +64,10 @@ class Body extends Component {
 		return(
 			<div className={cx('Body',{ 'body-scroll' : scrollBar })} ref={ dom => { this.Body=dom } } >
 				<Switch>
-					<Route path="/search/:tab?/:query?" render={(props) => (
+					<Route path="/search/:type?/:query?" render={(props) => (
             <Search {...props }
               isBottom = { isBottom }
+              url="/search"
             />
           )}/>
 					<Route path="/@:handle/:tab?" render={(props) => (
@@ -105,7 +106,7 @@ class Body extends Component {
 						this.isLoggedIn() ? 
 						  <Notice {...props} 
 							  isBottom={ isBottom }
-                url='/notice'
+                url="/notice"
 						  />
 						: <Redirect to="/auth/login/notice" />
 					)}/>
@@ -114,8 +115,11 @@ class Body extends Component {
             />
           )} />
 					<Route path="/setting/:tab?" render={(props) => (
-            <Setting {...props}
-            />
+						this.isLoggedIn() ? 
+              <Setting {...props}
+                url="/setting"
+              />
+						: <Redirect to="/auth/login/setting" />
           )} />
 					<Route exact path="/" render={(props) => (
 						this.isLoggedIn() ? 

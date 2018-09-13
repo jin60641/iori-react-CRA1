@@ -31,7 +31,7 @@ class Newsfeed extends Component {
     }
 	}
 	componentDidUpdate = (prevProps,prevState) => {
-		if( !prevProps.isBottom && this.props.isBottom ){
+    if( ( prevProps.id !== this.props.id ) || ( !prevProps.isBottom && this.props.isBottom ) ){
 			this.handleGetPosts();
 		}
     if( prevProps.posts.length && prevProps.posts.length !== this.props.posts.length ){

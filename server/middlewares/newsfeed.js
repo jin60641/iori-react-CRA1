@@ -123,9 +123,11 @@ obj.getPosts = async ( req, res ) => {
 			query.where.id = id;
 		}
 	} else {
-    const hides = await db.Hide.findAll({ where : { userId : req.user.id }}).then( hides => hides.map( hide => hide.dataValues.postId ) );
-    if( hides.length ){
-      query.where.id = { $notIn : hides };
+    if( req.user ){
+      const hides = await db.Hide.findAll({ where : { userId : req.user.id }}).then( hides => hides.map( hide => hide.dataValues.postId ) );
+      if( hides.length ){
+        query.where.id = { $notIn : hides };
+      }
     }
 		query.limit = limit?limit:20;
 	}

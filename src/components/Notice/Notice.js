@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { getNotices } from '../../actions/notice';
 import Item from './Item';
@@ -56,15 +56,14 @@ class Notice extends Component {
     getNotices({ limit, offset : notices.length, type });
   }
 	render(){
-    const { url, notices, isFetching } = this.props;
-    const match = this.props.match.params.type;
+    const { url, notices, isFetching, match : { params : { match : type } } } = this.props;
     return (
 		  <div className="Notice">
         <div className="notice-types">
           { types.map( type => (
-            <Link to={`${url}${type.link}`} className={cx("notice-type",{"notice-type-active":!match&&type.key==='all'||match===type.key})} key={`notice-type-${type.key}`}>
+            <NavLink to={`${url}${type.link}`} exact={true} className="notice-type" activeClassName={cx("notice-type","notice-type-active")} key={`notice-type-${type.key}`}>
               {type.name}
-            </Link>
+            </NavLink>
           ))}
         </div>
         { !isFetching.getNotices && ( notices.length ? 

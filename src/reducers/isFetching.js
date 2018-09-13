@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { getChats } from '../actions/chat';
 import { getNotices } from '../actions/notice';
+import { searchUsers } from '../actions/search';
 
 let initialState = {};
 
@@ -24,5 +25,14 @@ export default handleActions({
 	},
 	[getNotices.Failure]: (state, action) => {
     return { getNotices : false };
+  },
+  [searchUsers.REQUEST]: (state, action) => {
+    return { searchUsers : true };
+  },
+	[searchUsers.SUCCESS]: (state, action) => {
+    return { searchUsers : false };
+	},
+	[searchUsers.Failure]: (state, action) => {
+    return { searchUsers : false };
   },
 }, initialState );

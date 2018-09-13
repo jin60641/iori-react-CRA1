@@ -1,17 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Route, withRouter } from 'react-router-dom';
-import './Setting.scss';
+import { NavLink, Switch, Redirect, Route, withRouter } from 'react-router-dom';
 
-import Notice from './Notice';
 import Account from './Account';
+import Notice from './Notice';
+
+import classNames from 'classnames/bind';
+import styles from './Setting.scss';
+const cx = classNames.bind(styles);
 
 const tabs = [{
   key : 'account',
-  name : '계정'
+  name : '계정',
+  link : '/account',
+  component : Account
 },{
   key : 'notice',
-  name : '알림'
+  name : '알림',
+  link : '/notice',
+  component : Notice
 }];
 
 const stateToProps = ({ user }) => ({ user });
@@ -20,18 +27,32 @@ const stateToProps = ({ user }) => ({ user });
 @connect(stateToProps,undefined)
 class Setting extends Component {
   render(){
+    const { url } = this.props;
     return (
       <div className="Setting">
         <div className="setting-tabs">
           { tabs.map( tab => (
-            <div className="setting-tab" key={`setting-tab-${tab.key}`}>
+            <NavLink 
+              className="setting-tab"
+              activeClassName={cx("setting-tab","setting-tab-active")}
+              key={`setting-tab-${tab.key}`}
+              to={`${url}${tab.link}`} 
+            >
               {tab.name}
-            </div>
+            </NavLink>
           ))}
         </div>
         <div className="setting-body">
-	        <Account />
-	        <Notice />
+          <Switch>
+            { tabs.map( tab => (
+              <Route
+                path={`${url}${tab.link}`}
+                component={tab.component}
+                key={`setting-route-${tab.key}`}
+              />
+            ))}
+            <Redirect to={`${url}${tabs[0].link}`} />
+          </Switch>
         </div>
       </div>
     );
