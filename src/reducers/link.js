@@ -1,11 +1,11 @@
 import { handleActions } from 'redux-actions';
 import { getLink } from '../actions/link';
 
-let initialState = {};
+const initialState = {};
 
 export default handleActions({
-	[getLink.SUCCESS]: function(state, action) {
+  [getLink.SUCCESS](state, action) {
     const { link } = action.payload;
-    return { ...state, [link] : action.payload };
-	},
-}, initialState );
+    return { ...state, [link]: action.payload };
+  },
+}, initialState);

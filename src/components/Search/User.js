@@ -5,35 +5,36 @@ import { searchUsers } from '../../actions/search';
 
 import UserCard from '../UserCard/UserCard';
 
-const stateToProps = ({ searched : { users }, isFetching }) => ({ users, isFetching })
+const stateToProps = ({ searched: { users }, isFetching }) => ({ users, isFetching });
 const actionToProps = {
-  searchUsers : searchUsers.REQUEST,
-}
+  searchUsers: searchUsers.REQUEST,
+};
 
 @withRouter
-@connect(stateToProps,actionToProps)
+@connect(stateToProps, actionToProps)
 class User extends Component {
-  constructor(props){
-    super(props);
-  }
   componentDidMount = () => {
     this.init();
   }
-  shouldComponentUpdate(nextProps){
-    return ( ( this.props.match.params.query !== nextProps.match.params.query ) || ( !!this.props.isFetching.searchUsers && !nextProps.isFetching.searchUsers ) );
+
+  shouldComponentUpdate(nextProps) {
+    return ((this.props.match.params.query !== nextProps.match.params.query) || (!!this.props.isFetching.searchUsers && !nextProps.isFetching.searchUsers));
   }
+
   componentDidUpdate = (prevProps) => {
-    if( prevProps.match.params.query !== this.props.match.params.query ){
+    if (prevProps.match.params.query !== this.props.match.params.query) {
       this.init();
     }
   }
+
   init = () => {
-    const { match : { params : { query } }, searchUsers } = this.props;
+    const { match: { params: { query } }, searchUsers } = this.props;
     searchUsers({ query });
   }
-  render(){
+
+  render() {
     const { users } = this.props;
-    return users.map( user => (<UserCard data={user} key={`search-user-${user.id}`}/>) );
+    return users.map(user => (<UserCard data={user} key={`search-user-${user.id}`} />));
   }
 }
 

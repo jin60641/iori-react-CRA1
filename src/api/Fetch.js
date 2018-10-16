@@ -1,19 +1,19 @@
-const Fetch = (method,uri,data) => {
-  const options = { 
+const Fetch = (method, uri, data) => {
+  const options = {
     method,
-    credentials: 'include'
+    credentials: 'include',
   };
-  if( data ){
-    if( data.constructor !== FormData ){
+  if (data) {
+    if (data.constructor !== FormData) {
       options.headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      };
       options.body = JSON.stringify(data);
     } else {
       options.body = data;
     }
   }
-  return fetch(uri,options).then( resp => resp.json() );
-}
+  return fetch(uri, options).then(resp => resp.json());
+};
 export default Fetch;

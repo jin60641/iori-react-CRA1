@@ -1,5 +1,5 @@
-//import { BehaviorSubject } from 'rxjs';
-//import { mergeMap } from 'rxjs/operators';
+// import { BehaviorSubject } from 'rxjs';
+// import { mergeMap } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 
 import authEpic from './auth';
@@ -21,7 +21,7 @@ export const rootEpic = combineEpics(
   searchEpic,
   settingEpic,
   noticeEpic,
-  linkEpic
+  linkEpic,
 );
 
 /*
@@ -36,7 +36,7 @@ export const addEpic = epic$ => {
 }
 */
 
-//addEpic(authEpic);
-//addEpic(socketEpic);
+// addEpic(authEpic);
+// addEpic(socketEpic);
 
 export default rootEpic;

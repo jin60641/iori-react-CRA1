@@ -4,6 +4,6 @@ const setProfileUri = '/api/setting/profile';
 
 const obj = {};
 
-obj.setProfile = data => Fetch('POST',setProfileUri,data);
+obj.setProfile = data => Fetch('POST', setProfileUri, data);
 
 export default obj;

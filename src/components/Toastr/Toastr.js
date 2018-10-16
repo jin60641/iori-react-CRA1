@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import ReduxToastr from 'react-redux-toastr'
+import ReduxToastr from 'react-redux-toastr';
 
 import './Toastr.scss';
 
 class Toastr extends Component {
-  render(){
+  render() {
     return (
       <ReduxToastr
         timeOut={4000}
@@ -15,7 +15,7 @@ class Toastr extends Component {
         progressBar
         closeOnToastrClick
       />
-    )
+    );
   }
 }
 export default Toastr;

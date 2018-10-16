@@ -7,9 +7,9 @@ const searchFollowsUri = '/api/search/follows';
 
 const obj = {};
 
-obj.searchUserByHandle = data => Fetch('POST',searchUserByHandleUri,data);
-obj.searchUsers = data => Fetch('POST',searchUsersUri,data);
-obj.searchGroupById = data => Fetch('POST',searchGroupByIdUri,data);
-obj.searchFollows = data => Fetch('POST',searchFollowsUri,data);
+obj.searchUserByHandle = data => Fetch('POST', searchUserByHandleUri, data);
+obj.searchUsers = data => Fetch('POST', searchUsersUri, data);
+obj.searchGroupById = data => Fetch('POST', searchGroupByIdUri, data);
+obj.searchFollows = data => Fetch('POST', searchFollowsUri, data);
 
 export default obj;

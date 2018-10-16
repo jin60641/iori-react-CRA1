@@ -6,15 +6,14 @@ import React, { Component } from 'react';
 탈퇴
 */
 class Account extends Component {
-  constrcutor(){  
+  constrcutor() {
   }
-  render(){
+
+  render() {
     return (
-      <div>
-      </div>
+      <div />
     );
   }
 }
 
 export default Account;
-
