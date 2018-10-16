@@ -7,6 +7,8 @@ const database = {
 }
 
 const settings = {
+  host: "http://exmaple.com",
+  domain: "exmaple.com",
 	sessionSecret : "session secret",
 	mailAccount : {
 		user : "gmail address",

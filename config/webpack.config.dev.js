@@ -201,8 +201,6 @@ module.exports = {
               {
                 loader: require.resolve('sass-loader'), 
                 options: {
-                  sourceMap: true,
-                  data: '@import "utils";',
                   includePaths: [
                     path.resolve(paths.appSrc, 'styles')
                   ]
