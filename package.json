@@ -52,6 +52,7 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
+    "init": "mkdir tmp && mkdir files && cd files && mkdir profile && mkdir header && mkdir post && mkdir chat",
     "dev": "node scripts/start.js",
     "build": "node scripts/build.js",
     "start": "node ./server/app.js",
