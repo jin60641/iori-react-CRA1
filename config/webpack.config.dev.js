@@ -107,6 +107,7 @@ module.exports = {
 
       // First, run the linter.
       // It's important to do this before Babel processes the JS.
+      /*
       {
         test: /\.(js|jsx|mjs)$/,
         enforce: 'pre',
@@ -122,6 +123,7 @@ module.exports = {
         ],
         include: paths.appSrc,
       },
+      */
       {
         // "oneOf" will traverse all following loaders until one will
         // match the requirements. When no loader matches it will fall
@@ -201,6 +203,8 @@ module.exports = {
               {
                 loader: require.resolve('sass-loader'), 
                 options: {
+                  sourceMap: true,
+                  data: '@import "utils";',
                   includePaths: [
                     path.resolve(paths.appSrc, 'styles')
                   ]
